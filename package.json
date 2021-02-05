@@ -1,0 +1,13 @@
+{
+  "name": "go-fish",
+  "version": "1.0.0",
+  "description": "Language-agnostic Go Fish game for language learning",
+  "main": "index.js",
+  "author": "Cedar Edwards",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "hapi-websocket-server",
+    "hapi-websocket-client"
+  ]
+}
