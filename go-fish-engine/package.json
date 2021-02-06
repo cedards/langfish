@@ -1,0 +1,23 @@
+{
+  "name": "@langfish/go-fish-engine",
+  "version": "1.0.0",
+  "description": "Core game logic for Go Fish",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.0",
+    "typescript": "^4.1.3"
+  }
+}

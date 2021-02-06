@@ -7,6 +7,8 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
+    "go-fish-engine",
+    "go-fish-server",
     "hapi-websocket-server",
     "hapi-websocket-client"
   ]
