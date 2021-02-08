@@ -1,10 +1,7 @@
 import './App.css';
 import {useEffect, useState} from "react";
-import Nes from "@hapi/nes/lib/client";
 
-const client = new Nes.Client(`ws://localhost:5000`);
-
-function App() {
+function App({ client }) {
   const [playerName, updatePlayerName] = useState(null);
   const [gameState, updateGameState] = useState(null);
 
@@ -61,14 +58,14 @@ const LoadingScreen = () => <h1>Connecting...</h1>
 const GameTable = ({ playerName, game, draw }) => <div>
   <h1>😀 {playerName}</h1>
   <ul className="my-hand">
-    { game.players[playerName].hand.map(card => <li className="revealed-card">{card.value}</li>) }
+    { game.players[playerName].hand.map(card => <li className="revealed-card" key={card.id}>{card.value}</li>) }
   </ul>
   <p>There are {game.deck.length} cards left in the deck. <button onClick={draw}>Draw a card</button></p>
   {
     Object.keys(game.players).filter(player => player !== playerName).map(player => <div>
         <h3>{player}</h3>
         <ul className="other-player-hand">
-          {game.players[player].hand.map(card => <li className="hidden-card"/>)}
+          {game.players[player].hand.map(card => <li className="hidden-card" key={card.id} />)}
         </ul>
     </div>)
   }

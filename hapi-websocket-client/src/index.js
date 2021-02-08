@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Nes from "@hapi/nes/lib/client";
+
+const client = process.env.NODE_ENV === "development"
+  ? new Nes.Client(`ws://localhost:5000`)
+  : new Nes.Client(`ws://${document.location.host}/`)
 
 ReactDOM.render(
   <React.StrictMode>
-    <p>{process.env.NODE_ENV}</p>
-    <App />
+    <App client={client}/>
   </React.StrictMode>,
   document.getElementById('root')
 );

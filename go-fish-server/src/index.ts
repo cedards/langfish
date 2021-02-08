@@ -1,6 +1,8 @@
 import { Server } from "@hapi/hapi"
 import * as Nes from "@hapi/nes"
+import * as Inert from "@hapi/inert"
 import {GoFishGame} from "@langfish/go-fish-engine"
+import * as Path from "path";
 
 const server = new Server({ port: 5000 })
 
@@ -53,6 +55,7 @@ const start = async () => {
     ])
 
     await server.register(Nes)
+    await server.register(Inert)
 
     async function publishNewGameState() {
         await server.publish("/game", {
@@ -60,6 +63,21 @@ const start = async () => {
             state: game.currentState()
         });
     }
+
+    server.route({
+        method: 'GET',
+        path: '/{path*}',
+        options: {
+            auth: false,
+            cors: { origin: ['*'] },
+        },
+        handler: {
+            directory: {
+                path: Path.join(__dirname, 'build'),
+                listing: true
+            }
+        }
+    })
 
     server.route({
         method: 'POST',
