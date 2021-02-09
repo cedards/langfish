@@ -8,8 +8,13 @@ export interface PlayerState {
     sets: Array<Array<Card>>,
 }
 
+export interface GoFishGameState {
+    deck: Array<Card>,
+    players: { [key: string]: PlayerState }
+}
+
 export interface GoFishGame {
-    currentState: () => { deck: Array<Card>, players: { [key: string]: PlayerState } }
+    currentState: () => GoFishGameState
     setDeck: (deck: Array<Card>) => void
     addPlayer: (playerName: string) => void
 

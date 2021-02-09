@@ -114,6 +114,7 @@ const start = async () => {
     })
 
     await server.start()
+    console.log("server was assigned port", server.info.port);
     console.log('Server running on %s', server.info.uri);
 };
 start()

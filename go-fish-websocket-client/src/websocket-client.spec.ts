@@ -1,0 +1,287 @@
+import * as Hapi from "@hapi/hapi"
+import * as Nes from "@hapi/nes"
+import {GoFishGame} from "@langfish/go-fish-engine";
+
+const GoFishGameplayPlugin = {
+    name: "go-fish-gameplay-plugin",
+    register: async function (server, options) {
+        await server.register(Nes)
+
+        async function publishNewGameState(gameId: string) {
+            const game = await options.gameRepository.getGame(gameId)
+            await server.publish(`/game/${gameId}`, {
+                type: 'UPDATE_GAME_STATE',
+                state: game.currentState()
+            });
+        }
+
+        server.route({
+            method: 'POST',
+            path: `/game/{gameId}`,
+            options: {
+                id: 'game',
+                handler: async (request, h) => {
+                    const payload = request.payload
+                    const game = await options.gameRepository.getGame(request.params.gameId)
+                    switch (payload.type) {
+                        case "DRAW":
+                            game.draw(payload.player)
+                            await publishNewGameState(request.params.gameId)
+                            break
+                    }
+                    return true;
+                }
+            }
+        })
+
+        const playerNames = [
+            "Alex",
+            "Bailey",
+            "Charlie",
+            "Drew",
+            "Elliott",
+            "Frankie",
+            "Harley",
+            "Jordan",
+            "Kendall",
+            "Lindsey",
+            "Morgan",
+        ]
+
+        server.subscription('/game/{gameId}', {
+            onSubscribe: async function (socket, path, params) {
+                const game = await options.gameRepository.getGame(params.gameId)
+                const playerName = playerNames.find(name => !Object.keys(game.currentState().players).includes(name))
+
+                game.addPlayer(playerName)
+
+                await socket.publish(path, {
+                    type: 'SET_NAME',
+                    name: playerName
+                })
+                await socket.publish(path, {
+                    type: 'UPDATE_GAME_STATE',
+                    state: game.currentState()
+                });
+                await publishNewGameState(params.gameId)
+            }
+        })
+
+    }
+}
+
+interface GoFishGameplayClient {
+    connect: () => Promise<void>
+    disconnect: () => Promise<void>
+    onSetPlayerName(callback: (name) => void): void
+    onUpdateGameState(callback: (newState) => void): void
+    joinGame(gameId: string): void
+    draw(): void;
+}
+
+interface GameRepository {
+    getGame: (gameId: string) => Promise<GoFishGame | null>
+}
+
+function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient {
+    const client = new Nes.Client(websocketUrl)
+    const setPlayerNameCallbacks: Array<(name) => void> = []
+    const updateGameStateCallbacks: Array<(GameState) => void> = []
+    let playerName: string | null = null
+    let joinedGame: string | null = null
+
+    return {
+        joinGame(gameId: string): void {
+            client.subscribe(`/game/${gameId}`, payload => {
+                try {
+                    switch (payload.type) {
+                        case "SET_NAME":
+                            playerName = payload.name
+                            setPlayerNameCallbacks.forEach(callback => callback(playerName))
+                            break
+                        case "UPDATE_GAME_STATE":
+                            updateGameStateCallbacks.forEach(callback => callback(payload.state))
+                            break
+                        default:
+                            console.warn("Didn't know how to handle message of type", payload.type)
+                    }
+                } catch(e) {
+                    console.error(e)
+                }
+            })
+            joinedGame = gameId
+        },
+        draw(): void {
+            client.request({
+                    path: `/game/${joinedGame}`,
+                    method: "POST",
+                    payload: {
+                        type: "DRAW",
+                        player: playerName
+                    }
+                }
+            )
+        },
+        onSetPlayerName(callback: (name) => void): void {
+            setPlayerNameCallbacks.push(callback)
+        },
+        onUpdateGameState(callback: (newState) => void): void {
+            updateGameStateCallbacks.push(callback)
+        },
+        connect(): Promise<void> {
+            return client.connect()
+        },
+        disconnect(): Promise<void> {
+            return client.disconnect()
+        }
+    }
+}
+
+describe('Go Fish websocket client', function () {
+    let server: Hapi.Server
+    let client: GoFishGameplayClient
+    let games: { [key: string]: GoFishGame }
+    const gameRepository: GameRepository = {
+        getGame: async gameId => games[gameId]
+    };
+
+    beforeEach(async function () {
+        const existingGame = GoFishGame()
+        existingGame.setDeck([
+            { id: 1, value: 'A' },
+            { id: 2, value: 'B' },
+            { id: 3, value: 'C' },
+        ])
+
+        games = { "existing-game": existingGame }
+
+        server = new Hapi.Server({port: 0})
+        await server.register({
+            plugin: GoFishGameplayPlugin,
+            options: {
+                gameRepository: gameRepository
+            }
+        })
+        await server.start()
+
+        client = GoFishGameplayClient(`ws://localhost:${server.info.port}`)
+        await client.connect()
+    })
+
+    afterEach(async function () {
+        await client.disconnect()
+        await server.stop()
+    })
+
+    describe('when I join a game', function () {
+        let namesSpy: jest.Mock
+        let gameStatesSpy: jest.Mock
+
+        beforeEach(function () {
+            namesSpy = jest.fn()
+            gameStatesSpy = jest.fn()
+            client.onSetPlayerName(namesSpy)
+            client.onUpdateGameState(gameStatesSpy)
+            client.joinGame("existing-game")
+        })
+
+        it('receives an assigned name for the game', function () {
+            return eventually(() => {
+                expect(namesSpy).toHaveBeenCalled()
+            })
+        })
+
+        it('receives the current game state', function () {
+            return eventually(() => {
+                expect(gameStatesSpy).toHaveBeenCalledWith(games["existing-game"].currentState())
+            })
+        })
+
+        describe('and someone else joins', function () {
+            let otherClient: GoFishGameplayClient
+            let otherClientNamesSpy: jest.Mock
+
+            beforeEach(async function () {
+                otherClientNamesSpy = jest.fn()
+
+                otherClient = GoFishGameplayClient(`ws://localhost:${server.info.port}`)
+                await otherClient.connect()
+
+                otherClient.onSetPlayerName(otherClientNamesSpy)
+                otherClient.joinGame("existing-game")
+            })
+
+            afterEach(async () => {
+                await otherClient.disconnect()
+            })
+
+            it('assigns a different name to the other player', function () {
+                return eventually(() => {
+                    expect(namesSpy).toHaveBeenCalled()
+                    expect(otherClientNamesSpy).toHaveBeenCalled()
+                    expect(namesSpy.mock.calls[0][0])
+                        .not.toEqual(otherClientNamesSpy.mock.calls[0][0])
+                })
+            })
+
+            it('receives updated game state with the new player', function () {
+                return eventually(() => {
+                    const playerName = latestCallTo(namesSpy)[0]
+                    const otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                    const gameState = latestCallTo(gameStatesSpy)[0]
+
+                    expect(gameState.players[playerName]).toBeTruthy()
+                    expect(gameState.players[otherPlayerName]).toBeTruthy()
+                })
+            })
+
+            describe('and the other player draws a card', function () {
+                let otherClientGameStatesSpy: jest.Mock
+
+                beforeEach(async function () {
+                    otherClientGameStatesSpy = jest.fn()
+                    otherClient.onUpdateGameState(otherClientGameStatesSpy)
+                    await eventually(() => {
+                        expect(otherClientNamesSpy).toHaveBeenCalled()
+                    })
+                    otherClient.draw()
+                })
+
+                it('receives updated game state on all clients in the game', function () {
+                    return eventually(() => {
+                        const otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                        const myState = latestCallTo(gameStatesSpy)[0]
+                        const otherPlayerState = latestCallTo(otherClientGameStatesSpy)[0]
+
+                        expect(myState.players[otherPlayerName].hand.length).toEqual(1)
+                        expect(otherPlayerState.players[otherPlayerName].hand.length).toEqual(1)
+                    })
+                })
+            })
+        })
+    })
+})
+
+function eventually(assertion: () => void) {
+    const now = () => new Date().getTime()
+    const stopTime = now() + 3000
+    return new Promise<void>((resolve, reject) => {
+        const timer = setInterval(() => {
+            try {
+                assertion()
+            } catch(e) {
+                if(now() > stopTime) {
+                    clearInterval(timer)
+                    reject(e)
+                }
+                return
+            }
+            clearInterval(timer)
+            resolve()
+        }, 2)
+    })
+}
+
+function latestCallTo(spy: jest.Mock) {
+    return spy.mock.calls[spy.mock.calls.length - 1]
+}
