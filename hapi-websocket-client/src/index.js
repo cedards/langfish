@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Nes from "@hapi/nes/lib/client";
+import {GoFishGameplayClient} from "@langfish/go-fish-websocket-client/dist/browser-client";
 
 const client = process.env.NODE_ENV === "development"
-  ? new Nes.Client(`ws://localhost:5000`)
-  : new Nes.Client(`ws://${document.location.host}/`)
+  ? new GoFishGameplayClient(`ws://localhost:5000`)
+  : new GoFishGameplayClient(`ws://${document.location.host}/`)
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,29 +1,9 @@
 import { Server } from "@hapi/hapi"
-import * as Nes from "@hapi/nes"
-import * as Inert from "@hapi/inert"
 import {GoFishGame} from "@langfish/go-fish-engine"
-import * as Path from "path";
+import {GoFishGameplayPlugin} from "@langfish/go-fish-websocket-client"
+import {FrontendPlugin} from "./frontend-plugin";
 
 const server = new Server({ port: 5000 })
-
-interface MessagePayload {
-    type: string,
-    player: string
-}
-
-const playerNames = [
-    "Alex",
-    "Bailey",
-    "Charlie",
-    "Drew",
-    "Elliott",
-    "Frankie",
-    "Harley",
-    "Jordan",
-    "Kendall",
-    "Lindsey",
-    "Morgan",
-]
 
 const start = async () => {
     const game = GoFishGame()
@@ -53,68 +33,20 @@ const start = async () => {
         { id: 23, value: "🔪" },
         { id: 24, value: "🦅" },
     ])
-
-    await server.register(Nes)
-    await server.register(Inert)
-
-    async function publishNewGameState() {
-        await server.publish("/game", {
-            type: 'UPDATE_GAME_STATE',
-            state: game.currentState()
-        });
+    const gameRepository = {
+        getGame(gameId) {
+            if(gameId === "game1") return game
+            return null
+        }
     }
 
-    server.route({
-        method: 'GET',
-        path: '/{path*}',
-        options: {
-            auth: false,
-            cors: { origin: ['*'] },
-        },
-        handler: {
-            directory: {
-                path: Path.join(__dirname, 'build'),
-                listing: true
-            }
-        }
+    await server.register({
+        plugin: GoFishGameplayPlugin,
+        options: { gameRepository: gameRepository }
     })
-
-    server.route({
-        method: 'POST',
-        path: '/game',
-        options: {
-            id: 'game',
-            handler: (request, h) => {
-                const payload = request.payload as MessagePayload
-                switch (payload.type) {
-                    case "DRAW":
-                        game.draw(payload.player)
-                        publishNewGameState()
-                        break
-                }
-                return true;
-            }
-        }
-    })
-
-    server.subscription('/game', {
-        onSubscribe: async function(socket, path, params) {
-            const playerName = playerNames.find(name => !Object.keys(game.currentState().players).includes(name))
-            game.addPlayer(playerName)
-            await socket.publish(path, {
-                type: 'SET_NAME',
-                name: playerName
-            })
-            await socket.publish(path, {
-                type: 'UPDATE_GAME_STATE',
-                state: game.currentState()
-            });
-            await publishNewGameState()
-        }
-    })
+    await server.register(FrontendPlugin)
 
     await server.start()
-    console.log("server was assigned port", server.info.port);
     console.log('Server running on %s', server.info.uri);
 };
 start()

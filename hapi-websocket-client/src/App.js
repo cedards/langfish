@@ -7,39 +7,19 @@ function App({ client }) {
 
   useEffect(() => {
     client.connect().then(() => {
-      client.subscribe('/game', (payload) => {
-        console.log("received message:", payload);
-        switch(payload.type) {
-          case "SET_NAME":
-            updatePlayerName(payload.name)
-            break
-          case "UPDATE_GAME_STATE":
-            updateGameState(payload.state)
-            break
-          default:
-            console.warn("Didn't know how to handle message of type", payload.type)
-        }
-      })
+      client.joinGame('game1')
+      client.onSetPlayerName(updatePlayerName)
+      client.onUpdateGameState(updateGameState)
     })
 
     return () => {
-      client.unsubscribe('/game', null)
+      client.disconnect()
     }
   }, [])
 
   const draw = (e) => {
     e.preventDefault();
-    if(!playerName) return;
-
-    client.request({
-        path: "game",
-        method: "POST",
-        payload: {
-          type: "DRAW",
-          player: playerName
-        }
-      }
-    )
+    client.draw()
   }
 
   return (
