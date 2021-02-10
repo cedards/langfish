@@ -5,8 +5,6 @@
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-  },
   "scripts": {
     "build": "tsc",
     "test": "jest"

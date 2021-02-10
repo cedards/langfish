@@ -1,6 +1,6 @@
 import { Server } from "@hapi/hapi"
 import {GoFishGame} from "@langfish/go-fish-engine"
-import {GoFishGameplayPlugin} from "@langfish/go-fish-websocket-client"
+import {GoFishGameplayPlugin} from "@langfish/go-fish-websocket-server-plugin"
 import {FrontendPlugin} from "./frontend-plugin";
 
 const server = new Server({ port: 5000 })

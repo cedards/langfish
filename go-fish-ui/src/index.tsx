@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {GoFishGameplayClient} from "@langfish/go-fish-websocket-client/dist/browser-client";
+import {GoFishGameplayClient} from "@langfish/go-fish-websocket-client";
 
 const client = process.env.NODE_ENV === "development"
     ? GoFishGameplayClient(`ws://localhost:5000`)

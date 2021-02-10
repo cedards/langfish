@@ -1,10 +1,12 @@
 import * as Hapi from "@hapi/hapi"
-import {GoFishGame} from "@langfish/go-fish-engine";
+import {GoFishGame} from "@langfish/go-fish-engine"
 import {
     GameRepository,
+    GoFishGameplayPlugin,
+} from "@langfish/go-fish-websocket-server-plugin"
+import {
     GoFishGameplayClientInterface,
     GoFishGameplayClient,
-    GoFishGameplayPlugin
 } from ".";
 
 describe('Go Fish websocket client', function () {

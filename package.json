@@ -10,6 +10,11 @@
     "go-fish-engine",
     "go-fish-server",
     "go-fish-ui",
-    "go-fish-websocket-client"
-  ]
+    "go-fish-websocket-client",
+    "go-fish-websocket-server-plugin"
+  ],
+  "scripts": {
+    "build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-websocket-server-plugin run build && yarn workspace @langfish/go-fish-websocket-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
+    "start": "yarn workspace @langfish/go-fish-server run start"
+  }
 }

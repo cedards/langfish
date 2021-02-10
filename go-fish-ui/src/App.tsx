@@ -1,8 +1,7 @@
-import React, {EventHandler, MouseEventHandler, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-websocket-client"
 import './App.css';
-import {GoFishGameState} from "@langfish/go-fish-engine";
-import {Card} from "@langfish/go-fish-engine/dist";
+import {GoFishGameState, Card} from "@langfish/go-fish-engine";
 
 interface AppProps {
     client: GoFishGameplayClientInterface
