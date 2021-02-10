@@ -5,34 +5,48 @@ import {FrontendPlugin} from "./frontend-plugin";
 
 const server = new Server({ port: process.env.PORT || 5000 })
 
+function shuffleDeck(deck) {
+    const shuffledDeck = []
+    while(deck.length > 0) {
+        const choice = Math.floor(Math.random() * deck.length)
+        shuffledDeck.push(deck[choice])
+        deck = deck.slice(0,choice).concat(deck.slice(choice+1))
+    }
+    return shuffledDeck
+}
+
+function populateDeck(items) {
+    const deck = []
+    items.forEach(item => {
+        deck.push(item)
+        deck.push(item)
+        deck.push(item)
+        deck.push(item)
+        deck.push(item)
+        deck.push(item)
+    })
+    return deck.map((item, index) => ({
+        id: index+1,
+        value: item
+    }))
+}
+
+function buildDeck() {
+    return shuffleDeck(populateDeck([
+        "🦆",
+        "🏎️",
+        "📃",
+        "🥔",
+        "🔑",
+        "🥄",
+        "🐻",
+        "🍎",
+    ]))
+}
+
 const start = async () => {
     const game = GoFishGame()
-    game.setDeck([
-        { id: 1, value: "🍎" },
-        { id: 2, value: "🐺" },
-        { id: 3, value: "🥔" },
-        { id: 4, value: "🥄" },
-        { id: 5, value: "🔪" },
-        { id: 6, value: "🦅" },
-        { id: 7, value: "🍎" },
-        { id: 8, value: "🐺" },
-        { id: 9, value: "🥔" },
-        { id: 10, value: "🥄" },
-        { id: 11, value: "🔪" },
-        { id: 12, value: "🦅" },
-        { id: 13, value: "🍎" },
-        { id: 14, value: "🐺" },
-        { id: 15, value: "🥔" },
-        { id: 16, value: "🥄" },
-        { id: 17, value: "🔪" },
-        { id: 18, value: "🦅" },
-        { id: 19, value: "🍎" },
-        { id: 20, value: "🐺" },
-        { id: 21, value: "🥔" },
-        { id: 22, value: "🥄" },
-        { id: 23, value: "🔪" },
-        { id: 24, value: "🦅" },
-    ])
+    game.setDeck(buildDeck())
     const gameRepository = {
         getGame(gameId) {
             if(gameId === "game1") return game
@@ -50,4 +64,3 @@ const start = async () => {
     console.log('Server running on %s', server.info.uri);
 };
 start()
-
