@@ -1,10 +1,15 @@
 import * as Hapi from "@hapi/hapi"
 import {GoFishGame} from "@langfish/go-fish-engine";
-import {GameRepository, GoFishGameplayClient, GoFishGameplayPlugin} from ".";
+import {
+    GameRepository,
+    GoFishGameplayClientInterface,
+    GoFishGameplayClient,
+    GoFishGameplayPlugin
+} from ".";
 
 describe('Go Fish websocket client', function () {
     let server: Hapi.Server
-    let client: GoFishGameplayClient
+    let client: GoFishGameplayClientInterface
     let games: { [key: string]: GoFishGame }
     const gameRepository: GameRepository = {
         getGame: async gameId => games[gameId]
@@ -63,7 +68,7 @@ describe('Go Fish websocket client', function () {
         })
 
         describe('and someone else joins', function () {
-            let otherClient: GoFishGameplayClient
+            let otherClient: GoFishGameplayClientInterface
             let otherClientNamesSpy: jest.Mock
 
             beforeEach(async function () {

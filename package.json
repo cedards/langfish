@@ -9,8 +9,7 @@
   "workspaces": [
     "go-fish-engine",
     "go-fish-server",
-    "go-fish-websocket-client",
-    "hapi-websocket-server",
-    "hapi-websocket-client"
+    "go-fish-ui",
+    "go-fish-websocket-client"
   ]
 }

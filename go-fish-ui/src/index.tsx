@@ -6,8 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import {GoFishGameplayClient} from "@langfish/go-fish-websocket-client/dist/browser-client";
 
 const client = process.env.NODE_ENV === "development"
-  ? new GoFishGameplayClient(`ws://localhost:5000`)
-  : new GoFishGameplayClient(`ws://${document.location.host}/`)
+    ? GoFishGameplayClient(`ws://localhost:5000`)
+    : GoFishGameplayClient(`ws://${document.location.host}/`)
 
 ReactDOM.render(
   <React.StrictMode>

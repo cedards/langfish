@@ -1,6 +1,6 @@
 import * as Nes from "@hapi/nes/lib/client";
 
-export interface GoFishGameplayClient {
+export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
     disconnect: () => Promise<void>
     onSetPlayerName(callback: (name) => void): void
@@ -9,7 +9,7 @@ export interface GoFishGameplayClient {
     draw(): void;
 }
 
-export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient {
+export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
     const client = new Nes.Client(websocketUrl)
     const setPlayerNameCallbacks: Array<(name) => void> = []
     const updateGameStateCallbacks: Array<(GameState) => void> = []
