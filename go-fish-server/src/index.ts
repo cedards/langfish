@@ -3,7 +3,7 @@ import {GoFishGame} from "@langfish/go-fish-engine"
 import {GoFishGameplayPlugin} from "@langfish/go-fish-websocket-server-plugin"
 import {FrontendPlugin} from "./frontend-plugin";
 
-const server = new Server({ port: 5000 })
+const server = new Server({ port: process.env.PORT || 5000 })
 
 const start = async () => {
     const game = GoFishGame()

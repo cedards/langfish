@@ -7,7 +7,7 @@ import {GoFishGameplayClient} from "@langfish/go-fish-websocket-client";
 
 const client = process.env.NODE_ENV === "development"
     ? GoFishGameplayClient(`ws://localhost:5000`)
-    : GoFishGameplayClient(`ws://${document.location.host}/`)
+    : GoFishGameplayClient(`wss://${document.location.host}/`)
 
 ReactDOM.render(
   <React.StrictMode>
