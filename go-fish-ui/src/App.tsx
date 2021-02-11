@@ -93,68 +93,68 @@ function Game(
         return selectedCardValues.every(value => value === selectedCardValues[0])
     }
 
-    return <div>
-        <section aria-labelledby="myName">
-            <h1 id="myName">😀 {playerName}</h1>
-            <ul className="my-hand" aria-label="my hand">
-                { sortCards(game.players[playerName].hand).map(card =>
-                    <li
-                        className="card"
-                        key={card.id}
-                        aria-label={`hidden card: ${card.value}`}
-                        role="checkbox"
-                        aria-selected={selectedCards.includes(card.id)}
-                        onClick={selectCard(card.id)}
-                    >
-                        {card.value}
-                    </li>
-                )}
-            </ul>
-            <ul className="sets" aria-label="my sets">
-                { game.players[playerName].sets.map((set, setNumber) =>
-                    <li
-                        className="scored-set"
-                        key={`${playerName}-${set[0].value}-set-${setNumber}`}
-                        aria-label={`set: ${set[0].value}`}
-                    >
-                        {set[0].value}
-                    </li>
-                )}
-                {
-                    readyToScore()
-                        ? <li><button className="score-button" onClick={handleScore}>🌟🌟🌟</button></li>
-                        : null
-                }
-            </ul>
-        </section>
-        <p>There are {game.deck.length} cards left in the deck. <button onClick={draw}>Draw a card</button></p>
-        {
-            Object.keys(game.players).filter(player => player !== playerName).map(player =>
-                <section key={player} aria-labelledby={player}>
-                    <h3 id={player}>{
-                        selectedCards.length > 0
-                            ? <button onClick={giveTo(player)}>{player}</button>
-                            : player
-                    }</h3>
-                    <ul className="other-player-hand">
-                        {sortCards(game.players[player].hand).map(card =>
-                            <li className="hidden-card" aria-label="hidden card" key={card.id} />
-                        )}
-                    </ul>
-                    <ul className="sets" aria-label={`sets for ${player}`}>
-                        { game.players[player].sets.map((set, setNumber) =>
-                            <li
-                                className="scored-set"
-                                key={`${player}-${set[0].value}-set-${setNumber}`}
-                                aria-label={`set: ${set[0].value}`}
-                            >
-                                {set[0].value}
-                            </li>
-                        )}
-                    </ul>
-                </section>
-            )
-        }
+    return <div className="game-table">
+        <button aria-label="deck" className="deck" onClick={draw}>{game.deck.length}</button>
+        <div className="play-areas">
+            <section aria-labelledby="myName" className="play-area">
+                <h1 id="myName">😀 {playerName}</h1>
+                <ul className={`my-hand ${readyToScore() ? "ready-to-score" : ""}`} aria-label="my hand">
+                    { sortCards(game.players[playerName].hand).map(card =>
+                        <li
+                            className="card"
+                            key={card.id}
+                            aria-label={`hidden card: ${card.value}`}
+                            role="checkbox"
+                            aria-selected={selectedCards.includes(card.id)}
+                            onClick={selectCard(card.id)}
+                        >
+                            {card.value}
+                        </li>
+                    )}
+                </ul>
+                <ul className="sets" aria-label="my sets">
+                    { game.players[playerName].sets.map((set, setNumber) =>
+                        <li
+                            className="scored-set"
+                            key={`${playerName}-${set[0].value}-set-${setNumber}`}
+                            aria-label={`set: ${set[0].value}`}
+                        >
+                            {set[0].value}
+                        </li>
+                    )}
+                    {
+                        readyToScore()
+                            ? <li className="score-button"><button onClick={handleScore}>+1</button></li>
+                            : null
+                    }
+                </ul>
+            </section>
+            {
+                Object.keys(game.players).filter(player => player !== playerName).map(player =>
+                    <section key={player} aria-labelledby={player} className="play-area">
+                        <h3 id={player}>{
+                            <button onClick={giveTo(player)} disabled={selectedCards.length === 0}>{player}</button>
+                        }</h3>
+                        <ul className="other-player-hand">
+                            {sortCards(game.players[player].hand).map(card =>
+                                <li className="hidden-card" aria-label="hidden card" key={card.id} />
+                            )}
+                        </ul>
+                        <ul className="sets" aria-label={`sets for ${player}`}>
+                            { game.players[player].sets.map((set, setNumber) =>
+                                <li
+                                    className="scored-set"
+                                    key={`${player}-${set[0].value}-set-${setNumber}`}
+                                    aria-label={`set: ${set[0].value}`}
+                                >
+                                    {set[0].value}
+                                </li>
+                            )}
+                        </ul>
+                    </section>
+                )
+            }
+        </div>
     </div>
 }
 

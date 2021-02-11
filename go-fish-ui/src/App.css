@@ -1,5 +1,41 @@
 .App {
   text-align: center;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.game-table {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  width: 100%;
+}
+
+.play-areas {
+  flex-grow: 1;
+}
+
+h1 {
+  width: 100%;
+}
+
+.deck {
+  flex-basis: auto;
+
+  border-color: black;
+  border-width: 3px 9px 9px 3px;
+  border-style: solid double double solid;
+
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+
+  margin: 1rem;
+  background-color: gray;
+  min-width: 6rem;
+  height: 8rem;
+
+  cursor: grab;
 }
 
 .my-hand, .other-player-hand, .sets {
@@ -38,7 +74,11 @@
 }
 
 .card[aria-selected="true"] {
-  border: solid lime 3px;
+  border: solid blue 3px;
+}
+
+.ready-to-score .card[aria-selected="true"] {
+  border-color: #00CC00;
 }
 
 .hidden-card {
@@ -46,25 +86,36 @@
 }
 
 h3 button {
-  font-size: inherit;
+  height: 2rem;
+  box-sizing: border-box;
+  color: black;
+  background: none;
+  font-size: 1.4rem;
   font-weight: bold;
+  border: none;
 }
 
-h3 button::before {
+h3 button:not([disabled]) {
+  /*background: #EEEEEE;*/
+  color: blue;
+  cursor: pointer;
+}
+
+h3 button:not([disabled])::before {
   content: "➡️ ";
 }
 
-.score-button {
-  font-size: 2rem;
-  padding: 0.5rem;
-  border: solid 3px lime;
+.sets {
+  min-height: 5rem;
+  align-items: center;
+  /*border: dashed black 2px;*/
 }
 
 .sets li {
   list-style-type: none;
 }
 
-.scored-set {
+.scored-set, .score-button {
   width: 2rem;
   height: 3rem;
   text-align: center;
@@ -76,6 +127,53 @@ h3 button::before {
   font-size: 1.5rem;
 
   border-color: black;
-  border-width: 3px 6px 6px 3px;
+  border-width: 2px 6px 6px 2px;
   border-style: solid double double solid;
+}
+
+@keyframes readytoscore {
+  from {
+    border-color: white;
+    width: 2rem;
+    height: 3rem;
+    margin: 0.2rem;
+    font-size: 1.25rem;
+  }
+
+  50% {
+    border-color: #00CC00;
+    width: 3rem;
+    height: 4.5rem;
+    margin: -0.6rem -0.3rem;
+    font-size: 2rem;
+  }
+
+  to {
+    border-color: white;
+    width: 2rem;
+    height: 3rem;
+    margin: 0.2rem;
+    font-size: 1.25rem;
+  }
+}
+
+.score-button {
+  border: dashed #00CC00 3px;
+  animation-name: readytoscore;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+.score-button button {
+  color: #00CC00;
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.play-area {
+  border: dashed silver 2px;
+  margin: 0.5rem;
 }

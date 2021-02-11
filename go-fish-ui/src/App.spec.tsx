@@ -121,26 +121,26 @@ test('playing a game', async () => {
 
     expect(screen.getByText(/talapas/)).toBeInTheDocument()
     expect(screen.getByText(/lilu/)).toBeInTheDocument()
-    expect(screen.getByText(/There are 4 cards left in the deck/)).toBeInTheDocument()
+    expect(screen.getByLabelText("deck")).toHaveTextContent("4")
 
-    const talapasHand = within(screen.getByLabelText("😀 talapas")).queryAllByRole("checkbox");
+    const talapasHand = within(screen.getByLabelText(/talapas/)).queryAllByRole("checkbox");
     expect(talapasHand.length).toEqual(5)
     expect(talapasHand.map(element => element.textContent)).toEqual(['A','A','A','B','B'])
-    expect(within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("set: C").length).toEqual(1)
+    expect(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("set: C").length).toEqual(1)
 
     expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("hidden card").length).toEqual(2)
     expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("set: D").length).toEqual(1)
 
     act(() => {
-        screen.getByText("Draw a card").click()
+        screen.getByLabelText("deck").click()
     })
     expect(fakeClient.draw).toHaveBeenCalled()
 
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[1].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1].click()
     })
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
     })
     act(() => {
         screen.getByText("lilu").click()
@@ -149,13 +149,13 @@ test('playing a game', async () => {
     expect(fakeClient.give).toHaveBeenCalledWith([9,8], "lilu")
 
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()
     })
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
     })
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
     })
     act(() => {
         screen.getByText("lilu").click()
@@ -163,31 +163,31 @@ test('playing a game', async () => {
     expect(fakeClient.give).toHaveBeenCalledWith([7], "lilu")
 
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()
     })
-    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[1].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1].click()
     })
-    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
     })
-    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[2].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[2].click()
     })
-    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
     })
-    expect(screen.queryByText("🌟🌟🌟")).toBeInTheDocument()
+    expect(screen.queryByText("+1")).toBeInTheDocument()
 
     act(() => {
-        screen.getByText("🌟🌟🌟").click()
+        screen.getByText("+1").click()
     })
     expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
-    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
 
     unmount()
 
