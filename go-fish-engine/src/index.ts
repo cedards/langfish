@@ -17,10 +17,9 @@ export interface GoFishGame {
     currentState: () => GoFishGameState
     setDeck: (deck: Array<Card>) => void
     addPlayer: (playerName: string) => void
-
-    draw(playerName: string): void
-
-    give(alex: string, bailey: string, number: number): void
+    draw: (playerName: string) => void
+    give: (donor: string, recipient: string, cardId: number) => void
+    score: (playerName: string, cardIds: number[]) => void;
 }
 
 export function GoFishGame(): GoFishGame {
@@ -56,6 +55,20 @@ export function GoFishGame(): GoFishGame {
             const card = _players[fromPlayer].hand.find(card => card.id === cardId)
             _players[fromPlayer].hand = _players[fromPlayer].hand.filter(card => card.id !== cardId)
             _players[toPlayer].hand.push(card)
+        },
+
+        score(playerName: string, cardIds: number[]): void {
+            if(cardIds.length !== 3) return
+            const cards = cardIds.map(cardId =>
+                _players[playerName].hand.find(card => card.id === cardId)
+            )
+            if(cards.some(card => !card)) return
+            if(!cards.every(card => card.value === cards[0].value)) return
+
+            _players[playerName].sets.push(cards)
+            _players[playerName].hand = _players[playerName].hand.filter(card =>
+                !cardIds.includes(card.id)
+            )
         },
     }
 }

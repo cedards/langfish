@@ -111,4 +111,72 @@ describe("A new Go Fish game", function () {
             ])
         })
     })
+
+    describe('scoring sets', function () {
+        beforeEach(function () {
+            game.setDeck([
+                {id: 1, value: "apple"},
+                {id: 2, value: "apple"},
+                {id: 3, value: "apple"},
+                {id: 4, value: "banana"},
+            ])
+            game.addPlayer("alex")
+
+            game.draw("alex")
+            game.draw("alex")
+            game.draw("alex")
+            game.draw("alex")
+
+            expect(game.currentState().players["alex"].hand.map(card => card.value))
+                .toEqual(["apple", "apple", "apple", "banana"])
+            expect(game.currentState().players["alex"].sets).toEqual([])
+        })
+
+        it('allows scoring a set of three of a kind', function () {
+            game.score("alex", [1,2,3])
+            expect(game.currentState().players["alex"].sets).toEqual([
+                [
+                    {id: 1, value: "apple"},
+                    {id: 2, value: "apple"},
+                    {id: 3, value: "apple"},
+                ]
+            ])
+            expect(game.currentState().players["alex"].hand).toEqual([
+                {id: 4, value: "banana"}
+            ])
+        })
+
+        it('does not allow scoring a set of less than three', function () {
+            game.score("alex", [1,2])
+            expect(game.currentState().players["alex"].sets).toEqual([])
+            expect(game.currentState().players["alex"].hand).toEqual([
+                {id: 1, value: "apple"},
+                {id: 2, value: "apple"},
+                {id: 3, value: "apple"},
+                {id: 4, value: "banana"}
+            ])
+        })
+
+        it('does not allow scoring a set of mixed cards', function () {
+            game.score("alex", [2,3,4])
+            expect(game.currentState().players["alex"].sets).toEqual([])
+            expect(game.currentState().players["alex"].hand).toEqual([
+                {id: 1, value: "apple"},
+                {id: 2, value: "apple"},
+                {id: 3, value: "apple"},
+                {id: 4, value: "banana"}
+            ])
+        })
+
+        it('does not allow scoring cards the player does not own', function () {
+            game.score("alex", [5,6,7])
+            expect(game.currentState().players["alex"].sets).toEqual([])
+            expect(game.currentState().players["alex"].hand).toEqual([
+                {id: 1, value: "apple"},
+                {id: 2, value: "apple"},
+                {id: 3, value: "apple"},
+                {id: 4, value: "banana"}
+            ])
+        })
+    })
 })
