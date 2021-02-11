@@ -163,6 +163,50 @@ describe('Go Fish websocket client', function () {
             })
         })
     })
+
+    describe('when I score a set', function () {
+        let assignedName: string | null
+        let gameStatesSpy: jest.Mock
+
+        beforeEach(async function () {
+            const gameWithIdenticalCards = GoFishGame()
+            gameWithIdenticalCards.setDeck([
+                { id: 1, value: 'A' },
+                { id: 2, value: 'A' },
+                { id: 3, value: 'A' },
+            ])
+            games["game-with-identical-cards"] = gameWithIdenticalCards
+
+            gameStatesSpy = jest.fn()
+            assignedName = null
+            client.onSetPlayerName(name => assignedName = name)
+            client.onUpdateGameState(gameStatesSpy)
+            client.joinGame("game-with-identical-cards")
+            await eventually(() => { if(!assignedName) throw new Error("Never received player name for game-with-identical-cards") })
+
+            client.draw()
+            client.draw()
+            client.draw()
+            await eventually(() => {
+                expect(latestCallTo(gameStatesSpy)[0].players[assignedName].hand.length).toEqual(3)
+            })
+
+            expect(latestCallTo(gameStatesSpy)[0].players[assignedName].sets.length).toEqual(0)
+            client.score([1,2,3])
+        })
+
+        it('broadcasts updated game state to all clients', function () {
+            return eventually(() => {
+                expect(latestCallTo(gameStatesSpy)[0].players[assignedName].sets).toEqual([
+                    [
+                        { id: 1, value: 'A' },
+                        { id: 2, value: 'A' },
+                        { id: 3, value: 'A' },
+                    ]
+                ])
+            })
+        })
+    })
 })
 
 function eventually(assertion: () => void) {

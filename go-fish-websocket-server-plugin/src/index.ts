@@ -37,6 +37,10 @@ export const GoFishGameplayPlugin = {
                             })
                             await publishNewGameState(request.params.gameId)
                             break
+                        case "SCORE":
+                            game.score(payload.player, payload.cardIds)
+                            await publishNewGameState(request.params.gameId)
+                            break
                     }
                     return true;
                 }

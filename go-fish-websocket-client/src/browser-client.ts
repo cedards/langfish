@@ -8,6 +8,7 @@ export interface GoFishGameplayClientInterface {
     joinGame(gameId: string): void
     draw(): void;
     give(cardIds: Array<number>, recipientName: string): void;
+    score(cardIds: number[]): void;
 }
 
 export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
@@ -56,6 +57,17 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                     type: "GIVE",
                     player: playerName,
                     recipient: recipientName,
+                    cardIds
+                }
+            })
+        },
+        score(cardIds: number[]): void {
+            client.request({
+                path: `/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "SCORE",
+                    player: playerName,
                     cardIds
                 }
             })
