@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-websocket-server-plugin run build && yarn workspace @langfish/go-fish-websocket-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
+    "dev-server": "yarn workspace @langfish/go-fish-ui run start",
     "start": "yarn workspace @langfish/go-fish-server run start"
   }
 }
