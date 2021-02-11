@@ -108,7 +108,11 @@ function Game(
                             aria-selected={selectedCards.includes(card.id)}
                             onClick={selectCard(card.id)}
                         >
-                            {card.value}
+                            {
+                                card.image
+                                    ? <img src={card.image} alt={card.value} />
+                                    : card.value
+                            }
                         </li>
                     )}
                 </ul>
@@ -119,7 +123,11 @@ function Game(
                             key={`${playerName}-${set[0].value}-set-${setNumber}`}
                             aria-label={`set: ${set[0].value}`}
                         >
-                            {set[0].value}
+                            {
+                                set[0].image
+                                    ? <img src={set[0].image} alt={set[0].value} />
+                                    : set[0].value
+                            }
                         </li>
                     )}
                     {
@@ -147,7 +155,11 @@ function Game(
                                     key={`${player}-${set[0].value}-set-${setNumber}`}
                                     aria-label={`set: ${set[0].value}`}
                                 >
-                                    {set[0].value}
+                                    {
+                                        set[0].image
+                                            ? <img src={set[0].image} alt={set[0].value} />
+                                            : set[0].value
+                                    }
                                 </li>
                             )}
                         </ul>

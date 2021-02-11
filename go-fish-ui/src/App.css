@@ -7,7 +7,7 @@
 .game-table {
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -50,6 +50,10 @@ h1 {
   list-style-type: none;
   width: 6rem;
   height: 8rem;
+}
+
+.my-hand li img, .scored-set img {
+  height: 100%;
 }
 
 .other-player-hand li {
@@ -129,6 +133,8 @@ h3 button:not([disabled])::before {
   border-color: black;
   border-width: 2px 6px 6px 2px;
   border-style: solid double double solid;
+
+  overflow: hidden;
 }
 
 @keyframes readytoscore {

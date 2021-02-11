@@ -1,6 +1,7 @@
 export interface Card {
     id: number
     value: string
+    image?: string
 }
 
 export interface PlayerState {
