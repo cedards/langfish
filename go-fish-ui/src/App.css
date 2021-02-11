@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-.my-hand, .other-player-hand {
+.my-hand, .other-player-hand, .sets {
   padding: 0;
   margin: 0;
   display: flex;
@@ -52,4 +52,30 @@ h3 button {
 
 h3 button::before {
   content: "➡️ ";
+}
+
+.score-button {
+  font-size: 2rem;
+  padding: 0.5rem;
+  border: solid 3px lime;
+}
+
+.sets li {
+  list-style-type: none;
+}
+
+.scored-set {
+  width: 2rem;
+  height: 3rem;
+  text-align: center;
+  margin: 0.2rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+
+  border-color: black;
+  border-width: 3px 6px 6px 3px;
+  border-style: solid double double solid;
 }

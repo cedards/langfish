@@ -29,7 +29,13 @@ function App({ client }: AppProps) {
         <div className="App">
             {
                 (playerName && gameState)
-                    ? <Game playerName={playerName} game={gameState} draw={draw} give={client.give}/>
+                    ? <Game
+                        playerName={playerName}
+                        game={gameState}
+                        draw={draw}
+                        give={client.give}
+                        score={client.score}
+                    />
                     : <LoadingScreen/>
             }
         </div>
@@ -50,11 +56,12 @@ function sortCards(cards: Array<Card>): Array<Card> {
 }
 
 function Game(
-    {playerName, game, draw, give}: {
+    {playerName, game, draw, give, score}: {
         playerName: string,
         game: GoFishGameState,
         draw: React.MouseEventHandler,
-        give: (cards: Array<number>, recipient: string) => void
+        give: (cards: Array<number>, recipient: string) => void,
+        score: (cards: Array<number>) => void
     }
 ) {
     const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
@@ -70,6 +77,20 @@ function Game(
     const giveTo = (recipient: string) => () => {
         give(selectedCards, recipient)
         updateSelectedCards([])
+    }
+
+    const handleScore = (e: React.MouseEvent) => {
+        e.preventDefault()
+        score(selectedCards)
+        updateSelectedCards([])
+    }
+
+    const readyToScore: () => boolean = () => {
+        if(selectedCards.length !== 3) return false
+        const selectedCardValues = game.players[playerName].hand
+            .filter(card => selectedCards.includes(card.id))
+            .map(card => card.value)
+        return selectedCardValues.every(value => value === selectedCardValues[0])
     }
 
     return <div>
@@ -89,6 +110,22 @@ function Game(
                     </li>
                 )}
             </ul>
+            <ul className="sets" aria-label="my sets">
+                { game.players[playerName].sets.map((set, setNumber) =>
+                    <li
+                        className="scored-set"
+                        key={`${playerName}-${set[0].value}-set-${setNumber}`}
+                        aria-label={`set: ${set[0].value}`}
+                    >
+                        {set[0].value}
+                    </li>
+                )}
+                {
+                    readyToScore()
+                        ? <li><button className="score-button" onClick={handleScore}>🌟🌟🌟</button></li>
+                        : null
+                }
+            </ul>
         </section>
         <p>There are {game.deck.length} cards left in the deck. <button onClick={draw}>Draw a card</button></p>
         {
@@ -102,6 +139,17 @@ function Game(
                     <ul className="other-player-hand">
                         {sortCards(game.players[player].hand).map(card =>
                             <li className="hidden-card" aria-label="hidden card" key={card.id} />
+                        )}
+                    </ul>
+                    <ul className="sets" aria-label={`sets for ${player}`}>
+                        { game.players[player].sets.map((set, setNumber) =>
+                            <li
+                                className="scored-set"
+                                key={`${player}-${set[0].value}-set-${setNumber}`}
+                                aria-label={`set: ${set[0].value}`}
+                            >
+                                {set[0].value}
+                            </li>
                         )}
                     </ul>
                 </section>

@@ -33,6 +33,7 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
         },
         draw: jest.fn(),
         give: jest.fn(),
+        score: jest.fn(),
         onSetPlayerName: (callback) => {
             _setPlayerNameCallbacks.push(callback)
         },
@@ -91,15 +92,28 @@ test('playing a game', async () => {
                         { id: 8, value: 'B' },
                         { id: 9, value: 'A' },
                         { id: 10, value: 'B' },
+                        { id: 11, value: 'A' },
                     ],
-                    sets: []
+                    sets: [
+                        [
+                            { id: 12, value: 'C' },
+                            { id: 13, value: 'C' },
+                            { id: 14, value: 'C' },
+                        ]
+                    ]
                 },
                 "lilu": {
                     hand: [
                         { id: 5, value: 'E' },
                         { id: 6, value: 'F' },
                     ],
-                    sets: []
+                    sets: [
+                        [
+                            { id: 15, value: 'D' },
+                            { id: 16, value: 'D' },
+                            { id: 17, value: 'D' },
+                        ]
+                    ]
                 },
             }
         })
@@ -110,9 +124,12 @@ test('playing a game', async () => {
     expect(screen.getByText(/There are 4 cards left in the deck/)).toBeInTheDocument()
 
     const talapasHand = within(screen.getByLabelText("😀 talapas")).queryAllByRole("checkbox");
-    expect(talapasHand.length).toEqual(4)
-    expect(talapasHand.map(element => element.textContent)).toEqual(['A','A','B','B'])
+    expect(talapasHand.length).toEqual(5)
+    expect(talapasHand.map(element => element.textContent)).toEqual(['A','A','A','B','B'])
+    expect(within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("set: C").length).toEqual(1)
+
     expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("hidden card").length).toEqual(2)
+    expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("set: D").length).toEqual(1)
 
     act(() => {
         screen.getByText("Draw a card").click()
@@ -144,6 +161,33 @@ test('playing a game', async () => {
         screen.getByText("lilu").click()
     })
     expect(fakeClient.give).toHaveBeenCalledWith([7], "lilu")
+
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[0].click()
+    })
+    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[1].click()
+    })
+    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+    })
+    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[2].click()
+    })
+    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+    })
+    expect(screen.queryByText("🌟🌟🌟")).toBeInTheDocument()
+
+    act(() => {
+        screen.getByText("🌟🌟🌟").click()
+    })
+    expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
+    expect(screen.queryByText("🌟🌟🌟")).not.toBeInTheDocument()
 
     unmount()
 
