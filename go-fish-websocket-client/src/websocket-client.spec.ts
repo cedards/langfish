@@ -129,6 +129,37 @@ describe('Go Fish websocket client', function () {
                         expect(otherPlayerState.players[otherPlayerName].hand.length).toEqual(1)
                     })
                 })
+
+                describe('and then gives me a card', function () {
+                    let myName = null
+                    let otherPlayerName = null
+                    let cardsToGive = null
+
+                    beforeEach(async function () {
+                        await eventually(() => {
+                            myName = latestCallTo(namesSpy)[0]
+                            otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                        })
+                        otherClient.draw()
+                        await eventually(() => {
+                            const otherPlayerHand = latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerName].hand
+                            expect(otherPlayerHand.length).toEqual(2)
+
+                            cardsToGive = otherPlayerHand
+                            otherClient.give(cardsToGive.map(card => card.id), myName)
+                        })
+                    })
+
+                    it('updates all clients with the new game state', function () {
+                        return eventually(() => {
+                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerName].hand.length).toEqual(0)
+                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[myName].hand).toEqual(cardsToGive)
+
+                            expect(latestCallTo(gameStatesSpy)[0].players[otherPlayerName].hand.length).toEqual(0)
+                            expect(latestCallTo(gameStatesSpy)[0].players[myName].hand).toEqual(cardsToGive)
+                        })
+                    })
+                })
             })
         })
     })

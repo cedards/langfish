@@ -23,12 +23,13 @@
   text-align: center;
 }
 
-.revealed-card, .hidden-card {
+.card, .hidden-card {
   border: solid black 3px;
   margin: 0.2rem;
 }
 
-.revealed-card {
+.card {
+  cursor: pointer;
   background-color: white;
   display: flex;
   justify-content: center;
@@ -36,6 +37,19 @@
   font-size: 4rem;
 }
 
+.card[aria-selected="true"] {
+  border: solid lime 3px;
+}
+
 .hidden-card {
   background-color: gray;
+}
+
+h3 button {
+  font-size: inherit;
+  font-weight: bold;
+}
+
+h3 button::before {
+  content: "➡️ ";
 }

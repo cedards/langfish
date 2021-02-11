@@ -29,7 +29,7 @@ function App({ client }: AppProps) {
         <div className="App">
             {
                 (playerName && gameState)
-                    ? <Game playerName={playerName} game={gameState} draw={draw}/>
+                    ? <Game playerName={playerName} game={gameState} draw={draw} give={client.give}/>
                     : <LoadingScreen/>
             }
         </div>
@@ -49,21 +49,56 @@ function sortCards(cards: Array<Card>): Array<Card> {
     })
 }
 
-function Game({playerName, game, draw}: { playerName: string, game: GoFishGameState, draw: React.MouseEventHandler }) {
+function Game(
+    {playerName, game, draw, give}: {
+        playerName: string,
+        game: GoFishGameState,
+        draw: React.MouseEventHandler,
+        give: (cards: Array<number>, recipient: string) => void
+    }
+) {
+    const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
+
+    const selectCard = (cardId: number) => () => {
+        if(selectedCards.includes(cardId)) {
+            updateSelectedCards(selectedCards.filter(id => id !== cardId))
+        } else {
+            updateSelectedCards(selectedCards.concat(cardId))
+        }
+    }
+
+    const giveTo = (recipient: string) => () => {
+        give(selectedCards, recipient)
+        updateSelectedCards([])
+    }
+
     return <div>
         <section aria-labelledby="myName">
             <h1 id="myName">😀 {playerName}</h1>
             <ul className="my-hand" aria-label="my hand">
                 { sortCards(game.players[playerName].hand).map(card =>
-                    <li className="revealed-card" key={card.id} aria-label="hidden card">{card.value}</li>
+                    <li
+                        className="card"
+                        key={card.id}
+                        aria-label={`hidden card: ${card.value}`}
+                        role="checkbox"
+                        aria-selected={selectedCards.includes(card.id)}
+                        onClick={selectCard(card.id)}
+                    >
+                        {card.value}
+                    </li>
                 )}
             </ul>
         </section>
         <p>There are {game.deck.length} cards left in the deck. <button onClick={draw}>Draw a card</button></p>
         {
             Object.keys(game.players).filter(player => player !== playerName).map(player =>
-                <section key={playerName} aria-labelledby={player}>
-                    <h3 id={player}>{player}</h3>
+                <section key={player} aria-labelledby={player}>
+                    <h3 id={player}>{
+                        selectedCards.length > 0
+                            ? <button onClick={giveTo(player)}>{player}</button>
+                            : player
+                    }</h3>
                     <ul className="other-player-hand">
                         {sortCards(game.players[player].hand).map(card =>
                             <li className="hidden-card" aria-label="hidden card" key={card.id} />

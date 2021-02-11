@@ -7,6 +7,7 @@ export interface GoFishGameplayClientInterface {
     onUpdateGameState(callback: (newState) => void): void
     joinGame(gameId: string): void
     draw(): void;
+    give(cardIds: Array<number>, recipientName: string): void;
 }
 
 export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
@@ -39,14 +40,25 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
         },
         draw(): void {
             client.request({
-                    path: `/game/${joinedGame}`,
-                    method: "POST",
-                    payload: {
-                        type: "DRAW",
-                        player: playerName
-                    }
+                path: `/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "DRAW",
+                    player: playerName
                 }
-            )
+            })
+        },
+        give(cardIds: Array<number>, recipientName: string): void {
+            client.request({
+                path: `/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "GIVE",
+                    player: playerName,
+                    recipient: recipientName,
+                    cardIds
+                }
+            })
         },
         onSetPlayerName(callback: (name) => void): void {
             setPlayerNameCallbacks.push(callback)

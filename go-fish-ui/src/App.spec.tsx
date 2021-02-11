@@ -32,6 +32,7 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
             _joinedGame = gameId
         },
         draw: jest.fn(),
+        give: jest.fn(),
         onSetPlayerName: (callback) => {
             _setPlayerNameCallbacks.push(callback)
         },
@@ -108,7 +109,7 @@ test('playing a game', async () => {
     expect(screen.getByText(/lilu/)).toBeInTheDocument()
     expect(screen.getByText(/There are 4 cards left in the deck/)).toBeInTheDocument()
 
-    const talapasHand = within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card");
+    const talapasHand = within(screen.getByLabelText("😀 talapas")).queryAllByRole("checkbox");
     expect(talapasHand.length).toEqual(4)
     expect(talapasHand.map(element => element.textContent)).toEqual(['A','A','B','B'])
     expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("hidden card").length).toEqual(2)
@@ -116,8 +117,33 @@ test('playing a game', async () => {
     act(() => {
         screen.getByText("Draw a card").click()
     })
-
     expect(fakeClient.draw).toHaveBeenCalled()
+
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[1].click()
+    })
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+    })
+    act(() => {
+        screen.getByText("lilu").click()
+    })
+
+    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "lilu")
+
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: A")[0].click()
+    })
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+    })
+    act(() => {
+        within(screen.getByLabelText("😀 talapas")).queryAllByLabelText("hidden card: B")[0].click()
+    })
+    act(() => {
+        screen.getByText("lilu").click()
+    })
+    expect(fakeClient.give).toHaveBeenCalledWith([7], "lilu")
 
     unmount()
 

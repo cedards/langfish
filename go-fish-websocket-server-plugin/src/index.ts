@@ -31,6 +31,12 @@ export const GoFishGameplayPlugin = {
                             game.draw(payload.player)
                             await publishNewGameState(request.params.gameId)
                             break
+                        case "GIVE":
+                            payload.cardIds.forEach(cardId => {
+                                game.give(payload.player, payload.recipient, cardId)
+                            })
+                            await publishNewGameState(request.params.gameId)
+                            break
                     }
                     return true;
                 }
