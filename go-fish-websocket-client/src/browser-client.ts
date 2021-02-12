@@ -79,7 +79,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
             updateGameStateCallbacks.push(callback)
         },
         connect(): Promise<void> {
-            return client.connect()
+            return client.id ? Promise.resolve() : client.connect()
         },
         disconnect(): Promise<void> {
             return client.disconnect()

@@ -207,6 +207,12 @@ describe('Go Fish websocket client', function () {
             })
         })
     })
+
+    describe('sad paths', function () {
+        it('does not fail if I try to connect while already connected', async function () {
+            await client.connect()
+        })
+    })
 })
 
 function eventually(assertion: () => void) {
