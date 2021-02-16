@@ -3,7 +3,7 @@ import * as Nes from "@hapi/nes/lib/client";
 export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
     disconnect: () => Promise<void>
-    onSetPlayerName(callback: (name) => void): void
+    onSetPlayerId(callback: (name) => void): void
     onUpdateGameState(callback: (newState) => void): void
     joinGame(gameId: string): void
     draw(): void;
@@ -13,9 +13,9 @@ export interface GoFishGameplayClientInterface {
 
 export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
     const client = new Nes.Client(websocketUrl)
-    const setPlayerNameCallbacks: Array<(name) => void> = []
+    const setPlayerIdCallbacks: Array<(name) => void> = []
     const updateGameStateCallbacks: Array<(GameState) => void> = []
-    let playerName: string | null = null
+    let playerId: string | null = null
     let joinedGame: string | null = null
 
     return {
@@ -23,9 +23,9 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
             client.subscribe(`/game/${gameId}`, payload => {
                 try {
                     switch (payload.type) {
-                        case "SET_NAME":
-                            playerName = payload.name
-                            setPlayerNameCallbacks.forEach(callback => callback(playerName))
+                        case "SET_PLAYER_ID":
+                            playerId = payload.playerId
+                            setPlayerIdCallbacks.forEach(callback => callback(playerId))
                             break
                         case "UPDATE_GAME_STATE":
                             updateGameStateCallbacks.forEach(callback => callback(payload.state))
@@ -45,7 +45,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 method: "POST",
                 payload: {
                     type: "DRAW",
-                    player: playerName
+                    player: playerId
                 }
             })
         },
@@ -55,7 +55,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 method: "POST",
                 payload: {
                     type: "GIVE",
-                    player: playerName,
+                    player: playerId,
                     recipient: recipientName,
                     cardIds
                 }
@@ -67,13 +67,13 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 method: "POST",
                 payload: {
                     type: "SCORE",
-                    player: playerName,
+                    player: playerId,
                     cardIds
                 }
             })
         },
-        onSetPlayerName(callback: (name) => void): void {
-            setPlayerNameCallbacks.push(callback)
+        onSetPlayerId(callback: (name) => void): void {
+            setPlayerIdCallbacks.push(callback)
         },
         onUpdateGameState(callback: (newState) => void): void {
             updateGameStateCallbacks.push(callback)

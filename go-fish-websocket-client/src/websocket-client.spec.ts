@@ -46,20 +46,20 @@ describe('Go Fish websocket client', function () {
     })
 
     describe('when I join a game', function () {
-        let namesSpy: jest.Mock
+        let playerIdSpy: jest.Mock
         let gameStatesSpy: jest.Mock
 
         beforeEach(function () {
-            namesSpy = jest.fn()
+            playerIdSpy = jest.fn()
             gameStatesSpy = jest.fn()
-            client.onSetPlayerName(namesSpy)
+            client.onSetPlayerId(playerIdSpy)
             client.onUpdateGameState(gameStatesSpy)
             client.joinGame("existing-game")
         })
 
-        it('receives an assigned name for the game', function () {
+        it('receives an assigned player id for the game', function () {
             return eventually(() => {
-                expect(namesSpy).toHaveBeenCalled()
+                expect(playerIdSpy).toHaveBeenCalled()
             })
         })
 
@@ -71,15 +71,15 @@ describe('Go Fish websocket client', function () {
 
         describe('and someone else joins', function () {
             let otherClient: GoFishGameplayClientInterface
-            let otherClientNamesSpy: jest.Mock
+            let otherClientPlayerIdSpy: jest.Mock
 
             beforeEach(async function () {
-                otherClientNamesSpy = jest.fn()
+                otherClientPlayerIdSpy = jest.fn()
 
                 otherClient = GoFishGameplayClient(`ws://localhost:${server.info.port}`)
                 await otherClient.connect()
 
-                otherClient.onSetPlayerName(otherClientNamesSpy)
+                otherClient.onSetPlayerId(otherClientPlayerIdSpy)
                 otherClient.joinGame("existing-game")
             })
 
@@ -89,21 +89,21 @@ describe('Go Fish websocket client', function () {
 
             it('assigns a different name to the other player', function () {
                 return eventually(() => {
-                    expect(namesSpy).toHaveBeenCalled()
-                    expect(otherClientNamesSpy).toHaveBeenCalled()
-                    expect(namesSpy.mock.calls[0][0])
-                        .not.toEqual(otherClientNamesSpy.mock.calls[0][0])
+                    expect(playerIdSpy).toHaveBeenCalled()
+                    expect(otherClientPlayerIdSpy).toHaveBeenCalled()
+                    expect(playerIdSpy.mock.calls[0][0])
+                        .not.toEqual(otherClientPlayerIdSpy.mock.calls[0][0])
                 })
             })
 
             it('receives updated game state with the new player', function () {
                 return eventually(() => {
-                    const playerName = latestCallTo(namesSpy)[0]
-                    const otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                    const playerId = latestCallTo(playerIdSpy)[0]
+                    const otherPlayerId = latestCallTo(otherClientPlayerIdSpy)[0]
                     const gameState = latestCallTo(gameStatesSpy)[0]
 
-                    expect(gameState.players[playerName]).toBeTruthy()
-                    expect(gameState.players[otherPlayerName]).toBeTruthy()
+                    expect(gameState.players[playerId]).toBeTruthy()
+                    expect(gameState.players[otherPlayerId]).toBeTruthy()
                 })
             })
 
@@ -114,49 +114,49 @@ describe('Go Fish websocket client', function () {
                     otherClientGameStatesSpy = jest.fn()
                     otherClient.onUpdateGameState(otherClientGameStatesSpy)
                     await eventually(() => {
-                        expect(otherClientNamesSpy).toHaveBeenCalled()
+                        expect(otherClientPlayerIdSpy).toHaveBeenCalled()
                     })
                     otherClient.draw()
                 })
 
                 it('receives updated game state on all clients in the game', function () {
                     return eventually(() => {
-                        const otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                        const otherPlayerId = latestCallTo(otherClientPlayerIdSpy)[0]
                         const myState = latestCallTo(gameStatesSpy)[0]
                         const otherPlayerState = latestCallTo(otherClientGameStatesSpy)[0]
 
-                        expect(myState.players[otherPlayerName].hand.length).toEqual(1)
-                        expect(otherPlayerState.players[otherPlayerName].hand.length).toEqual(1)
+                        expect(myState.players[otherPlayerId].hand.length).toEqual(1)
+                        expect(otherPlayerState.players[otherPlayerId].hand.length).toEqual(1)
                     })
                 })
 
                 describe('and then gives me a card', function () {
-                    let myName = null
-                    let otherPlayerName = null
+                    let myId = null
+                    let otherPlayerId = null
                     let cardsToGive = null
 
                     beforeEach(async function () {
                         await eventually(() => {
-                            myName = latestCallTo(namesSpy)[0]
-                            otherPlayerName = latestCallTo(otherClientNamesSpy)[0]
+                            myId = latestCallTo(playerIdSpy)[0]
+                            otherPlayerId = latestCallTo(otherClientPlayerIdSpy)[0]
                         })
                         otherClient.draw()
                         await eventually(() => {
-                            const otherPlayerHand = latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerName].hand
+                            const otherPlayerHand = latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerId].hand
                             expect(otherPlayerHand.length).toEqual(2)
 
                             cardsToGive = otherPlayerHand
-                            otherClient.give(cardsToGive.map(card => card.id), myName)
+                            otherClient.give(cardsToGive.map(card => card.id), myId)
                         })
                     })
 
                     it('updates all clients with the new game state', function () {
                         return eventually(() => {
-                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerName].hand.length).toEqual(0)
-                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[myName].hand).toEqual(cardsToGive)
+                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[otherPlayerId].hand.length).toEqual(0)
+                            expect(latestCallTo(otherClientGameStatesSpy)[0].players[myId].hand).toEqual(cardsToGive)
 
-                            expect(latestCallTo(gameStatesSpy)[0].players[otherPlayerName].hand.length).toEqual(0)
-                            expect(latestCallTo(gameStatesSpy)[0].players[myName].hand).toEqual(cardsToGive)
+                            expect(latestCallTo(gameStatesSpy)[0].players[otherPlayerId].hand.length).toEqual(0)
+                            expect(latestCallTo(gameStatesSpy)[0].players[myId].hand).toEqual(cardsToGive)
                         })
                     })
                 })
@@ -165,7 +165,7 @@ describe('Go Fish websocket client', function () {
     })
 
     describe('when I score a set', function () {
-        let assignedName: string | null
+        let assignedId: string | null
         let gameStatesSpy: jest.Mock
 
         beforeEach(async function () {
@@ -178,26 +178,26 @@ describe('Go Fish websocket client', function () {
             games["game-with-identical-cards"] = gameWithIdenticalCards
 
             gameStatesSpy = jest.fn()
-            assignedName = null
-            client.onSetPlayerName(name => assignedName = name)
+            assignedId = null
+            client.onSetPlayerId(name => assignedId = name)
             client.onUpdateGameState(gameStatesSpy)
             client.joinGame("game-with-identical-cards")
-            await eventually(() => { if(!assignedName) throw new Error("Never received player name for game-with-identical-cards") })
+            await eventually(() => { if(!assignedId) throw new Error("Never received player id for game-with-identical-cards") })
 
             client.draw()
             client.draw()
             client.draw()
             await eventually(() => {
-                expect(latestCallTo(gameStatesSpy)[0].players[assignedName].hand.length).toEqual(3)
+                expect(latestCallTo(gameStatesSpy)[0].players[assignedId].hand.length).toEqual(3)
             })
 
-            expect(latestCallTo(gameStatesSpy)[0].players[assignedName].sets.length).toEqual(0)
+            expect(latestCallTo(gameStatesSpy)[0].players[assignedId].sets.length).toEqual(0)
             client.score([1,2,3])
         })
 
         it('broadcasts updated game state to all clients', function () {
             return eventually(() => {
-                expect(latestCallTo(gameStatesSpy)[0].players[assignedName].sets).toEqual([
+                expect(latestCallTo(gameStatesSpy)[0].players[assignedId].sets).toEqual([
                     [
                         { id: 1, value: 'A' },
                         { id: 2, value: 'A' },

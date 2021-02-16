@@ -50,11 +50,11 @@ export const GoFishGameplayPlugin = {
         server.subscription('/game/{gameId}', {
             onSubscribe: async function (socket, path, params) {
                 const game = await options.gameRepository.getGame(params.gameId)
-                const playerName = game.addPlayer()
+                const playerId = game.addPlayer()
 
                 await socket.publish(path, {
-                    type: 'SET_NAME',
-                    name: playerName
+                    type: 'SET_PLAYER_ID',
+                    playerId: playerId
                 })
                 await socket.publish(path, {
                     type: 'UPDATE_GAME_STATE',

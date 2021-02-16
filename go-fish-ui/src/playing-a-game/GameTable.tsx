@@ -5,8 +5,8 @@ import {MyPlayArea} from "./MyPlayArea";
 import {OpponentPlayArea} from "./OpponentPlayArea";
 
 export function GameTable(
-    {playerName, game, draw, give, score}: {
-        playerName: string,
+    {playerId, game, draw, give, score}: {
+        playerId: string,
         game: GoFishGameState,
         draw: () => void,
         give: (cards: Array<number>, recipient: string) => void,
@@ -14,25 +14,25 @@ export function GameTable(
     }
 ) {
     const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
-    const me = game.players[playerName]
-    const opponents = Object.keys(game.players).filter(player => player !== playerName);
+    const me = game.players[playerId]
+    const opponents = Object.keys(game.players).filter(player => player !== playerId);
 
     return <div className="game-table">
         <Deck draw={draw} deck={game.deck}/>
         <div className="play-areas">
             <MyPlayArea
-                playerName={playerName}
+                playerId={playerId}
                 playerInfo={me}
                 selectedCards={selectedCards}
                 updateSelectedCards={updateSelectedCards}
                 score={score}
             />
             {
-                opponents.map(playerName =>
+                opponents.map(playerId =>
                     <OpponentPlayArea
-                        key={playerName}
-                        playerName={playerName}
-                        playerInfo={game.players[playerName]}
+                        key={playerId}
+                        playerId={playerId}
+                        playerInfo={game.players[playerId]}
                         selectedCards={selectedCards}
                         updateSelectedCards={updateSelectedCards}
                         give={give}

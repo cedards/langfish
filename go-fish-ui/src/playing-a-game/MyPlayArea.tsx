@@ -4,8 +4,8 @@ import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 
 export function MyPlayArea(
-    { playerName, playerInfo, selectedCards, updateSelectedCards, score }: {
-        playerName: string,
+    { playerId, playerInfo, selectedCards, updateSelectedCards, score }: {
+        playerId: string,
         playerInfo: { hand: Array<Card>, sets: Array<Array<Card>> },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
@@ -26,7 +26,7 @@ export function MyPlayArea(
     }
 
     return <section aria-labelledby="myName" className="play-area">
-        <h1 id="myName">😀 {playerName}</h1>
+        <h1 id="myName">😀 {playerId}</h1>
         <MyHand
             hand={playerInfo.hand}
             readyToScore={readyToScore()}

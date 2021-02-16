@@ -10,13 +10,13 @@ interface AppProps {
 }
 
 function App({ client }: AppProps) {
-    const [playerName, updatePlayerName] = useState<string | null>(null)
+    const [playerId, updatePlayerId] = useState<string | null>(null)
     const [gameState, updateGameState] = useState<GoFishGameState | null>(null)
 
     useEffect(() => {
         client.connect().then(() => {
             client.joinGame("game1")
-            client.onSetPlayerName(updatePlayerName)
+            client.onSetPlayerId(updatePlayerId)
             client.onUpdateGameState(updateGameState)
         })
         return () => { client.disconnect() }
@@ -25,9 +25,9 @@ function App({ client }: AppProps) {
     return (
         <div className="App">
             {
-                (playerName && gameState)
+                (playerId && gameState)
                     ? <GameTable
-                        playerName={playerName}
+                        playerId={playerId}
                         game={gameState}
                         draw={client.draw}
                         give={client.give}

@@ -8,7 +8,7 @@ import {GoFishGameState} from "@langfish/go-fish-engine";
 interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterface {
     isConnected(): boolean;
     joinedGame(): string | null;
-    setPlayerName(name: string): void;
+    setPlayerId(name: string): void;
 
     setGameState(gameState: GoFishGameState): void;
 }
@@ -16,7 +16,7 @@ interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterfa
 function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
     let _isConnected = false
     let _joinedGame: string | null = null
-    const _setPlayerNameCallbacks: Array<(name: string) => void> = []
+    const _setPlayerIdCallbacks: Array<(name: string) => void> = []
     const _setGameStateCallbacks: Array<(gameState: GoFishGameState) => void> = []
 
     return {
@@ -34,8 +34,8 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
         draw: jest.fn(),
         give: jest.fn(),
         score: jest.fn(),
-        onSetPlayerName: (callback) => {
-            _setPlayerNameCallbacks.push(callback)
+        onSetPlayerId: (callback) => {
+            _setPlayerIdCallbacks.push(callback)
         },
         onUpdateGameState: (callback) => {
             _setGameStateCallbacks.push(callback)
@@ -46,8 +46,8 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
         joinedGame(): string | null {
             return _joinedGame;
         },
-        setPlayerName(name: string): void {
-            _setPlayerNameCallbacks.forEach(callback => callback(name))
+        setPlayerId(name: string): void {
+            _setPlayerIdCallbacks.forEach(callback => callback(name))
         },
         setGameState(gameState): void {
             _setGameStateCallbacks.forEach(callback => callback(gameState))
@@ -72,7 +72,7 @@ test('playing a game', async () => {
     expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
 
     act(() => {
-        fakeClient.setPlayerName("talapas")
+        fakeClient.setPlayerId("talapas")
     })
 
     expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
