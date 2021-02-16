@@ -69,6 +69,21 @@ describe('Go Fish websocket client', function () {
             })
         })
 
+        describe('and update my name', function () {
+            beforeEach(async function () {
+                await eventually(() => {
+                    expect(playerIdSpy).toHaveBeenCalled()
+                })
+                client.renamePlayer('alex')
+            })
+
+            it('receives updated game state', function () {
+                return eventually(() => {
+                    expect(latestCallTo(gameStatesSpy)[0].players[latestCallTo(playerIdSpy)[0]].name).toEqual('alex')
+                })
+            })
+        })
+
         describe('and someone else joins', function () {
             let otherClient: GoFishGameplayClientInterface
             let otherClientPlayerIdSpy: jest.Mock

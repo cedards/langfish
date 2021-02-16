@@ -6,9 +6,10 @@ export interface GoFishGameplayClientInterface {
     onSetPlayerId(callback: (name) => void): void
     onUpdateGameState(callback: (newState) => void): void
     joinGame(gameId: string): void
-    draw(): void;
-    give(cardIds: Array<number>, recipientName: string): void;
-    score(cardIds: number[]): void;
+    draw(): void
+    give(cardIds: Array<number>, recipientName: string): void
+    score(cardIds: number[]): void
+    renamePlayer(name: string): void
 }
 
 export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
@@ -39,6 +40,19 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
             })
             joinedGame = gameId
         },
+
+        renamePlayer(name: string): void {
+            client.request({
+                path: `/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "RENAME",
+                    player: playerId,
+                    name: name
+                }
+            })
+        },
+
         draw(): void {
             client.request({
                 path: `/game/${joinedGame}`,
@@ -49,6 +63,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 }
             })
         },
+
         give(cardIds: Array<number>, recipientName: string): void {
             client.request({
                 path: `/game/${joinedGame}`,
@@ -61,6 +76,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 }
             })
         },
+
         score(cardIds: number[]): void {
             client.request({
                 path: `/game/${joinedGame}`,
@@ -72,15 +88,19 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
                 }
             })
         },
+
         onSetPlayerId(callback: (name) => void): void {
             setPlayerIdCallbacks.push(callback)
         },
+
         onUpdateGameState(callback: (newState) => void): void {
             updateGameStateCallbacks.push(callback)
         },
+
         connect(): Promise<void> {
             return client.id ? Promise.resolve() : client.connect()
         },
+
         disconnect(): Promise<void> {
             return client.disconnect()
         }

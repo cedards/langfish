@@ -9,7 +9,6 @@ interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterfa
     isConnected(): boolean;
     joinedGame(): string | null;
     setPlayerId(name: string): void;
-
     setGameState(gameState: GoFishGameState): void;
 }
 
@@ -31,6 +30,7 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
         joinGame: (gameId: string) => {
             _joinedGame = gameId
         },
+        renamePlayer: jest.fn(),
         draw: jest.fn(),
         give: jest.fn(),
         score: jest.fn(),

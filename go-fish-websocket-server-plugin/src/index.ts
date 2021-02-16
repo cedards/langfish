@@ -27,6 +27,10 @@ export const GoFishGameplayPlugin = {
                     const payload = request.payload
                     const game = await options.gameRepository.getGame(request.params.gameId)
                     switch (payload.type) {
+                        case "RENAME":
+                            game.renamePlayer(payload.player, payload.name)
+                            await publishNewGameState(request.params.gameId)
+                            break
                         case "DRAW":
                             game.draw(payload.player)
                             await publishNewGameState(request.params.gameId)
