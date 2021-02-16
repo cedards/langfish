@@ -27,6 +27,7 @@
   min-width: 10rem;
   font-size: inherit;
   margin: 0 0.5rem;
+  cursor: pointer;
 }
 
 #myName button {
@@ -43,7 +44,7 @@
   font-weight: bold;
 }
 
-#myName button.highlight {
+#myName .highlight {
   animation-name: encourageRename;
   animation-duration: 2s;
   animation-iteration-count: infinite;
