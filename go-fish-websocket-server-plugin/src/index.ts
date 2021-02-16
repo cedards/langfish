@@ -47,27 +47,10 @@ export const GoFishGameplayPlugin = {
             }
         })
 
-        const playerNames = [
-            "Alex",
-            "Bailey",
-            "Charlie",
-            "Drew",
-            "Elliott",
-            "Frankie",
-            "Harley",
-            "Jordan",
-            "Kendall",
-            "Lindsey",
-            "Morgan",
-        ]
-
         server.subscription('/game/{gameId}', {
             onSubscribe: async function (socket, path, params) {
                 const game = await options.gameRepository.getGame(params.gameId)
-                let playerName = playerNames.find(name => !Object.keys(game.currentState().players).includes(name))
-                if(!playerName) playerName = `Player ${Object.keys(game.currentState().players).length + 1}`
-
-                game.addPlayer(playerName)
+                const playerName = game.addPlayer()
 
                 await socket.publish(path, {
                     type: 'SET_NAME',

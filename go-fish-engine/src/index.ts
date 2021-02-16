@@ -5,6 +5,7 @@ export interface Card {
 }
 
 export interface PlayerState {
+    name?: string,
     hand: Array<Card>,
     sets: Array<Array<Card>>,
 }
@@ -17,13 +18,15 @@ export interface GoFishGameState {
 export interface GoFishGame {
     currentState: () => GoFishGameState
     setDeck: (deck: Array<Card>) => void
-    addPlayer: (playerName: string) => void
+    addPlayer: () => string
     draw: (playerName: string) => void
     give: (donor: string, recipient: string, cardId: number) => void
-    score: (playerName: string, cardIds: number[]) => void;
+    score: (playerName: string, cardIds: number[]) => void
+    renamePlayer: (playerId: string, name: string) => void
 }
 
 export function GoFishGame(): GoFishGame {
+    let _nextPlayerId = 0
     let _deck: Array<Card> = []
     const _players: { [key: string]: PlayerState } = {}
 
@@ -39,11 +42,20 @@ export function GoFishGame(): GoFishGame {
             _deck = deck
         },
 
-        addPlayer(playerName: string) {
-            _players[playerName] = {
+        addPlayer(): string {
+            _nextPlayerId++
+            const playerId = `player-${_nextPlayerId}`
+
+            _players[playerId] = {
                 hand: [],
                 sets: [],
             }
+
+            return playerId
+        },
+
+        renamePlayer(playerId: string, name: string): void {
+            _players[playerId].name = name
         },
 
         draw(playerName: string): void {
@@ -70,6 +82,6 @@ export function GoFishGame(): GoFishGame {
             _players[playerName].hand = _players[playerName].hand.filter(card =>
                 !cardIds.includes(card.id)
             )
-        },
+        }
     }
 }
