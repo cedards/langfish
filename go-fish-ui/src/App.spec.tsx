@@ -72,7 +72,7 @@ test('playing a game', async () => {
     expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
 
     act(() => {
-        fakeClient.setPlayerId("talapas")
+        fakeClient.setPlayerId("TALAPAS")
     })
 
     expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
@@ -86,7 +86,8 @@ test('playing a game', async () => {
                 { id: 4, value: 'D' },
             ],
             players: {
-                "talapas": {
+                "TALAPAS": {
+                    name: "talapas",
                     hand: [
                         { id: 7, value: 'A' },
                         { id: 8, value: 'B' },
@@ -102,7 +103,8 @@ test('playing a game', async () => {
                         ]
                     ]
                 },
-                "lilu": {
+                "LILU": {
+                    name: "lilu",
                     hand: [
                         { id: 5, value: 'E' },
                         { id: 6, value: 'F' },
@@ -146,7 +148,7 @@ test('playing a game', async () => {
         screen.getByText("lilu").click()
     })
 
-    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "lilu")
+    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
 
     act(() => {
         within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()
@@ -160,7 +162,7 @@ test('playing a game', async () => {
     act(() => {
         screen.getByText("lilu").click()
     })
-    expect(fakeClient.give).toHaveBeenCalledWith([7], "lilu")
+    expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
 
     act(() => {
         within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()

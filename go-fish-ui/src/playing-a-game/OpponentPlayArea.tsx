@@ -6,7 +6,7 @@ import {ScoredSet} from "./ScoredSet";
 export function OpponentPlayArea(
     { playerId, playerInfo, selectedCards, updateSelectedCards, give }: {
         playerId: string,
-        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>> },
+        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
         give: (cards: Array<number>, recipient: string) => void,
@@ -20,7 +20,7 @@ export function OpponentPlayArea(
 
     return <section aria-labelledby={playerId} className="play-area">
         <h3 id={playerId}>{
-            <button onClick={giveTo(playerId)} disabled={selectedCards.length === 0}>{playerId}</button>
+            <button onClick={giveTo(playerId)} disabled={selectedCards.length === 0}>{playerInfo.name || '???'}</button>
         }</h3>
         <ul className="other-player-hand">
             {sortCards(playerInfo.hand).map(card =>

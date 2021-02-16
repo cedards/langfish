@@ -5,12 +5,13 @@ import {MyPlayArea} from "./MyPlayArea";
 import {OpponentPlayArea} from "./OpponentPlayArea";
 
 export function GameTable(
-    {playerId, game, draw, give, score}: {
+    {playerId, game, draw, give, score, renamePlayer}: {
         playerId: string,
         game: GoFishGameState,
         draw: () => void,
         give: (cards: Array<number>, recipient: string) => void,
-        score: (cards: Array<number>) => void
+        score: (cards: Array<number>) => void,
+        renamePlayer: (name: string) => void
     }
 ) {
     const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
@@ -21,11 +22,11 @@ export function GameTable(
         <Deck draw={draw} deck={game.deck}/>
         <div className="play-areas">
             <MyPlayArea
-                playerId={playerId}
                 playerInfo={me}
                 selectedCards={selectedCards}
                 updateSelectedCards={updateSelectedCards}
                 score={score}
+                renamePlayer={renamePlayer}
             />
             {
                 opponents.map(playerId =>

@@ -32,6 +32,7 @@ function App({ client }: AppProps) {
                         draw={client.draw}
                         give={client.give}
                         score={client.score}
+                        renamePlayer={client.renamePlayer}
                     />
                     : <LoadingScreen/>
             }

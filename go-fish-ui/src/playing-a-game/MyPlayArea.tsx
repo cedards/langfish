@@ -1,15 +1,15 @@
-import React from "react";
+import React, {useRef, useState} from "react";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 
 export function MyPlayArea(
-    { playerId, playerInfo, selectedCards, updateSelectedCards, score }: {
-        playerId: string,
-        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>> },
+    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer }: {
+        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
-        score: (cardIds: Array<number>) => void
+        score: (cardIds: Array<number>) => void,
+        renamePlayer: (name: string) => void
     }
 ) {
     const readyToScore: () => boolean = () => {
@@ -26,7 +26,7 @@ export function MyPlayArea(
     }
 
     return <section aria-labelledby="myName" className="play-area">
-        <h1 id="myName">😀 {playerId}</h1>
+        <PlayerName playerName={playerInfo.name} renamePlayer={renamePlayer}/>
         <MyHand
             hand={playerInfo.hand}
             readyToScore={readyToScore()}
@@ -39,6 +39,63 @@ export function MyPlayArea(
             sets={playerInfo.sets}
         />
     </section>
+}
+
+function PlayerName(
+    { playerName, renamePlayer }: {
+        playerName: string | undefined,
+        renamePlayer: (name: string) => void
+    }
+) {
+    const [ editMode, updateEditMode ] = useState(false)
+    const handleRename = (newName: string) => {
+        renamePlayer(newName)
+        updateEditMode(false)
+    }
+
+    return editMode
+        ? <PlayerNameForm name={playerName} renamePlayer={handleRename}/>
+        : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)}/>
+}
+
+function PlayerNameForm({ name, renamePlayer }: {
+    name: string | undefined,
+    renamePlayer: (name: string) => void
+}) {
+    const [ enteredName, updateEnteredName ] = useState(name || "")
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault()
+        updateEnteredName(e.target.value)
+    }
+    const saveName = (e: React.FormEvent) => {
+        e.preventDefault()
+        renamePlayer(enteredName)
+    }
+    return <form id="myName" onSubmit={saveName}>
+        😀
+        <input
+            autoFocus={true}
+            className="name"
+            name={"playerName"}
+            aria-label="your name"
+            placeholder="???"
+            value={enteredName}
+            onChange={handleNameChange}
+        />
+        <button aria-label="save name">✅</button>
+    </form>
+}
+
+function PlayerNameHeader({ name, editPlayerName }: {
+    name: string | undefined,
+    editPlayerName: () => void
+}) {
+    return <h1 id="myName">
+        😀
+        <span className="name">{name || "???"}</span>
+        <button className={name ? '' : 'highlight'} aria-label="edit name" onClick={editPlayerName}>✍️</button>
+    </h1>
 }
 
 function MyHand(
