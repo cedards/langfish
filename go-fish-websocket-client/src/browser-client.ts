@@ -20,25 +20,17 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
     let joinedGame: string | null = null
 
     return {
-        joinGame(gameId: string): void {
-            client.subscribe(`/game/${gameId}`, payload => {
-                try {
-                    switch (payload.type) {
-                        case "SET_PLAYER_ID":
-                            playerId = payload.playerId
-                            setPlayerIdCallbacks.forEach(callback => callback(playerId))
-                            break
-                        case "UPDATE_GAME_STATE":
-                            updateGameStateCallbacks.forEach(callback => callback(payload.state))
-                            break
-                        default:
-                            console.warn("Didn't know how to handle message of type", payload.type)
-                    }
-                } catch(e) {
-                    console.error(e)
-                }
+        async joinGame(gameId: string): Promise<void> {
+            await client.subscribe(`/game/${gameId}`, payload => {
+                updateGameStateCallbacks.forEach(callback => callback(payload.state))
             })
             joinedGame = gameId
+            const addPlayerResponse = await client.request({
+                path: `/game/${joinedGame}/addPlayer`,
+                method: "POST"
+            })
+            playerId = addPlayerResponse.payload.playerId
+            setPlayerIdCallbacks.forEach(callback => callback(playerId))
         },
 
         renamePlayer(name: string): void {

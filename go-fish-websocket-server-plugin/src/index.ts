@@ -51,21 +51,20 @@ export const GoFishGameplayPlugin = {
             }
         })
 
-        server.subscription('/game/{gameId}', {
-            onSubscribe: async function (socket, path, params) {
-                const game = await options.gameRepository.getGame(params.gameId)
-                const playerId = game.addPlayer()
-
-                await socket.publish(path, {
-                    type: 'SET_PLAYER_ID',
-                    playerId: playerId
-                })
-                await socket.publish(path, {
-                    type: 'UPDATE_GAME_STATE',
-                    state: game.currentState()
-                });
-                await publishNewGameState(params.gameId)
+        server.route({
+            method: 'POST',
+            path: `/game/{gameId}/addPlayer`,
+            options: {
+                id: 'addPlayerToGame',
+                handler: async (request, h) => {
+                    const game = await options.gameRepository.getGame(request.params.gameId)
+                    const playerId = game.addPlayer()
+                    await publishNewGameState(request.params.gameId)
+                    return { playerId: playerId }
+                }
             }
         })
+
+        server.subscription('/game/{gameId}')
     }
 }
