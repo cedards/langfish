@@ -52,15 +52,15 @@
 
 @keyframes encourageRename {
   from {
-    background: none;
+    filter: drop-shadow(0 0 0);
   }
 
   50% {
-    background: #0C0;
+    filter: drop-shadow(0 0 0.5rem #0C0);
   }
 
   to {
-    background: none;
+    filter: drop-shadow(0 0 0);
   }
 }
 
@@ -81,6 +81,29 @@
   height: 8rem;
 
   cursor: grab;
+}
+
+.deck.highlight {
+  animation-name: encourageDraw;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes encourageDraw {
+  from {
+    box-shadow: 0 0 0;
+    background-color: gray;
+  }
+
+  50% {
+    box-shadow: 0 0 3rem #00cc00;
+    background-color: #558855;
+  }
+
+  to {
+    box-shadow: 0 0 0;
+    background-color: gray;
+  }
 }
 
 .my-hand, .other-player-hand, .sets {

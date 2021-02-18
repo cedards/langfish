@@ -93,7 +93,7 @@ function PlayerNameHeader({ name, editPlayerName }: {
 }) {
     return <h1 id="myName">
         😀
-        <span onClick={editPlayerName} className="name">{name || "???"}</span>
+        <span onClick={editPlayerName} className={`name ${name ? '' : 'highlight'}`}>{name || "???"}</span>
         <button className={name ? '' : 'highlight'} aria-label="edit name" onClick={editPlayerName}>✍️</button>
     </h1>
 }
