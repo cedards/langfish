@@ -200,4 +200,35 @@ describe("A new Go Fish game", function () {
             ])
         })
     })
+
+    describe('reconstructing a game from stored state', function () {
+        it('recreates the original game', function () {
+            const deck = [
+                {id: 1, value: "apple"},
+                {id: 2, value: "apple"},
+            ]
+            const players = {
+                "TALAPAS": {
+                    name: "talapas",
+                    hand: [
+                        {id: 3, value: "apple"},
+                    ],
+                    sets: [
+                        [
+                            {id: 4, value: "apple"},
+                            {id: 5, value: "apple"},
+                            {id: 6, value: "apple"},
+                        ]
+                    ]
+                }
+            }
+
+            game = GoFishGame(deck, players)
+
+            expect(game.currentState()).toEqual({
+                deck,
+                players
+            })
+        })
+    })
 })

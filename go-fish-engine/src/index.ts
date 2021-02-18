@@ -25,10 +25,10 @@ export interface GoFishGame {
     renamePlayer: (playerId: string, name: string) => void
 }
 
-export function GoFishGame(): GoFishGame {
+export function GoFishGame(deck?: Array<Card>, players?: { [key: string]: PlayerState }): GoFishGame {
     let _nextPlayerId = 0
-    let _deck: Array<Card> = []
-    const _players: { [key: string]: PlayerState } = {}
+    let _deck: Array<Card> = deck || []
+    const _players: { [key: string]: PlayerState } = players || {}
 
     return {
         currentState() {
