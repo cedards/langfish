@@ -33,20 +33,20 @@ function populateDeck(items) {
 
 function buildDeck() {
     return shuffleDeck(populateDeck([
-        { value: "saqul'aaq", image: "https://drive.google.com/uc?id=1Qlxh332AYYHt1FhfDbeQ13EowLzr7q1f" },
-        { value: "kaaRaq", image: "https://drive.google.com/uc?id=1p1hwwpKGuHGaYCAilflxuErcZxENRG6g" },
-        { value: "paRag'autaq (N) / paRag'uutaq (S)", image: "https://drive.google.com/uc?id=1gXwZlQm7aDt-49D-hRVad-oXgDGjosfB" },
-        { value: "wiil'kaaq (N) / wiiR'kaaq (S)", image: "https://drive.google.com/uc?id=1r2VHyeglXucwDn9n6Nr33BI_OJRFYcPn" },
-        { value: "kalikaq", image: "https://drive.google.com/uc?id=1lbiJPNKIdp7c4YpAc5QJN1AtCpY1mDXb" },
-        { value: "kaRtuugaaq", image: "https://drive.google.com/uc?id=1LSr0X7_it2Kqah2BIdhHz0x_F4JznDPJ" },
-        { value: "kluucaq", image: "https://drive.google.com/uc?id=1rrAUndFt7kPbN55ep1TCbz2Squa40He0" },
-        { value: "yaamaq", image: "https://drive.google.com/uc?id=1Tcj5v8dRm_knzPr1KLBs76Sm2NCrIu0k" },
-        { value: "qatayaq", image: "https://drive.google.com/uc?id=101BBjeKrEySQ4QqUxdG8EFUIuLq-xzlV" },
-        { value: "laus'kaaq (N) / luus'kaaq (S)", image: "https://drive.google.com/uc?id=1GHYrznVodYCTL_l6QE4ho0584cT1zNVy" },
-        { value: "taquka'aq", image: "https://drive.google.com/uc?id=1j3v3uU_M4pIENy43oEqcwmrngFYnGfDa" },
-        { value: "yaaplakaaq", image: "https://drive.google.com/uc?id=1swG6hxLvxO8H73A2Up47zsAV_P3VcWTI" },
-        { value: "wiinaq", image: "https://drive.google.com/uc?id=1FuuklanvsC2u6g0pi5wNR8bidHE5aCb2" },
-        { value: "caskaq", image: "https://drive.google.com/uc?id=1DyxoU7QuOOqrZvvDYgWeKeOAeEnFRMRB" },
+        { value: "saqul'aaq", image: "https://drive.google.com/uc?id=1N8FWetDVpGq7SyMZnkeq0Rs_AnkZSxxu" },
+        { value: "kaaRaq", image: "https://drive.google.com/uc?id=1X_1l6jVdYExDwcJ4hK06INB6MfkQT3AG" },
+        { value: "paRag'autaq (N) / paRag'uutaq (S)", image: "https://drive.google.com/uc?id=1zYn03jp_3JemEy44Iryw9XXwnHWDUZS4" },
+        { value: "wiil'kaaq (N) / wiiR'kaaq (S)", image: "https://drive.google.com/uc?id=1LwoyYDRYSSC7ylONv_DJKvM9kHWd1y3s" },
+        { value: "kalikaq", image: "https://drive.google.com/uc?id=1b1KMLAuS9dwNv_mlfDRppAqOVtduhFGq" },
+        { value: "kaRtuugaaq", image: "https://drive.google.com/uc?id=11PS0Ux_RpidiwxQjZvRTJ8Z7BeFeu_eT" },
+        { value: "kluucaq", image: "https://drive.google.com/uc?id=17Yq4B7rl0Oyy90gzF70xeJvurEm3Rt1l" },
+        { value: "yaamaq", image: "https://drive.google.com/uc?id=1cwjbp3VGRCFMBbkadwR4BqqhyijpOTNn" },
+        { value: "qatayaq", image: "https://drive.google.com/uc?id=1dEFxnIFrAPTeqSrk-swhGr4tyM5Oqd2h" },
+        { value: "laus'kaaq (N) / luus'kaaq (S)", image: "https://drive.google.com/uc?id=1UKlqb75pYWRIHIFtmWm0xDGsCn-YHCTJ  " },
+        { value: "taquka'aq", image: "https://drive.google.com/uc?id=1grf1RjprlpkkwgHJNrBRd3ntdzHtbytG" },
+        { value: "yaaplakaaq", image: "https://drive.google.com/uc?id=1vIx334SjSFDsm0JT0aIjoJo8sE8pyr7p" },
+        { value: "wiinaq", image: "https://drive.google.com/uc?id=1rMfTMxMGfB2WiQMc7NaeBqgPsxCQcsfz" },
+        { value: "caskaq", image: "https://drive.google.com/uc?id=1poY_6S4x1sJbj1oMP5teiDFQLlqJ83t-" },
     ]))
 }
 
