@@ -43,7 +43,9 @@ export function GoFishGame(deck?: Array<Card>, players?: { [key: string]: Player
         },
 
         addPlayer(): string {
-            _nextPlayerId++
+            while(_players[`player-${_nextPlayerId}`]) {
+                _nextPlayerId++
+            }
             const playerId = `player-${_nextPlayerId}`
 
             _players[playerId] = {
