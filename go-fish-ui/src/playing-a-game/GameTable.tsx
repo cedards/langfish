@@ -19,7 +19,7 @@ export function GameTable(
     const opponents = Object.keys(game.players).filter(player => player !== playerId);
 
     return <div className="game-table">
-        <Deck draw={draw} deck={game.deck} highlight={!!game.players[playerId].name && game.players[playerId].hand.length === 0}/>
+        <Deck draw={draw} deck={game.deck} highlight={!!game.players[playerId].name && game.players[playerId].hand.length === 0 && game.deck.length > 0}/>
         <div className="play-areas">
             <MyPlayArea
                 playerInfo={me}

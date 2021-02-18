@@ -71,7 +71,7 @@ body {
   }
 
   50% {
-    filter: drop-shadow(0 0 0.5rem var(--highlight-color));
+    filter: drop-shadow(0 0 1rem var(--highlight-color));
     color: var(--highlight-color)
   }
 
