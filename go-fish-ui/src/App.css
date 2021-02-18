@@ -1,3 +1,14 @@
+:root {
+  --highlight-color: #DD0;
+  --selected-color: #5F5;
+  --card-back-color: #454;
+  --card-border-color: black;
+}
+
+body {
+  background: #696;
+}
+
 .App {
   text-align: center;
   max-width: 60rem;
@@ -17,7 +28,6 @@
 
 #myName {
   width: 100%;
-  margin: 1rem 0;
   font-size: 1.6rem;
   overflow-y: visible;
 }
@@ -42,6 +52,10 @@
   width: 10rem;
   text-align: center;
   font-weight: bold;
+  background: #131;
+  color: var(--selected-color);
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
 }
 
 #myName .highlight {
@@ -53,30 +67,34 @@
 @keyframes encourageRename {
   from {
     filter: drop-shadow(0 0 0);
+    color: inherit;
   }
 
   50% {
-    filter: drop-shadow(0 0 0.5rem #0C0);
+    filter: drop-shadow(0 0 0.5rem var(--highlight-color));
+    color: var(--highlight-color)
   }
 
   to {
     filter: drop-shadow(0 0 0);
+    color: inherit;
   }
 }
 
 .deck {
   flex-basis: auto;
 
-  border-color: black;
+  border-color: var(--card-border-color);
   border-width: 3px 9px 9px 3px;
   border-style: solid double double solid;
+  border-radius: 6px;
 
   color: white;
   font-size: 2rem;
   font-weight: bold;
 
   margin: 1rem;
-  background-color: gray;
+  background-color: var(--card-back-color);
   min-width: 6rem;
   height: 8rem;
 
@@ -92,17 +110,17 @@
 @keyframes encourageDraw {
   from {
     box-shadow: 0 0 0;
-    background-color: gray;
+    background-color: var(--card-back-color);
   }
 
   50% {
-    box-shadow: 0 0 3rem #00cc00;
-    background-color: #558855;
+    box-shadow: 0 0 3rem var(--highlight-color);
+    background-color: var(--highlight-color);
   }
 
   to {
     box-shadow: 0 0 0;
-    background-color: gray;
+    background-color: var(--card-back-color);
   }
 }
 
@@ -112,6 +130,10 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.my-hand {
+  min-height: 9rem;
 }
 
 .my-hand li {
@@ -131,8 +153,13 @@
   text-align: center;
 }
 
+.other-player-hand {
+  min-height: 5rem;
+}
+
 .card, .hidden-card {
-  border: solid black 3px;
+  border: solid var(--card-border-color) 3px;
+  border-radius: 6px;
   margin: 0.2rem;
 }
 
@@ -146,21 +173,27 @@
 }
 
 .card[aria-selected="true"] {
-  border: solid blue 3px;
+  border: solid var(--selected-color) 3px;
+  box-shadow: 0 0 1rem var(--selected-color);
 }
 
 .ready-to-score .card[aria-selected="true"] {
-  border-color: #00CC00;
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 1rem var(--highlight-color);
 }
 
 .hidden-card {
-  background-color: gray;
+  background-color: var(--card-back-color);
+}
+
+#myName, h3 {
+  margin: 0 0 1rem 0;
 }
 
 h3 button {
-  height: 2rem;
+  height: 2.5rem;
   box-sizing: border-box;
-  color: black;
+  color: inherit;
   background: none;
   font-size: 1.4rem;
   font-weight: bold;
@@ -168,19 +201,20 @@ h3 button {
 }
 
 h3 button:not([disabled]) {
-  /*background: #EEEEEE;*/
-  color: blue;
+  color: var(--selected-color);
   cursor: pointer;
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
+  padding: 0 1rem;
 }
 
 h3 button:not([disabled])::before {
-  content: "➡️ ";
+  content: "⇒️ ";
 }
 
 .sets {
   min-height: 5rem;
   align-items: center;
-  /*border: dashed black 2px;*/
 }
 
 .sets li {
@@ -198,7 +232,7 @@ h3 button:not([disabled])::before {
   align-items: center;
   font-size: 1.5rem;
 
-  border-color: black;
+  border-color: var(--card-border-color);
   border-width: 2px 6px 6px 2px;
   border-style: solid double double solid;
 
@@ -207,7 +241,7 @@ h3 button:not([disabled])::before {
 
 @keyframes readytoscore {
   from {
-    border-color: white;
+    border-color: #252;
     width: 2rem;
     height: 3rem;
     margin: 0.2rem;
@@ -215,7 +249,7 @@ h3 button:not([disabled])::before {
   }
 
   50% {
-    border-color: #00CC00;
+    border-color: var(--highlight-color);
     width: 3rem;
     height: 4.5rem;
     margin: -0.6rem -0.3rem;
@@ -223,7 +257,7 @@ h3 button:not([disabled])::before {
   }
 
   to {
-    border-color: white;
+    border-color: #252;
     width: 2rem;
     height: 3rem;
     margin: 0.2rem;
@@ -232,13 +266,14 @@ h3 button:not([disabled])::before {
 }
 
 .score-button {
-  border: dashed #00CC00 3px;
+  background: transparent;
+  border: dashed var(--highlight-color) 3px;
   animation-name: readytoscore;
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }
 .score-button button {
-  color: #00CC00;
+  color: var(--highlight-color);
   background: none;
   border: none;
   width: 100%;
@@ -248,6 +283,9 @@ h3 button:not([disabled])::before {
 }
 
 .play-area {
-  border: dashed silver 2px;
+  color: white;
+  background: #252;
+  padding: 1rem;
+  border-radius: 2rem;
   margin: 0.5rem;
 }
