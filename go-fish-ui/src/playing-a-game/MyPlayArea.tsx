@@ -53,7 +53,7 @@ function PlayerName(
         updateEditMode(false)
     }
 
-    return editMode
+    return editMode || !playerName
         ? <PlayerNameForm name={playerName} renamePlayer={handleRename}/>
         : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)}/>
 }
@@ -79,7 +79,7 @@ function PlayerNameForm({ name, renamePlayer }: {
             className="name"
             name={"playerName"}
             aria-label="your name"
-            placeholder="???"
+            placeholder="Alex"
             value={enteredName}
             onChange={handleNameChange}
         />
