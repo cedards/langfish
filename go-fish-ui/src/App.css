@@ -301,10 +301,12 @@ h3 button:not([disabled])::before {
   border-radius: 2rem;
   margin: 0.5rem;
   max-width: 60rem;
+  width: 100%;
   flex-grow: 2;
 }
 
 .opponent-play-area {
+  width: auto;
   flex-grow: 1;
   padding: 1rem 2rem;
 }
