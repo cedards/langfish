@@ -21,13 +21,6 @@ export function GameTable(
     return <div className="game-table">
         <Deck draw={draw} deck={game.deck} highlight={!!game.players[playerId].name && game.players[playerId].hand.length === 0 && game.deck.length > 0}/>
         <div className="play-areas">
-            <MyPlayArea
-                playerInfo={me}
-                selectedCards={selectedCards}
-                updateSelectedCards={updateSelectedCards}
-                score={score}
-                renamePlayer={renamePlayer}
-            />
             {
                 opponents.map(playerId =>
                     <OpponentPlayArea
@@ -40,6 +33,13 @@ export function GameTable(
                     />
                 )
             }
+            <MyPlayArea
+                playerInfo={me}
+                selectedCards={selectedCards}
+                updateSelectedCards={updateSelectedCards}
+                score={score}
+                renamePlayer={renamePlayer}
+            />
         </div>
     </div>
 }

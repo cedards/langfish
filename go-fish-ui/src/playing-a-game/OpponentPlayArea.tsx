@@ -18,7 +18,7 @@ export function OpponentPlayArea(
         updateSelectedCards([])
     }
 
-    return <section aria-labelledby={playerId} className="play-area">
+    return <section aria-labelledby={playerId} className="play-area opponent-play-area">
         <h3 id={playerId}>{
             <button onClick={giveTo(playerId)} disabled={selectedCards.length === 0}>{playerInfo.name || '???'}</button>
         }</h3>

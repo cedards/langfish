@@ -22,10 +22,6 @@ body {
   width: 100%;
 }
 
-.play-areas {
-  flex-grow: 1;
-}
-
 #myName {
   width: 100%;
   font-size: 1.6rem;
@@ -155,6 +151,16 @@ body {
 
 .other-player-hand {
   min-height: 5rem;
+  padding: 0;
+  margin: 0 2rem;
+}
+
+.other-player-hand .hidden-card {
+  margin-right: -2.7rem;
+}
+
+.other-player-hand .hidden-card:first-child {
+  margin-left: -2.7rem;
 }
 
 .card, .hidden-card {
@@ -282,10 +288,23 @@ h3 button:not([disabled])::before {
   cursor: pointer;
 }
 
+.play-areas {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .play-area {
   color: white;
   background: #252;
   padding: 1rem;
   border-radius: 2rem;
   margin: 0.5rem;
+  max-width: 60rem;
+  flex-grow: 2;
+}
+
+.opponent-play-area {
+  flex-grow: 1;
+  padding: 1rem 2rem;
 }
