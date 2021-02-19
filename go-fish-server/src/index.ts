@@ -65,7 +65,7 @@ function populateDeck(items) {
 }
 
 function buildDeck() {
-    return shuffleDeck(populateDeck(qawalangimTunuuDeckTemplate))
+    return shuffleDeck(populateDeck(kodiakDeckTemplate))
 }
 
 const start = async () => {
