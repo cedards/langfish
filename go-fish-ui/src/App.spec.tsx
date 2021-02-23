@@ -2,7 +2,7 @@ import React from 'react';
 import {act, render, screen} from '@testing-library/react';
 import { within } from '@testing-library/dom'
 import App from './App';
-import {GoFishGameplayClientInterface} from "@langfish/go-fish-websocket-client";
+import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import {GoFishGameState} from "@langfish/go-fish-engine";
 
 interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterface {

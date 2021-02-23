@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@langfish/go-fish-engine": "1.0.0",
-    "@langfish/go-fish-websocket-client": "1.0.0",
+    "@langfish/go-fish-gameplay-client": "1.0.0",
     "@testing-library/dom": "^7.29.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
