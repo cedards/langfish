@@ -7,7 +7,7 @@ import {GoFishGameplayClient} from "@langfish/go-fish-gameplay-client";
 
 const client = process.env.NODE_ENV === "development"
     ? GoFishGameplayClient(`ws://localhost:5000`)
-    : GoFishGameplayClient(`wss://${document.location.host}/`);
+    : GoFishGameplayClient(`${document.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${document.location.host}/`);
 
 const templatesClient = {
     getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }>}>> {

@@ -20,5 +20,19 @@ export const FrontendPlugin = {
                 }
             }
         })
+
+        server.route({
+            method: 'GET',
+            path: '/game/{gameId*}',
+            options: {
+                auth: false,
+                cors: { origin: ['*'] },
+            },
+            handler: {
+                file: {
+                    path: Path.join(__dirname, 'build', 'index.html'),
+                }
+            }
+        })
     }
 }
