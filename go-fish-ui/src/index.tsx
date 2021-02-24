@@ -9,6 +9,12 @@ const client = process.env.NODE_ENV === "development"
     ? GoFishGameplayClient(`ws://localhost:5000`)
     : GoFishGameplayClient(`wss://${document.location.host}/`);
 
+const templatesClient = {
+    getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }>}>> {
+        return fetch("/templates").then(response => response.json())
+    }
+}
+
 const preloadedImages = [
     { value: "yaablukaX", image: "https://drive.google.com/uc?id=1Urnd6hmYmhClVrmiLrQgQXl50P9-dgiq" },
     { value: "yaachiX", image: "https://drive.google.com/uc?id=1fO7WLTpuZfE6QbcQ3JXp-2vIqRHQ1BgZ" },
@@ -30,7 +36,7 @@ const preloadedImages = [
 
 ReactDOM.render(
   <React.StrictMode>
-    <App client={client}/>
+    <App client={client} templatesClient={templatesClient}/>
   </React.StrictMode>,
   document.getElementById('root')
 );

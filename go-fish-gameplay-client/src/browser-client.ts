@@ -20,6 +20,9 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
     let playerId: string | null = null
     let joinedGame: string | null = null
 
+    let connectionPromise: Promise<void> | null = null
+    let isConnected = () => !!client.id
+
     return {
         createGame(template: Array<{ value: string; image?: string }>): Promise<string> {
             return client.request({
@@ -101,7 +104,13 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
         },
 
         connect(): Promise<void> {
-            return client.id ? Promise.resolve() : client.connect()
+            if(connectionPromise) return connectionPromise
+            if(isConnected()) return Promise.resolve()
+
+            connectionPromise = client.connect().then(() => {
+                connectionPromise = null
+            })
+            return connectionPromise
         },
 
         disconnect(): Promise<void> {

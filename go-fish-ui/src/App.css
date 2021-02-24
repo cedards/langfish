@@ -310,3 +310,41 @@ h3 button:not([disabled])::before {
   flex-grow: 1;
   padding: 1rem 2rem;
 }
+
+.choose-template {
+  color: white;
+}
+
+.choose-template .template-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.choose-template .template-list li {
+  list-style-type: none;
+  flex-grow: 1;
+  font-size: 2rem;
+  border-radius: 2rem;
+  background: #252;
+  color: white;
+  margin: 1rem;
+}
+
+.choose-template .template-list li button {
+  background: none;
+  font-size: inherit;
+  color: inherit;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  border: none;
+  cursor: pointer;
+}
+
+.choose-template p {
+  font-size: 2rem;
+}
+
+.choose-template a {
+  color: var(--highlight-color)
+}

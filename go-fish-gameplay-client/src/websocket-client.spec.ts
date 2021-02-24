@@ -256,7 +256,17 @@ describe('Go Fish gameplay client', function () {
     })
 
     describe('sad paths', function () {
+        beforeEach(async function () {
+            await client.disconnect()
+        })
+
         it('does not fail if I try to connect while already connected', async function () {
+            await client.connect()
+            await client.connect()
+        })
+
+        it('does not fail when connect is called multiple times in quick succession', async function () {
+            client.connect()
             await client.connect()
         })
     })

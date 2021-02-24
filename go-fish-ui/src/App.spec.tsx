@@ -12,6 +12,20 @@ interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterfa
     setGameState(gameState: GoFishGameState): void;
 }
 
+function FakeTemplatesClient() {
+    return {
+        getTemplates: () => Promise.resolve([
+            {
+                name: 'Template A',
+                template: [{ value: 'A' }]
+            }, {
+                name: 'Template B',
+                template: [{ value: 'B' }]
+            },
+        ])
+    }
+}
+
 function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
     let _isConnected = false
     let _joinedGame: string | null = null
@@ -27,6 +41,7 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
             _isConnected = false
             return Promise.resolve()
         },
+        createGame: jest.fn(() => Promise.resolve("game1")),
         joinGame: (gameId: string) => {
             _joinedGame = gameId
         },
@@ -56,17 +71,40 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
 }
 
 async function promisesToResolve() {
-    return Promise.resolve()
+    await act(async () => {
+        await Promise.resolve()
+    })
 }
 
 test('playing a game', async () => {
     const fakeClient = FakeGoFishWebsocketClient()
+    const templatesClient = FakeTemplatesClient()
 
     expect(fakeClient.isConnected()).toBeFalsy()
-    const { unmount } = render(<App client={fakeClient}/>)
+    const { unmount } = render(<App templatesClient={templatesClient} client={fakeClient}/>)
     expect(fakeClient.isConnected()).toBeTruthy()
 
     await promisesToResolve()
+
+    expect(screen.queryByText(/Template A/)).toBeInTheDocument()
+    expect(screen.queryByText(/Template B/)).toBeInTheDocument()
+
+    act(() => {
+        screen.getByText(/Template A/).click()
+    })
+
+    expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
+
+    await promisesToResolve()
+
+    expect(screen.queryByText(/Send your players to/)).toBeInTheDocument()
+    expect(screen.queryByText(/game1/)).toBeInTheDocument()
+
+    act(() => {
+        screen.getByText(/game1/).click()
+    })
+    await promisesToResolve()
+
     expect(fakeClient.joinedGame()).toEqual("game1")
 
     expect(screen.getByText(/Connecting.../)).toBeInTheDocument()

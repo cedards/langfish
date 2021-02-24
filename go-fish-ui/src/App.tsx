@@ -1,42 +1,40 @@
 import React, {useEffect, useState} from 'react';
-import {GoFishGameState} from "@langfish/go-fish-engine";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
+import {LoadingScreen} from "./LoadingScreen";
+import {TemplatesClientInterface} from "./creating-a-game/TemplatesClientInterface";
+import {CreateGame} from "./creating-a-game/CreateGame";
 import './App.css';
-import {LoadingScreen} from "./playing-a-game/LoadingScreen";
-import {GameTable} from "./playing-a-game/GameTable";
+import {PlayGame} from "./playing-a-game/PlayGame";
 
 interface AppProps {
-    client: GoFishGameplayClientInterface
+    client: GoFishGameplayClientInterface,
+    templatesClient: TemplatesClientInterface
 }
 
-function App({ client }: AppProps) {
-    const [playerId, updatePlayerId] = useState<string | null>(null)
-    const [gameState, updateGameState] = useState<GoFishGameState | null>(null)
+function App({ client, templatesClient }: AppProps) {
+    const [connected, updateConnected] = useState(false)
 
     useEffect(() => {
-        client.connect().then(() => {
-            client.joinGame("game1")
-            client.onSetPlayerId(updatePlayerId)
-            client.onUpdateGameState(updateGameState)
-        })
+        client.connect().then(() => { updateConnected(true) })
         return () => { client.disconnect() }
     }, [])
 
     return (
-        <div className="App">
+        <div className="App"><BrowserRouter>
             {
-                (playerId && gameState)
-                    ? <GameTable
-                        playerId={playerId}
-                        game={gameState}
-                        draw={client.draw}
-                        give={client.give}
-                        score={client.score}
-                        renamePlayer={client.renamePlayer}
-                    />
+                connected
+                    ? <Switch>
+                        <Route path="/game/:gameId">
+                            <PlayGame client={client}/>
+                        </Route>
+                        <Route path="/">
+                            <CreateGame templatesClient={templatesClient} gameplayClient={client}/>
+                        </Route>
+                    </Switch>
                     : <LoadingScreen/>
             }
-        </div>
+        </BrowserRouter></div>
     );
 }
 
