@@ -24,11 +24,9 @@ export function LocalStorageGameMembershipRepository(): GameMembershipRepository
     return {
         getPlayerIdFor(gameId: string) {
             const lookedUpEntry = get()[gameId];
-            console.log("lookedUpEntry:", lookedUpEntry)
             return (lookedUpEntry || {}).playerId || null
         },
         savePlayerIdFor(gameId: string, playerId: string) {
-            console.log("saving playerId", playerId, "for game", gameId)
             const repo = get()
             repo[gameId] = { playerId, expirationTime: new Date().getTime() + entryLifespan }
             save(repo)
