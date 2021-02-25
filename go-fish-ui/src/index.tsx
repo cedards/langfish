@@ -44,6 +44,7 @@ const preloadedImages = [
 ].map(card => {
     const img = new Image()
     img.src = card.image
+    return img
 })
 
 ReactDOM.render(
