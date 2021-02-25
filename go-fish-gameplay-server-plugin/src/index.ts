@@ -9,11 +9,13 @@ export interface GameRepository {
 
 export function InMemoryGameRepository(): GameRepository {
     const _games: { [key: string]: GoFishGame } = {}
-    let _nextId = 1
+
+    const randomId = () => Math.floor(Math.random() * 1e7)
+    let _nextId = randomId()
 
     return {
         saveGame(game): Promise<string> {
-            while(_games[`game-${_nextId}`]) _nextId++
+            while(_games[`game-${_nextId}`]) _nextId = randomId()
             const id = `game-${_nextId}`
             _games[id] = game
             return Promise.resolve(id);
@@ -35,7 +37,7 @@ export const GoFishGameplayPlugin = {
 
         async function publishNewGameState(gameId: string) {
             const game = await options.gameRepository.getGame(gameId)
-            await server.publish(`/game/${gameId}`, {
+            await server.publish(`/api/game/${gameId}`, {
                 type: 'UPDATE_GAME_STATE',
                 state: game.currentState()
             })
@@ -43,7 +45,7 @@ export const GoFishGameplayPlugin = {
 
         server.route({
             method: 'POST',
-            path: `/game`,
+            path: `/api/game`,
             options: {
                 id: 'createGame',
                 handler: (request, h) => {
@@ -57,8 +59,21 @@ export const GoFishGameplayPlugin = {
         })
 
         server.route({
+            method: 'GET',
+            path: `/api/game/{gameId}`,
+            options: {
+                id: 'getGameState',
+                handler: (request, h) => {
+                    return options.gameRepository
+                        .getGame(request.params.gameId)
+                        .then(game => game.currentState())
+                }
+            }
+        })
+
+        server.route({
             method: 'POST',
-            path: `/game/{gameId}`,
+            path: `/api/game/{gameId}`,
             options: {
                 id: 'performGameAction',
                 handler: async (request, h) => {
@@ -91,7 +106,7 @@ export const GoFishGameplayPlugin = {
 
         server.route({
             method: 'POST',
-            path: `/game/{gameId}/addPlayer`,
+            path: `/api/game/{gameId}/player`,
             options: {
                 id: 'addPlayerToGame',
                 handler: async (request, h) => {
@@ -103,7 +118,7 @@ export const GoFishGameplayPlugin = {
             }
         })
 
-        server.subscription('/game/{gameId}')
+        server.subscription('/api/game/{gameId}')
     }
 }
 

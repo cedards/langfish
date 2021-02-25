@@ -24,8 +24,8 @@ export function ChooseTemplate({templates, gameplayClient}: {
         }</ul>
         {
             gameId
-                ? <p>Your game has been created! Send your players to <Link to={`/game/${gameId}`}>
-                    {`${window.location.protocol}//${window.location.host}${window.location.pathname}game/${gameId}`}
+                ? <p>Your game has been created! Send your players to <Link to={`/play/${gameId}`}>
+                    {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
                 </Link></p>
                 : ''
         }

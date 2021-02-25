@@ -1,4 +1,5 @@
 import * as Nes from "@hapi/nes/lib/client";
+import {GameMembershipRepository, InMemoryGameMembershipRepository} from "./game-membership-repository";
 
 export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
@@ -7,13 +8,16 @@ export interface GoFishGameplayClientInterface {
     onUpdateGameState(callback: (newState) => void): void
     createGame(template: Array<{ value: string, image?: string }>): Promise<string>
     joinGame(gameId: string): void
+    renamePlayer(name: string): void
     draw(): void
     give(cardIds: Array<number>, recipientName: string): void
     score(cardIds: number[]): void
-    renamePlayer(name: string): void
 }
 
-export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClientInterface {
+export function GoFishGameplayClient(
+    websocketUrl: string,
+    gameMembershipRepository: GameMembershipRepository = InMemoryGameMembershipRepository()
+): GoFishGameplayClientInterface {
     const client = new Nes.Client(websocketUrl)
     const setPlayerIdCallbacks: Array<(name) => void> = []
     const updateGameStateCallbacks: Array<(GameState) => void> = []
@@ -23,10 +27,21 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
     let connectionPromise: Promise<void> | null = null
     let isConnected = () => !!client.id
 
+    async function useExistingPlayer(gameId) {
+        return gameMembershipRepository.getPlayerIdFor(gameId)
+    }
+
+    async function createNewPlayer(gameId) {
+        return (await client.request({
+            path: `/api/game/${gameId}/player`,
+            method: "POST"
+        })).payload.playerId
+    }
+
     return {
         createGame(template: Array<{ value: string; image?: string }>): Promise<string> {
             return client.request({
-                path: `/game`,
+                path: `/api/game`,
                 method: "POST",
                 payload: { template: template },
             }).then((response) => {
@@ -35,21 +50,25 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
         },
 
         async joinGame(gameId: string): Promise<void> {
-            await client.subscribe(`/game/${gameId}`, payload => {
+            await client.subscribe(`/api/game/${gameId}`, payload => {
                 updateGameStateCallbacks.forEach(callback => callback(payload.state))
             })
             joinedGame = gameId
-            const addPlayerResponse = await client.request({
-                path: `/game/${joinedGame}/addPlayer`,
-                method: "POST"
-            })
-            playerId = addPlayerResponse.payload.playerId
+
+            playerId = await useExistingPlayer(gameId) || await createNewPlayer(gameId)
+            gameMembershipRepository.savePlayerIdFor(gameId, playerId)
             setPlayerIdCallbacks.forEach(callback => callback(playerId))
+
+            const getGameStateResponse = await client.request({
+                path: `/api/game/${gameId}`,
+                method: "GET",
+            })
+            updateGameStateCallbacks.forEach(callback => callback(getGameStateResponse.payload))
         },
 
         renamePlayer(name: string): void {
             client.request({
-                path: `/game/${joinedGame}`,
+                path: `/api/game/${joinedGame}`,
                 method: "POST",
                 payload: {
                     type: "RENAME",
@@ -61,7 +80,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
 
         draw(): void {
             client.request({
-                path: `/game/${joinedGame}`,
+                path: `/api/game/${joinedGame}`,
                 method: "POST",
                 payload: {
                     type: "DRAW",
@@ -72,7 +91,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
 
         give(cardIds: Array<number>, recipientName: string): void {
             client.request({
-                path: `/game/${joinedGame}`,
+                path: `/api/game/${joinedGame}`,
                 method: "POST",
                 payload: {
                     type: "GIVE",
@@ -85,7 +104,7 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
 
         score(cardIds: number[]): void {
             client.request({
-                path: `/game/${joinedGame}`,
+                path: `/api/game/${joinedGame}`,
                 method: "POST",
                 payload: {
                     type: "SCORE",
@@ -107,10 +126,9 @@ export function GoFishGameplayClient(websocketUrl: string): GoFishGameplayClient
             if(connectionPromise) return connectionPromise
             if(isConnected()) return Promise.resolve()
 
-            connectionPromise = client.connect().then(() => {
+            return connectionPromise = client.connect().then(() => {
                 connectionPromise = null
             })
-            return connectionPromise
         },
 
         disconnect(): Promise<void> {

@@ -18,7 +18,7 @@ export function PlayGame({client}: { client: GoFishGameplayClientInterface }) {
         })
     }, [])
 
-    return (playerId && gameState)
+    return (playerId && gameState && gameState.players[playerId])
         ? <GameTable
             playerId={playerId}
             game={gameState}

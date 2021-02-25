@@ -3,11 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {GoFishGameplayClient} from "@langfish/go-fish-gameplay-client";
+import {
+    GoFishGameplayClient,
+    InMemoryGameMembershipRepository
+} from "@langfish/go-fish-gameplay-client";
+import {
+    LocalStorageGameMembershipRepository
+} from "./playing-a-game/LocalStorageGameMembershipRepository";
 
-const client = process.env.NODE_ENV === "development"
-    ? GoFishGameplayClient(`ws://localhost:5000`)
-    : GoFishGameplayClient(`${document.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${document.location.host}/`);
+const websocketUrl = process.env.NODE_ENV === "development"
+    ? `ws://localhost:5000`
+    : `${document.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${document.location.host}/`
+
+const gameMembershipRepo = process.env.NODE_ENV === "development"
+    ? InMemoryGameMembershipRepository()
+    : LocalStorageGameMembershipRepository()
+
+const client = GoFishGameplayClient(websocketUrl, gameMembershipRepo)
 
 const templatesClient = {
     getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }>}>> {

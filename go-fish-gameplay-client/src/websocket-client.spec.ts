@@ -1,16 +1,27 @@
 import * as Hapi from "@hapi/hapi"
 import {GoFishGame} from "@langfish/go-fish-engine"
-import {GameRepository, GoFishGameplayPlugin, InMemoryGameRepository,} from "@langfish/go-fish-gameplay-server-plugin"
-import {GoFishGameplayClient, GoFishGameplayClientInterface,} from ".";
+import {
+    GameRepository,
+    GoFishGameplayPlugin,
+    InMemoryGameRepository,
+} from "@langfish/go-fish-gameplay-server-plugin"
+import {
+    GameMembershipRepository,
+    GoFishGameplayClient,
+    GoFishGameplayClientInterface,
+    InMemoryGameMembershipRepository,
+} from ".";
 
 describe('Go Fish gameplay client', function () {
     let server: Hapi.Server
     let client: GoFishGameplayClientInterface
     let gameRepository: GameRepository
     let existingGameId: string
+    let gameMembershipRepository: GameMembershipRepository
 
     beforeEach(async function () {
         gameRepository = InMemoryGameRepository()
+        gameMembershipRepository = InMemoryGameMembershipRepository()
         existingGameId = await gameRepository.saveGame(GoFishGame([
             {id: 1, value: 'A'},
             {id: 2, value: 'B'},
@@ -26,7 +37,10 @@ describe('Go Fish gameplay client', function () {
         })
         await server.start()
 
-        client = GoFishGameplayClient(`ws://localhost:${server.info.port}`)
+        client = GoFishGameplayClient(
+            `ws://localhost:${server.info.port}`,
+            gameMembershipRepository
+        )
         await client.connect()
     })
 
@@ -78,16 +92,44 @@ describe('Go Fish gameplay client', function () {
         })
     })
 
+    describe('given I have joined a game previously', function () {
+        let existingPlayerId
+        let gameStatesSpy: jest.Mock
+
+        beforeEach(async function () {
+            gameStatesSpy = jest.fn()
+            const game = await gameRepository.getGame(existingGameId)
+
+            existingPlayerId = game.addPlayer()
+            gameMembershipRepository.savePlayerIdFor(existingGameId, existingPlayerId)
+
+            client.onUpdateGameState(gameStatesSpy)
+            await client.joinGame(existingGameId)
+        })
+
+        it('does not create another player', async function () {
+            const game = await gameRepository.getGame(existingGameId)
+            expect(Object.keys(game.currentState().players)).toEqual([existingPlayerId])
+        })
+
+        it('uses my existing player id for game actions', function () {
+            client.draw()
+            return eventually(() => {
+                expect(latestCallTo(gameStatesSpy)[0].players[existingPlayerId].hand.length).toEqual(1)
+            })
+        })
+    })
+
     describe('when I join a game', function () {
         let playerIdSpy: jest.Mock
         let gameStatesSpy: jest.Mock
 
-        beforeEach(function () {
+        beforeEach(async function () {
             playerIdSpy = jest.fn()
             gameStatesSpy = jest.fn()
             client.onSetPlayerId(playerIdSpy)
             client.onUpdateGameState(gameStatesSpy)
-            client.joinGame(existingGameId)
+            await client.joinGame(existingGameId)
         })
 
         it('receives an assigned player id for the game', function () {
@@ -96,10 +138,15 @@ describe('Go Fish gameplay client', function () {
             })
         })
 
+        it('saves my player id in the game membership repo', async function () {
+            await eventually(() => { expect(playerIdSpy).toHaveBeenCalled() })
+            expect(gameMembershipRepository.getPlayerIdFor(existingGameId)).toEqual(latestCallTo(playerIdSpy)[0])
+        })
+
         it('receives the current game state', async function () {
             const existingGame = await gameRepository.getGame(existingGameId)
             return eventually(() => {
-                expect(gameStatesSpy).toHaveBeenCalledWith(existingGame.currentState())
+                expect(latestCallTo(gameStatesSpy)[0]).toEqual(existingGame.currentState())
             })
         })
 
@@ -129,7 +176,7 @@ describe('Go Fish gameplay client', function () {
                 await otherClient.connect()
 
                 otherClient.onSetPlayerId(otherClientPlayerIdSpy)
-                otherClient.joinGame(existingGameId)
+                await otherClient.joinGame(existingGameId)
             })
 
             afterEach(async () => {
@@ -228,7 +275,7 @@ describe('Go Fish gameplay client', function () {
             assignedId = null
             client.onSetPlayerId(name => assignedId = name)
             client.onUpdateGameState(gameStatesSpy)
-            client.joinGame(gameWithIdenticalCards)
+            await client.joinGame(gameWithIdenticalCards)
             await eventually(() => { if(!assignedId) throw new Error(`Never received player id for ${gameWithIdenticalCards}`) })
 
             client.draw()

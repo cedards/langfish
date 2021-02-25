@@ -25,7 +25,7 @@ function App({ client, templatesClient }: AppProps) {
             {
                 connected
                     ? <Switch>
-                        <Route path="/game/:gameId">
+                        <Route path="/play/:gameId">
                             <PlayGame client={client}/>
                         </Route>
                         <Route path="/">

@@ -23,7 +23,7 @@ export const FrontendPlugin = {
 
         server.route({
             method: 'GET',
-            path: '/game/{gameId*}',
+            path: '/play/{gameId*}',
             options: {
                 auth: false,
                 cors: { origin: ['*'] },
