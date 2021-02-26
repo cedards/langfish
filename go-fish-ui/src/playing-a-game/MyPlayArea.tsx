@@ -26,7 +26,7 @@ export function MyPlayArea(
     }
 
     return <section aria-labelledby="myName" className="play-area">
-        <PlayerName playerName={playerInfo.name} renamePlayer={renamePlayer}/>
+        <PlayerName playerName={playerInfo.name} renamePlayer={renamePlayer} handSize={playerInfo.hand.length}/>
         <MyHand
             hand={playerInfo.hand}
             readyToScore={readyToScore()}
@@ -42,9 +42,10 @@ export function MyPlayArea(
 }
 
 function PlayerName(
-    { playerName, renamePlayer }: {
+    { playerName, renamePlayer, handSize }: {
         playerName: string | undefined,
-        renamePlayer: (name: string) => void
+        renamePlayer: (name: string) => void,
+        handSize: number
     }
 ) {
     const [ editMode, updateEditMode ] = useState(false)
@@ -54,13 +55,14 @@ function PlayerName(
     }
 
     return editMode || !playerName
-        ? <PlayerNameForm name={playerName} renamePlayer={handleRename}/>
-        : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)}/>
+        ? <PlayerNameForm name={playerName} renamePlayer={handleRename} handSize={handSize}/>
+        : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)} handSize={handSize}/>
 }
 
-function PlayerNameForm({ name, renamePlayer }: {
+function PlayerNameForm({ name, renamePlayer, handSize }: {
     name: string | undefined,
-    renamePlayer: (name: string) => void
+    renamePlayer: (name: string) => void,
+    handSize: number
 }) {
     const [ enteredName, updateEnteredName ] = useState(name || "")
 
@@ -73,7 +75,7 @@ function PlayerNameForm({ name, renamePlayer }: {
         renamePlayer(enteredName)
     }
     return <form id="myName" onSubmit={saveName}>
-        😀
+        {handSize}
         <input
             autoFocus={true}
             className="name"
@@ -87,12 +89,13 @@ function PlayerNameForm({ name, renamePlayer }: {
     </form>
 }
 
-function PlayerNameHeader({ name, editPlayerName }: {
+function PlayerNameHeader({ name, editPlayerName, handSize }: {
     name: string | undefined,
-    editPlayerName: () => void
+    editPlayerName: () => void,
+    handSize: number
 }) {
     return <h1 id="myName">
-        😀
+        {handSize}
         <span onClick={editPlayerName} className={`name ${name ? '' : 'highlight'}`}>{name || "???"}</span>
         <button className={name ? '' : 'highlight'} aria-label="edit name" onClick={editPlayerName}>✍️</button>
     </h1>
