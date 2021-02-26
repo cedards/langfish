@@ -11,7 +11,7 @@ body {
 
 .App {
   text-align: center;
-  max-width: 60rem;
+  max-width: 70rem;
   margin: 0 auto;
 }
 
@@ -146,6 +146,10 @@ body {
   list-style-type: none;
   width: 3rem;
   height: 4rem;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 3.8rem;
   text-align: center;
 }
 

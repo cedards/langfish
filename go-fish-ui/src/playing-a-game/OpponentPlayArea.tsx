@@ -18,13 +18,17 @@ export function OpponentPlayArea(
         updateSelectedCards([])
     }
 
+    const cardsToShow = playerInfo.hand.slice(0, 7)
+
     return <section aria-labelledby={playerId} className="play-area opponent-play-area">
         <h3 id={playerId}>{
             <button onClick={giveTo(playerId)} disabled={selectedCards.length === 0}>{playerInfo.name || '???'}</button>
         }</h3>
         <ul className="other-player-hand">
-            {sortCards(playerInfo.hand).map(card =>
-                <li className="hidden-card" aria-label="hidden card" key={card.id}/>
+            {sortCards(cardsToShow).map((card, index) =>
+                <li className="hidden-card" aria-label="hidden card" key={card.id}>
+                    {index === cardsToShow.length-1 ? playerInfo.hand.length : ''}
+                </li>
             )}
         </ul>
         <ul className="sets" aria-label={`sets for ${playerId}`}>
