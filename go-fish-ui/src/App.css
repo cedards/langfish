@@ -79,6 +79,7 @@ body {
 
 .deck {
   flex-basis: auto;
+  align-self: flex-end;
 
   border-color: var(--card-border-color);
   border-width: 3px 9px 9px 3px;
@@ -89,7 +90,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
 
-  margin: 1rem;
+  margin: 1rem 1rem 7rem 1rem;
   background-color: var(--card-back-color);
   min-width: 6rem;
   height: 8rem;
@@ -98,9 +99,29 @@ body {
 }
 
 .deck.highlight {
+  position: relative;
+  box-sizing: border-box;
   animation-name: encourageDraw;
   animation-duration: 2s;
   animation-iteration-count: infinite;
+}
+
+.deck.highlight::before {
+  content: "🤚";
+  position: absolute;
+  top: 8rem;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  animation-name: reachingHand;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.deck.highlight:hover {
+  box-shadow: 0 0 5rem var(--highlight-color);
+  background-color: var(--highlight-color);
+  animation: none;
 }
 
 @keyframes encourageDraw {
@@ -117,6 +138,20 @@ body {
   to {
     box-shadow: 0 0 0;
     background-color: var(--card-back-color);
+  }
+}
+
+@keyframes reachingHand {
+  from {
+    top: 9rem;
+  }
+
+  50% {
+    top: 6rem;
+  }
+
+  to {
+    top: 9rem;
   }
 }
 
