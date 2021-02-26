@@ -17,9 +17,10 @@ export function GameTable(
     const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
     const me = game.players[playerId]
     const opponents = Object.keys(game.players).filter(player => player !== playerId);
+    const encourageDraw = !!me.name && me.hand.length === 0 && game.deck.length > 0;
 
     return <div className="game-table">
-        <Deck draw={draw} deck={game.deck} highlight={!!game.players[playerId].name && game.players[playerId].hand.length === 0 && game.deck.length > 0}/>
+        <Deck draw={draw} deck={game.deck} highlight={encourageDraw}/>
         <div className="play-areas">
             {
                 opponents.map(playerId =>

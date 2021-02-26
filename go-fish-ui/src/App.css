@@ -3,6 +3,7 @@
   --selected-color: #5F5;
   --card-back-color: #454;
   --card-border-color: black;
+  --play-area-background: #252;
 }
 
 body {
@@ -253,6 +254,15 @@ h3 button:not([disabled]) {
   padding: 0 1rem;
 }
 
+h3 button:not([disabled]):hover {
+  background-color: var(--selected-color);
+  color: var(--play-area-background);
+  cursor: pointer;
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
+  padding: 0 1rem;
+}
+
 h3 button:not([disabled])::before {
   content: "⇒️ ";
 }
@@ -286,7 +296,7 @@ h3 button:not([disabled])::before {
 
 @keyframes readytoscore {
   from {
-    border-color: #252;
+    border-color: var(--play-area-background);
     width: 2rem;
     height: 3rem;
     margin: 0.2rem;
@@ -302,7 +312,7 @@ h3 button:not([disabled])::before {
   }
 
   to {
-    border-color: #252;
+    border-color: var(--play-area-background);
     width: 2rem;
     height: 3rem;
     margin: 0.2rem;
@@ -335,7 +345,7 @@ h3 button:not([disabled])::before {
 
 .play-area {
   color: white;
-  background: #252;
+  background: var(--play-area-background);
   padding: 1rem;
   border-radius: 2rem;
   margin: 0.5rem;
@@ -364,7 +374,7 @@ h3 button:not([disabled])::before {
   flex-grow: 1;
   font-size: 2rem;
   border-radius: 2rem;
-  background: #252;
+  background: var(--play-area-background);
   color: white;
   margin: 1rem;
 }
