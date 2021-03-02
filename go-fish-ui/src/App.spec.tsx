@@ -1,9 +1,10 @@
-import React from 'react';
-import {act, render, screen} from '@testing-library/react';
+import React from 'react'
+import {act, render, screen} from '@testing-library/react'
 import { within } from '@testing-library/dom'
-import App from './App';
-import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
-import {GoFishGameState} from "@langfish/go-fish-engine";
+import userEvent from '@testing-library/user-event'
+import App from './App'
+import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
+import {GoFishGameState} from "@langfish/go-fish-engine"
 
 interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterface {
     isConnected(): boolean;
@@ -177,54 +178,54 @@ test('playing a game', async () => {
     expect(fakeClient.draw).toHaveBeenCalled()
 
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1])
     })
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
     })
     act(() => {
-        screen.getByText("lilu").click()
+        userEvent.click(screen.getByText("lilu"))
     })
 
     expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
 
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0])
     })
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
     })
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
     })
     act(() => {
-        screen.getByText("lilu").click()
+        userEvent.click(screen.getByText("lilu"))
     })
     expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
 
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0])
     })
     expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1])
     })
     expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
     })
     expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[2].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[2])
     })
     expect(screen.queryByText("+1")).not.toBeInTheDocument()
     act(() => {
-        within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0].click()
+        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
     })
     expect(screen.queryByText("+1")).toBeInTheDocument()
 
     act(() => {
-        screen.getByText("+1").click()
+        userEvent.click(screen.getByText("+1"))
     })
     expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
     expect(screen.queryByText("+1")).not.toBeInTheDocument()
