@@ -11,7 +11,7 @@ test('playing a game', async () => {
     const templatesClient = FakeTemplatesClient([
         {
             name: 'Template A',
-            template: [{ value: 'A' }]
+            template: [{ value: 'A' }, { value: 'C' }]
         }, {
             name: 'Template B',
             template: [{ value: 'B' }]
@@ -25,7 +25,7 @@ test('playing a game', async () => {
 
     expect_to_see_available_templates(['Template A', 'Template B'])
 
-    select_template(/Template A/);
+    select_template_without_some_cards(/Template A/, ['C']);
     expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
     await promisesToResolve()
 
@@ -130,8 +130,12 @@ test('playing a game', async () => {
     expect(fakeClient.isConnected()).toBeFalsy()
 });
 
-function select_template(templateName: RegExp) {
+function select_template_without_some_cards(templateName: RegExp, cardsToExclude: string[]) {
     userEvent.click(screen.getByText(templateName))
+    cardsToExclude.forEach(cardValue => {
+        userEvent.click(screen.getByLabelText(cardValue))
+    })
+    userEvent.click(screen.getByText('Create Game'))
 }
 
 function expect_to_see_game_link_for(gameId: RegExp) {

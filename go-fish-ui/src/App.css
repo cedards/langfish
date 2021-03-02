@@ -369,7 +369,7 @@ h3 button:not([disabled])::before {
   flex-wrap: wrap;
 }
 
-.choose-template .template-list li {
+.template {
   list-style-type: none;
   flex-grow: 1;
   font-size: 2rem;
@@ -377,17 +377,47 @@ h3 button:not([disabled])::before {
   background: var(--play-area-background);
   color: white;
   margin: 1rem;
+  width: 100%;
+  position: relative;
 }
 
-.choose-template .template-list li button {
+.choose-template-button {
   background: none;
   font-size: inherit;
   color: inherit;
   width: 100%;
-  height: 100%;
   padding: 2rem;
   border: none;
   cursor: pointer;
+}
+
+.choose-template-button::before {
+  content: "▶";
+  margin-right: 1rem;
+  position: absolute;
+  left: 2rem;
+}
+
+.expanded .choose-template-button::before {
+  content: "▼";
+  margin-right: 1rem;
+}
+
+.create-game-button {
+  background: none;
+  cursor: pointer;
+  padding: 1.2rem;
+  margin: 1rem;
+  width: auto;
+  font-size: 1.4rem;
+  border: solid 3px var(--selected-color);
+  border-radius: 2rem;
+  color: var(--selected-color);
+}
+
+.create-game-button:hover {
+  background: var(--selected-color);
+  color: var(--play-area-background);
 }
 
 .choose-template p {
@@ -396,4 +426,17 @@ h3 button:not([disabled])::before {
 
 .choose-template a {
   color: var(--highlight-color)
+}
+
+.card-list img {
+  height: 100px;
+  vertical-align: middle;
+  margin: 0 1rem;
+}
+.card-list > li {
+  list-style-type: none;
+  text-align: left;
+  font-size: 1.4rem;
+  min-height: 3rem;
+  margin: 1rem;
 }

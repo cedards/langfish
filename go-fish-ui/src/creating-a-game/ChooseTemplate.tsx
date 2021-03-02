@@ -8,8 +8,7 @@ export function ChooseTemplate({templates, gameplayClient}: {
 }) {
     const [gameId, updateGameId] = useState<string | null>(null)
 
-    const handleClick = (template: Array<{ value: string, image?: string }>) => (e: React.MouseEvent) => {
-        e.preventDefault()
+    const onSelect = (template: Array<{ value: string, image?: string }>) => {
         gameplayClient
             .createGame(template)
             .then(updateGameId)
@@ -17,11 +16,6 @@ export function ChooseTemplate({templates, gameplayClient}: {
 
     return <div className="choose-template">
         <h1>Choose the deck template for your game.</h1>
-        <ul className="template-list">{
-            templates.map(templateInfo => <li key={templateInfo.name}>
-                <button onClick={handleClick(templateInfo.template)}>{templateInfo.name}</button>
-            </li>)
-        }</ul>
         {
             gameId
                 ? <p>Your game has been created! Send your players to <Link to={`/play/${gameId}`}>
@@ -29,5 +23,62 @@ export function ChooseTemplate({templates, gameplayClient}: {
                 </Link></p>
                 : ''
         }
+        <ul className="template-list">{
+            templates.map(templateInfo => <Template
+                key={templateInfo.name}
+                templateInfo={templateInfo}
+                onSelect={onSelect}
+            />)
+        }</ul>
     </div>
+}
+
+function Template({templateInfo, onSelect}: {
+    templateInfo: { name: string, template: Array<{ value: string, image?: string }> },
+    onSelect: (template: Array<{ value: string, image?: string }>) => void,
+}) {
+    const [expanded, updateExpanded] = useState(false)
+    const [selectedCards, updateSelectedCards] = useState(templateInfo.template.map(({value}) => value))
+
+    const handleExpand = (e: React.MouseEvent) => {
+        e.preventDefault()
+        updateExpanded(old => !old)
+    }
+
+    const handleToggleCard = (cardValue: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateSelectedCards(e.target.checked
+            ? Array.from(new Set(selectedCards.concat([cardValue])))
+            : selectedCards.filter(v => v !== cardValue)
+        )
+    }
+
+    const createGame = (e: React.MouseEvent) => {
+        e.preventDefault()
+        onSelect(templateInfo.template.filter(cardInfo => selectedCards.includes(cardInfo.value)))
+        updateExpanded(false)
+    }
+
+    return <li className={`template ${expanded ? 'expanded' : ''}`}>
+        <button className="choose-template-button" onClick={handleExpand}>{templateInfo.name}</button>
+        {expanded
+            ? <div>
+                <ul className="card-list">
+                    {templateInfo.template.map(({value, image}) => <li key={value}>
+                        <label>
+                            <input
+                                type="checkbox"
+                                onChange={handleToggleCard(value)}
+                                checked={selectedCards.includes(value)}
+                            />
+                            {image
+                                ? <img src={image} alt=""/>
+                                : null}
+                            <span>{value}</span>
+                        </label>
+                    </li>)}
+                </ul>
+                <button className="create-game-button" onClick={createGame}>Create Game</button>
+            </div>
+            : null}
+    </li>
 }
