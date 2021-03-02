@@ -1,10 +1,213 @@
 import React from 'react'
 import {act, render, screen} from '@testing-library/react'
-import { within } from '@testing-library/dom'
+import {within} from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
 import {GoFishGameState} from "@langfish/go-fish-engine"
+
+test('playing a game', async () => {
+    const fakeClient = FakeGoFishWebsocketClient()
+    const templatesClient = FakeTemplatesClient([
+        {
+            name: 'Template A',
+            template: [{ value: 'A' }]
+        }, {
+            name: 'Template B',
+            template: [{ value: 'B' }]
+        },
+    ])
+
+    expect(fakeClient.isConnected()).toBeFalsy()
+    const { unmount } = render(<App templatesClient={templatesClient} client={fakeClient}/>)
+    expect(fakeClient.isConnected()).toBeTruthy()
+    await promisesToResolve()
+
+    expect_to_see_available_templates(['Template A', 'Template B'])
+
+    select_template(/Template A/);
+    expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
+    await promisesToResolve()
+
+    expect_to_see_game_link_for(/game1/);
+    follow_game_link_for(/game1/);
+    await promisesToResolve()
+    expect(fakeClient.joinedGame()).toEqual("game1")
+
+    expect_to_see_loading_screen();
+    when_the_server_assigns_me_a_player_id(fakeClient);
+    expect_to_see_loading_screen();
+
+    act(() => {
+        fakeClient.setGameState({
+            deck: [
+                { id: 1, value: 'A' },
+                { id: 2, value: 'B' },
+                { id: 3, value: 'C' },
+                { id: 4, value: 'D' },
+            ],
+            players: {
+                "TALAPAS": {
+                    name: "talapas",
+                    hand: [
+                        { id: 7, value: 'A' },
+                        { id: 8, value: 'B' },
+                        { id: 9, value: 'A' },
+                        { id: 10, value: 'B' },
+                        { id: 11, value: 'A' },
+                    ],
+                    sets: [
+                        [
+                            { id: 12, value: 'C' },
+                            { id: 13, value: 'C' },
+                            { id: 14, value: 'C' },
+                        ]
+                    ]
+                },
+                "LILU": {
+                    name: "lilu",
+                    hand: [
+                        { id: 5, value: 'E' },
+                        { id: 6, value: 'F' },
+                    ],
+                    sets: [
+                        [
+                            { id: 15, value: 'D' },
+                            { id: 16, value: 'D' },
+                            { id: 17, value: 'D' },
+                        ]
+                    ]
+                },
+            }
+        })
+    })
+
+    expect_to_see_play_areas_for([/talapas/, /lilu/])
+    expect_deck_to_have_number_of_cards("4");
+
+    expect_player_hand_to_equal(['A', 'A', 'A', 'B', 'B']);
+    expect_player_to_have_number_of_sets("C", 1);
+
+    expect_opponent_to_have_number_of_cards("lilu", 2);
+    expect_opponent_to_have_number_of_sets("lilu", "D", 1)
+
+    draw_a_card();
+    expect(fakeClient.draw).toHaveBeenCalled()
+
+    select_nth_card_with_value('A', 1)
+    select_nth_card_with_value('B', 0)
+    give_cards_to("lilu")
+
+    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
+
+    select_nth_card_with_value('A', 0)
+    select_nth_card_with_value('B', 0)
+    select_nth_card_with_value('B', 0) // deselect
+    give_cards_to("lilu");
+    expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
+
+    select_nth_card_with_value('A', 0)
+    expect_score_button_not_to_be_available()
+
+    select_nth_card_with_value('A', 1)
+    expect_score_button_not_to_be_available()
+
+    select_nth_card_with_value('B', 0)
+    expect_score_button_not_to_be_available() // three cards, but don't all match
+
+    select_nth_card_with_value('A', 2)
+    expect_score_button_not_to_be_available() // three A's, but one B selected
+
+    select_nth_card_with_value('B', 0)
+    expect_score_button_to_be_available() // only three A's selected
+
+    score_set()
+    expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
+    expect_score_button_not_to_be_available()
+
+    unmount()
+
+    expect(fakeClient.isConnected()).toBeFalsy()
+});
+
+function select_template(templateName: RegExp) {
+    userEvent.click(screen.getByText(templateName))
+}
+
+function expect_to_see_game_link_for(gameId: RegExp) {
+    expect(screen.queryByText(/Send your players to/)).toBeInTheDocument()
+    expect(screen.queryByText(gameId)).toBeInTheDocument()
+}
+
+function follow_game_link_for(gameLink: RegExp) {
+    userEvent.click(screen.getByText(gameLink))
+}
+
+function select_nth_card_with_value(cardValue: string, cardIndex: number) {
+    userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText(`hidden card: ${cardValue}`)[cardIndex])
+}
+
+function expect_score_button_not_to_be_available() {
+    expect(screen.queryByText("+1")).not.toBeInTheDocument()
+}
+
+function expect_score_button_to_be_available() {
+    expect(screen.queryByText("+1")).toBeInTheDocument()
+}
+
+function score_set() {
+    userEvent.click(screen.getByText("+1"))
+}
+
+function give_cards_to(recipientName: string) {
+    userEvent.click(screen.getByText(recipientName))
+}
+
+function expect_opponent_to_have_number_of_sets(opponentName: string, cardValue: string, numberOfSets: number) {
+    expect(within(screen.getByLabelText(opponentName)).queryAllByLabelText(`set: ${cardValue}`).length).toEqual(numberOfSets)
+}
+
+function expect_player_to_have_number_of_sets(cardValue: string, numberOfSets: number) {
+    expect(within(screen.getByLabelText(/talapas/)).queryAllByLabelText(`set: ${cardValue}`).length).toEqual(numberOfSets)
+}
+
+function expect_player_hand_to_equal(hand: string[]) {
+    expect(within(screen.getByLabelText(/talapas/)).queryAllByRole("checkbox").map(element => element.textContent)).toEqual(hand)
+}
+
+function expect_opponent_to_have_number_of_cards(opponentName: string, numberOfCards: number) {
+    expect(within(screen.getByLabelText(opponentName)).queryAllByLabelText("hidden card").length).toEqual(numberOfCards)
+}
+
+function draw_a_card() {
+    userEvent.click(screen.getByLabelText("deck"))
+}
+
+function expect_deck_to_have_number_of_cards(numberOfCards: string) {
+    expect(screen.getByLabelText("deck")).toHaveTextContent(numberOfCards)
+}
+
+function expect_to_see_play_areas_for(playerNames: RegExp[]) {
+    playerNames.forEach(playerName => {
+        expect(screen.getByText(playerName)).toBeInTheDocument()
+    })
+}
+
+function expect_to_see_loading_screen() {
+    expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
+}
+
+function when_the_server_assigns_me_a_player_id(fakeClient: FakeGoFishWebsocketClientInterface) {
+    act(() => {
+        fakeClient.setPlayerId("TALAPAS")
+    })
+}
+
+function expect_to_see_available_templates(templates: Array<string>) {
+    templates.forEach(template => {
+        expect(screen.queryByText(template)).toBeInTheDocument()
+    })
+}
 
 interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterface {
     isConnected(): boolean;
@@ -13,17 +216,9 @@ interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterfa
     setGameState(gameState: GoFishGameState): void;
 }
 
-function FakeTemplatesClient() {
+function FakeTemplatesClient(templates: { template: { value: string }[]; name: string }[]) {
     return {
-        getTemplates: () => Promise.resolve([
-            {
-                name: 'Template A',
-                template: [{ value: 'A' }]
-            }, {
-                name: 'Template B',
-                template: [{ value: 'B' }]
-            },
-        ])
+        getTemplates: () => Promise.resolve(templates)
     }
 }
 
@@ -72,165 +267,5 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
 }
 
 async function promisesToResolve() {
-    await act(async () => {
-        await Promise.resolve()
-    })
+    await act(async () => { await Promise.resolve() })
 }
-
-test('playing a game', async () => {
-    const fakeClient = FakeGoFishWebsocketClient()
-    const templatesClient = FakeTemplatesClient()
-
-    expect(fakeClient.isConnected()).toBeFalsy()
-    const { unmount } = render(<App templatesClient={templatesClient} client={fakeClient}/>)
-    expect(fakeClient.isConnected()).toBeTruthy()
-
-    await promisesToResolve()
-
-    expect(screen.queryByText(/Template A/)).toBeInTheDocument()
-    expect(screen.queryByText(/Template B/)).toBeInTheDocument()
-
-    act(() => {
-        screen.getByText(/Template A/).click()
-    })
-
-    expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
-
-    await promisesToResolve()
-
-    expect(screen.queryByText(/Send your players to/)).toBeInTheDocument()
-    expect(screen.queryByText(/game1/)).toBeInTheDocument()
-
-    act(() => {
-        screen.getByText(/game1/).click()
-    })
-    await promisesToResolve()
-
-    expect(fakeClient.joinedGame()).toEqual("game1")
-
-    expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
-
-    act(() => {
-        fakeClient.setPlayerId("TALAPAS")
-    })
-
-    expect(screen.getByText(/Connecting.../)).toBeInTheDocument()
-
-    act(() => {
-        fakeClient.setGameState({
-            deck: [
-                { id: 1, value: 'A' },
-                { id: 2, value: 'B' },
-                { id: 3, value: 'C' },
-                { id: 4, value: 'D' },
-            ],
-            players: {
-                "TALAPAS": {
-                    name: "talapas",
-                    hand: [
-                        { id: 7, value: 'A' },
-                        { id: 8, value: 'B' },
-                        { id: 9, value: 'A' },
-                        { id: 10, value: 'B' },
-                        { id: 11, value: 'A' },
-                    ],
-                    sets: [
-                        [
-                            { id: 12, value: 'C' },
-                            { id: 13, value: 'C' },
-                            { id: 14, value: 'C' },
-                        ]
-                    ]
-                },
-                "LILU": {
-                    name: "lilu",
-                    hand: [
-                        { id: 5, value: 'E' },
-                        { id: 6, value: 'F' },
-                    ],
-                    sets: [
-                        [
-                            { id: 15, value: 'D' },
-                            { id: 16, value: 'D' },
-                            { id: 17, value: 'D' },
-                        ]
-                    ]
-                },
-            }
-        })
-    })
-
-    expect(screen.getByText(/talapas/)).toBeInTheDocument()
-    expect(screen.getByText(/lilu/)).toBeInTheDocument()
-    expect(screen.getByLabelText("deck")).toHaveTextContent("4")
-
-    const talapasHand = within(screen.getByLabelText(/talapas/)).queryAllByRole("checkbox");
-    expect(talapasHand.length).toEqual(5)
-    expect(talapasHand.map(element => element.textContent)).toEqual(['A','A','A','B','B'])
-    expect(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("set: C").length).toEqual(1)
-
-    expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("hidden card").length).toEqual(2)
-    expect(within(screen.getByLabelText("lilu")).queryAllByLabelText("set: D").length).toEqual(1)
-
-    act(() => {
-        screen.getByLabelText("deck").click()
-    })
-    expect(fakeClient.draw).toHaveBeenCalled()
-
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1])
-    })
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
-    })
-    act(() => {
-        userEvent.click(screen.getByText("lilu"))
-    })
-
-    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
-
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0])
-    })
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
-    })
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
-    })
-    act(() => {
-        userEvent.click(screen.getByText("lilu"))
-    })
-    expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
-
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[0])
-    })
-    expect(screen.queryByText("+1")).not.toBeInTheDocument()
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[1])
-    })
-    expect(screen.queryByText("+1")).not.toBeInTheDocument()
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
-    })
-    expect(screen.queryByText("+1")).not.toBeInTheDocument()
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: A")[2])
-    })
-    expect(screen.queryByText("+1")).not.toBeInTheDocument()
-    act(() => {
-        userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText("hidden card: B")[0])
-    })
-    expect(screen.queryByText("+1")).toBeInTheDocument()
-
-    act(() => {
-        userEvent.click(screen.getByText("+1"))
-    })
-    expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
-    expect(screen.queryByText("+1")).not.toBeInTheDocument()
-
-    unmount()
-
-    expect(fakeClient.isConnected()).toBeFalsy()
-});
