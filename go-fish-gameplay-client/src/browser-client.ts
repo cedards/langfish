@@ -12,6 +12,7 @@ export interface GoFishGameplayClientInterface {
     draw(): void
     give(cardIds: Array<number>, recipientName: string): void
     score(cardIds: number[]): void
+    endTurn(): Promise<void>
 }
 
 export function GoFishGameplayClient(
@@ -120,6 +121,16 @@ export function GoFishGameplayClient(
 
         onUpdateGameState(callback: (newState) => void): void {
             updateGameStateCallbacks.push(callback)
+        },
+
+        async endTurn(): Promise<void> {
+            await client.request({
+                path: `/api/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "END_TURN",
+                }
+            })
         },
 
         connect(): Promise<void> {

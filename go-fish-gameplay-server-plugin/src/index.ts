@@ -98,6 +98,10 @@ export const GoFishGameplayPlugin = {
                             game.score(payload.player, payload.cardIds)
                             await publishNewGameState(request.params.gameId)
                             break
+                        case "END_TURN":
+                            game.endTurn()
+                            await publishNewGameState(request.params.gameId)
+                            break
                     }
                     return true
                 }

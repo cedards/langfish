@@ -183,7 +183,7 @@ describe('Go Fish gameplay client', function () {
                 await otherClient.disconnect()
             })
 
-            it('assigns a different name to the other player', function () {
+            it('assigns a different id to the other player', function () {
                 return eventually(() => {
                     expect(playerIdSpy).toHaveBeenCalled()
                     expect(otherClientPlayerIdSpy).toHaveBeenCalled()
@@ -200,6 +200,19 @@ describe('Go Fish gameplay client', function () {
 
                     expect(gameState.players[playerId]).toBeTruthy()
                     expect(gameState.players[otherPlayerId]).toBeTruthy()
+                })
+            })
+
+            describe('and I end the current turn', function () {
+                beforeEach(async function () {
+                    await client.endTurn()
+                })
+
+                it('publishes new game state', async function () {
+                    await eventually(() => expect(expect(otherClientPlayerIdSpy).toHaveBeenCalled()))
+                    await eventually(() => {
+                        expect(latestCallTo(gameStatesSpy)[0].currentTurn).toEqual(latestCallTo(otherClientPlayerIdSpy)[0])
+                    })
                 })
             })
 
