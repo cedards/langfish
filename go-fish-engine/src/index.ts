@@ -11,6 +11,7 @@ export interface PlayerState {
 }
 
 export interface GoFishGameState {
+    currentTurn?: string;
     deck: Array<Card>,
     players: { [key: string]: PlayerState }
 }
@@ -23,18 +24,28 @@ export interface GoFishGame {
     give: (donor: string, recipient: string, cardId: number) => void
     score: (playerName: string, cardIds: number[]) => void
     renamePlayer: (playerId: string, name: string) => void
+    endTurn: () => void;
 }
 
-export function GoFishGame(deck?: Array<Card>, players?: { [key: string]: PlayerState }): GoFishGame {
+export function GoFishGame(
+    deck?: Array<Card>,
+    players?: { [key: string]: PlayerState },
+    currentTurn?: string
+): GoFishGame {
     let _nextPlayerId = 0
     let _deck: Array<Card> = deck || []
     const _players: { [key: string]: PlayerState } = players || {}
+
+    const sortedPlayerIds = () => Object.keys(_players).concat([]).sort()
+
+    let _currentTurn: string | undefined = currentTurn || sortedPlayerIds()[0]
 
     return {
         currentState() {
             return {
                 deck: _deck,
-                players: _players
+                players: _players,
+                currentTurn: _currentTurn
             };
         },
 
@@ -52,6 +63,8 @@ export function GoFishGame(deck?: Array<Card>, players?: { [key: string]: Player
                 hand: [],
                 sets: [],
             }
+
+            if(!_currentTurn) _currentTurn = playerId
 
             return playerId
         },
@@ -84,6 +97,15 @@ export function GoFishGame(deck?: Array<Card>, players?: { [key: string]: Player
             _players[playerName].hand = _players[playerName].hand.filter(card =>
                 !cardIds.includes(card.id)
             )
-        }
+        },
+
+        endTurn(): void {
+            const playerList = sortedPlayerIds()
+            const currentPlayerIndex = playerList.indexOf(_currentTurn)
+            const nextPlayerIndex = currentPlayerIndex === playerList.length - 1
+                ? 0
+                : currentPlayerIndex + 1
+            _currentTurn = playerList[nextPlayerIndex]
+        },
     }
 }

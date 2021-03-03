@@ -14,6 +14,7 @@ describe("A new Go Fish game", function () {
     it("has empty game state", function () {
         expect(game.currentState().deck).toEqual([])
         expect(game.currentState().players).toEqual({})
+        expect(game.currentState().currentTurn).toEqual(undefined)
     })
 
     describe("after adding a deck", function () {
@@ -32,6 +33,10 @@ describe("A new Go Fish game", function () {
         beforeEach(function () {
             player1id = game.addPlayer()
             player2id = game.addPlayer()
+        })
+
+        it('marks the first player as having the current turn', function () {
+            expect(game.currentState().currentTurn).toEqual(player1id)
         })
 
         it('assigns unique identifiers to each player', function () {
@@ -223,12 +228,43 @@ describe("A new Go Fish game", function () {
                 }
             }
 
-            game = GoFishGame(deck, players)
+            game = GoFishGame(deck, players, "TALAPAS")
 
             expect(game.currentState()).toEqual({
                 deck,
-                players
+                players,
+                currentTurn: "TALAPAS"
             })
         })
+    })
+
+    test('ending the turn', function () {
+        const players = {
+            "player1": {
+                name: "Player 1",
+                hand: [],
+                sets: []
+            },
+            "player0": {
+                name: "Player 0",
+                hand: [],
+                sets: []
+            },
+            "player2": {
+                name: "Player 2",
+                hand: [],
+                sets: []
+            }
+        }
+
+        game = GoFishGame([], players)
+
+        expect(game.currentState().currentTurn).toEqual("player0")
+        game.endTurn()
+        expect(game.currentState().currentTurn).toEqual("player1")
+        game.endTurn()
+        expect(game.currentState().currentTurn).toEqual("player2")
+        game.endTurn()
+        expect(game.currentState().currentTurn).toEqual("player0")
     })
 })
