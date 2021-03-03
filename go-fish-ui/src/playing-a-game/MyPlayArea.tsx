@@ -4,12 +4,13 @@ import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 
 export function MyPlayArea(
-    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer }: {
+    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, currentTurn }: {
         playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
         score: (cardIds: Array<number>) => void,
-        renamePlayer: (name: string) => void
+        renamePlayer: (name: string) => void,
+        currentTurn: boolean
     }
 ) {
     const readyToScore: () => boolean = () => {
@@ -25,7 +26,7 @@ export function MyPlayArea(
         updateSelectedCards([])
     }
 
-    return <section aria-labelledby="myName" className="play-area">
+    return <section aria-labelledby="myName" className={`play-area ${currentTurn ? 'current-turn' : ''}`}>
         <PlayerName playerName={playerInfo.name} renamePlayer={renamePlayer} handSize={playerInfo.hand.length}/>
         <MyHand
             hand={playerInfo.hand}

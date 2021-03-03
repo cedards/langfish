@@ -164,7 +164,7 @@ function score_set() {
 }
 
 function give_cards_to(recipientName: string) {
-    userEvent.click(screen.getByText(recipientName))
+    userEvent.click(within(screen.getByLabelText("play areas")).getByText(recipientName))
 }
 
 function expect_opponent_to_have_number_of_sets(opponentName: string, cardValue: string, numberOfSets: number) {
@@ -193,7 +193,7 @@ function expect_deck_to_have_number_of_cards(numberOfCards: string) {
 
 function expect_to_see_play_areas_for(playerNames: RegExp[]) {
     playerNames.forEach(playerName => {
-        expect(screen.getByText(playerName)).toBeInTheDocument()
+        expect(within(screen.getByLabelText("play areas")).getByText(playerName)).toBeInTheDocument()
     })
 }
 

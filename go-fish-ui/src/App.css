@@ -352,6 +352,11 @@ h3 button:not([disabled])::before {
   max-width: 60rem;
   width: 100%;
   flex-grow: 2;
+  border: solid 5px var(--play-area-background);
+}
+
+.play-area.current-turn {
+  border-color: var(--selected-color);
 }
 
 .opponent-play-area {
@@ -439,4 +444,45 @@ h3 button:not([disabled])::before {
   font-size: 1.4rem;
   min-height: 3rem;
   margin: 1rem;
+}
+
+.game-table .sidepanel {
+  position: sticky;
+  top: 0.5rem;
+  margin: 0;
+}
+
+.player-list {
+  padding: 1rem 0;
+  margin: 0;
+  list-style-type: none;
+  text-align: left;
+  border: solid black 3px;
+  border-radius: 1rem;
+  width: 8rem;
+  overflow-x: hidden;
+  background: var(--play-area-background);
+  color: white;
+}
+
+.player-list li {
+  padding: 0.4rem 0 0.4rem 1rem;
+}
+
+.player-list li.current-turn {
+  cursor: pointer;
+  background: var(--selected-color);
+  color: var(--play-area-background);
+  font-weight: bold;
+}
+
+.player-list li.current-turn::before {
+  content: "↓";
+  display: inline-block;
+  width: 1rem;
+  margin-left: -1rem;
+}
+
+.player-list li.current-turn:last-child::before {
+  content: "↑";
 }

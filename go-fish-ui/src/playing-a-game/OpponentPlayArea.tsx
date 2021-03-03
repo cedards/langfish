@@ -4,12 +4,13 @@ import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 
 export function OpponentPlayArea(
-    { playerId, playerInfo, selectedCards, updateSelectedCards, give }: {
+    { playerId, playerInfo, selectedCards, updateSelectedCards, give, currentTurn }: {
         playerId: string,
         playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
         give: (cards: Array<number>, recipient: string) => void,
+        currentTurn: boolean
     }
 ) {
     const giveTo = (recipient: string) => (e: React.MouseEvent) => {
@@ -20,7 +21,7 @@ export function OpponentPlayArea(
 
     const cardsToShow = playerInfo.hand.slice(0, 7)
 
-    return <section aria-labelledby={playerId} className="play-area opponent-play-area">
+    return <section aria-labelledby={playerId} className={`play-area opponent-play-area ${currentTurn ? 'current-turn' : ''}`}>
         <h3 id={playerId}>{
             <button onClick={giveTo(playerId)} disabled={selectedCards.length === 0}>{playerInfo.name || '???'}</button>
         }</h3>
