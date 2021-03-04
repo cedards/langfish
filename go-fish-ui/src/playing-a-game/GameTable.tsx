@@ -5,14 +5,15 @@ import {MyPlayArea} from "./MyPlayArea";
 import {OpponentPlayArea} from "./OpponentPlayArea";
 
 export function GameTable(
-    {playerId, game, draw, give, score, renamePlayer, endTurn}: {
+    {playerId, game, draw, give, score, renamePlayer, endTurn, removePlayer}: {
         playerId: string,
         game: GoFishGameState,
         draw: () => void,
         give: (cards: Array<number>, recipient: string) => void,
         score: (cards: Array<number>) => void,
         renamePlayer: (name: string) => void,
-        endTurn: () => void
+        endTurn: () => void,
+        removePlayer: (playerId: string) => void,
     }
 ) {
     const [selectedCards, updateSelectedCards] = useState<Array<number>>([])
@@ -51,6 +52,7 @@ export function GameTable(
                 updateSelectedCards={updateSelectedCards}
                 score={score}
                 renamePlayer={renamePlayer}
+                leaveGame={() => removePlayer(playerId)}
             />
         </div>
     </div>

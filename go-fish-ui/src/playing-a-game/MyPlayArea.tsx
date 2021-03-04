@@ -1,15 +1,18 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
+import {ConfirmationModal} from "../ConfirmationModal";
 
 export function MyPlayArea(
-    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, currentTurn }: {
+    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, leaveGame, currentTurn }: {
         playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
         score: (cardIds: Array<number>) => void,
         renamePlayer: (name: string) => void,
+        leaveGame: () => void,
         currentTurn: boolean
     }
 ) {
@@ -27,7 +30,12 @@ export function MyPlayArea(
     }
 
     return <section aria-labelledby="myName" className={`play-area ${currentTurn ? 'current-turn' : ''}`}>
-        <PlayerName playerName={playerInfo.name} renamePlayer={renamePlayer} handSize={playerInfo.hand.length}/>
+        <PlayerName
+            playerName={playerInfo.name}
+            renamePlayer={renamePlayer}
+            handSize={playerInfo.hand.length}
+            leaveGame={leaveGame}
+        />
         <MyHand
             hand={playerInfo.hand}
             readyToScore={readyToScore()}
@@ -43,10 +51,11 @@ export function MyPlayArea(
 }
 
 function PlayerName(
-    { playerName, renamePlayer, handSize }: {
+    { playerName, renamePlayer, handSize, leaveGame }: {
         playerName: string | undefined,
         renamePlayer: (name: string) => void,
-        handSize: number
+        handSize: number,
+        leaveGame: () => void
     }
 ) {
     const [ editMode, updateEditMode ] = useState(false)
@@ -57,7 +66,7 @@ function PlayerName(
 
     return editMode || !playerName
         ? <PlayerNameForm name={playerName} renamePlayer={handleRename} handSize={handSize}/>
-        : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)} handSize={handSize}/>
+        : <PlayerNameHeader name={playerName} editPlayerName={() => updateEditMode(true)} handSize={handSize} leaveGame={leaveGame}/>
 }
 
 function PlayerNameForm({ name, renamePlayer, handSize }: {
@@ -86,19 +95,32 @@ function PlayerNameForm({ name, renamePlayer, handSize }: {
             value={enteredName}
             onChange={handleNameChange}
         />
-        <button aria-label="save name">✅</button>
+        <button className="player-name-form-button" aria-label="save name">✅</button>
     </form>
 }
 
-function PlayerNameHeader({ name, editPlayerName, handSize }: {
+function PlayerNameHeader({ name, editPlayerName, handSize, leaveGame }: {
     name: string | undefined,
     editPlayerName: () => void,
-    handSize: number
+    handSize: number,
+    leaveGame: () => void
 }) {
+    const history = useHistory()
+    const [ showModal, updateShowModal ] = useState(false)
+
+    const handleLeaveGame = () => {
+        leaveGame()
+        history.push("/")
+    }
+
     return <h1 id="myName">
         {handSize}
         <span onClick={editPlayerName} className={`name ${name ? '' : 'highlight'}`}>{name || "???"}</span>
-        <button className={name ? '' : 'highlight'} aria-label="edit name" onClick={editPlayerName}>✍️</button>
+        <button className={`player-name-form-button ${name ? '' : 'highlight'}`} aria-label="edit name" onClick={editPlayerName}>✍️</button>
+        <button className="player-name-form-button leave-button" aria-label="leave game" onClick={() => updateShowModal(true)}>🚪️</button>
+        <ConfirmationModal show={showModal} confirm={handleLeaveGame} cancel={() => updateShowModal(false)}>
+            {'~~>'} 🚪️ ?
+        </ConfirmationModal>
     </h1>
 }
 
