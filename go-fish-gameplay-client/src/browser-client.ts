@@ -13,6 +13,7 @@ export interface GoFishGameplayClientInterface {
     give(cardIds: Array<number>, recipientName: string): void
     score(cardIds: number[]): void
     endTurn(): Promise<void>
+    removePlayer(playerId: string): void
 }
 
 export function GoFishGameplayClient(
@@ -75,6 +76,17 @@ export function GoFishGameplayClient(
                     type: "RENAME",
                     player: playerId,
                     name: name
+                }
+            })
+        },
+
+        removePlayer(playerId: string): void {
+            client.request({
+                path: `/api/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "REMOVE_PLAYER",
+                    player: playerId
                 }
             })
         },

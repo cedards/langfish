@@ -150,6 +150,19 @@ describe('Go Fish gameplay client', function () {
             })
         })
 
+        describe('and then leave the game', function () {
+            beforeEach(async function () {
+                await eventually(() => expect(playerIdSpy).toHaveBeenCalled())
+                client.removePlayer(latestCallTo(playerIdSpy)[0])
+            })
+
+            it('removes me from the game and publishes new state', async function () {
+                await eventually(() => {
+                    expect(latestCallTo(gameStatesSpy)[0].players[latestCallTo(playerIdSpy)]).toBeFalsy()
+                })
+            })
+        })
+
         describe('and update my name', function () {
             beforeEach(async function () {
                 await eventually(() => {

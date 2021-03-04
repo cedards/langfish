@@ -102,6 +102,10 @@ export const GoFishGameplayPlugin = {
                             game.endTurn()
                             await publishNewGameState(request.params.gameId)
                             break
+                        case "REMOVE_PLAYER":
+                            game.removePlayer(payload.player)
+                            await publishNewGameState(request.params.gameId)
+                            break
                     }
                     return true
                 }
