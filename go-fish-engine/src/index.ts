@@ -37,9 +37,18 @@ export function GoFishGame(
     let _deck: Array<Card> = deck || []
     const _players: { [key: string]: PlayerState } = players || {}
 
-    const sortedPlayerIds = () => Object.keys(_players).concat([]).sort()
+    const sortedPlayerIds = () => Object.keys(_players).sort()
 
     let _currentTurn: string | undefined = currentTurn || sortedPlayerIds()[0]
+
+    function endTurn(): void {
+        const playerList = sortedPlayerIds()
+        const currentPlayerIndex = playerList.indexOf(_currentTurn)
+        const nextPlayerIndex = currentPlayerIndex === playerList.length - 1
+            ? 0
+            : currentPlayerIndex + 1
+        _currentTurn = playerList[nextPlayerIndex]
+    }
 
     return {
         currentState() {
@@ -100,18 +109,13 @@ export function GoFishGame(
             )
         },
 
-        endTurn(): void {
-            const playerList = sortedPlayerIds()
-            const currentPlayerIndex = playerList.indexOf(_currentTurn)
-            const nextPlayerIndex = currentPlayerIndex === playerList.length - 1
-                ? 0
-                : currentPlayerIndex + 1
-            _currentTurn = playerList[nextPlayerIndex]
-        },
+        endTurn,
 
         removePlayer(playerId: string): void {
             const playerInfo = _players[playerId]
             if(!playerInfo) return
+            
+            if(_currentTurn === playerId) endTurn()
 
             const recoveredCards = playerInfo.sets
                 .reduce((cards, set) => cards.concat(set), [])
