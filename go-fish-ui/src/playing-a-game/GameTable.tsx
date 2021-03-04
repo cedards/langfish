@@ -42,6 +42,7 @@ export function GameTable(
                         selectedCards={selectedCards}
                         updateSelectedCards={updateSelectedCards}
                         give={give}
+                        kickPlayer={() => removePlayer(playerId)}
                     />
                 )
             }

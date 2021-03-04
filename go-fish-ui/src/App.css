@@ -236,7 +236,7 @@ body {
   margin: 0 0 1rem 0;
 }
 
-h3 button {
+.opponent-name-button {
   height: 2.5rem;
   box-sizing: border-box;
   color: inherit;
@@ -246,7 +246,7 @@ h3 button {
   border: none;
 }
 
-h3 button:not([disabled]) {
+.opponent-name-button:not([disabled]) {
   color: var(--selected-color);
   cursor: pointer;
   border: solid var(--selected-color) 3px;
@@ -254,7 +254,7 @@ h3 button:not([disabled]) {
   padding: 0 1rem;
 }
 
-h3 button:not([disabled]):hover {
+.opponent-name-button:not([disabled]):hover {
   background-color: var(--selected-color);
   color: var(--play-area-background);
   cursor: pointer;
@@ -263,7 +263,7 @@ h3 button:not([disabled]):hover {
   padding: 0 1rem;
 }
 
-h3 button:not([disabled])::before {
+.opponent-name-button:not([disabled])::before {
   content: "⇒️ ";
 }
 
@@ -489,6 +489,7 @@ h3 button:not([disabled])::before {
 }
 
 .modal {
+  z-index: 9999;
   position: fixed;
   top: 0;
   left: 0;
@@ -528,4 +529,8 @@ h3 button:not([disabled])::before {
   right: 1rem;
   top: 1rem;
   height: auto;
+}
+
+.leave-button:hover {
+  filter: drop-shadow(0 0 0.6rem #FA0);
 }
