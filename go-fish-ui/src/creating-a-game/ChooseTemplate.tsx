@@ -62,6 +62,7 @@ function Template({templateInfo, onSelect}: {
         <button className="choose-template-button" onClick={handleExpand}>{templateInfo.name}</button>
         {expanded
             ? <div>
+                <p>Which cards do you want to include?</p>
                 <ul className="card-list">
                     {templateInfo.template.map(({value, image}) => <li key={value}>
                         <label>
