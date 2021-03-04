@@ -25,6 +25,7 @@ export interface GoFishGame {
     score: (playerName: string, cardIds: number[]) => void
     renamePlayer: (playerId: string, name: string) => void
     endTurn: () => void;
+    removePlayer: (playerId: string) => void;
 }
 
 export function GoFishGame(
@@ -106,6 +107,18 @@ export function GoFishGame(
                 ? 0
                 : currentPlayerIndex + 1
             _currentTurn = playerList[nextPlayerIndex]
+        },
+
+        removePlayer(playerId: string): void {
+            const playerInfo = _players[playerId]
+            if(!playerInfo) return
+
+            const recoveredCards = playerInfo.sets
+                .reduce((cards, set) => cards.concat(set), [])
+                .concat(playerInfo.hand)
+            _deck = _deck.concat(recoveredCards)
+
+            delete _players[playerId]
         },
     }
 }

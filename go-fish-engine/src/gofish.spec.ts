@@ -267,4 +267,39 @@ describe("A new Go Fish game", function () {
         game.endTurn()
         expect(game.currentState().currentTurn).toEqual("player0")
     })
+
+    describe('removing a player', function () {
+        const removedPlayerId = "player-to-remove"
+
+        beforeEach(function () {
+            game = GoFishGame([{id: 6, value: "X"}], {
+                [removedPlayerId]: {
+                    hand: [{id: 1, value: "A"}, {id: 2, value: "B"}],
+                    sets: [
+                        [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ]
+                    ],
+                    name: "Player 1",
+                },
+                [`not-${removedPlayerId}`]: {
+                    hand: [],
+                    sets: [],
+                    name: "Player 2",
+                }
+            })
+
+            game.removePlayer(removedPlayerId)
+        })
+
+        it('removes that player from the player information', function () {
+            expect(game.currentState().players[removedPlayerId]).toBeFalsy()
+        })
+
+        it('returns the removed player\'s cards to the deck', function () {
+            expect(game.currentState().deck.map(card => card.id)).toEqual(expect.arrayContaining([1,2,3,4,5,6]))
+        })
+
+        it('does not break when the player does not exist', function () {
+            game.removePlayer("nonsense")
+        })
+    })
 })
