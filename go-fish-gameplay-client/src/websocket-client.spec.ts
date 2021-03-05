@@ -178,6 +178,29 @@ describe('Go Fish gameplay client', function () {
             })
         })
 
+        describe('and show one of my cards', function () {
+            let playerId
+
+            beforeEach(async function () {
+                await eventually(() => { expect(playerIdSpy).toHaveBeenCalled() })
+                playerId = latestCallTo(playerIdSpy)[0]
+
+                client.draw()
+                await eventually(() => {
+                    expect(latestCallTo(gameStatesSpy)[0].players[playerId].hand.length).toEqual(1)
+                })
+
+                expect(latestCallTo(gameStatesSpy)[0].players[playerId].hand[0].revealed).toBeFalsy()
+                client.hideOrShowCard(latestCallTo(gameStatesSpy)[0].players[playerId].hand[0].id)
+            })
+
+            it('publishes new state', async function () {
+                await eventually(() => {
+                    expect(latestCallTo(gameStatesSpy)[0].players[playerId].hand[0].revealed).toBeTruthy()
+                })
+            })
+        })
+
         describe('and someone else joins', function () {
             let otherClient: GoFishGameplayClientInterface
             let otherClientPlayerIdSpy: jest.Mock

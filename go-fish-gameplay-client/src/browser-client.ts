@@ -12,6 +12,7 @@ export interface GoFishGameplayClientInterface {
     draw(): void
     give(cardIds: Array<number>, recipientName: string): void
     score(cardIds: number[]): void
+    hideOrShowCard(cardId: number): void;
     endTurn(): Promise<void>
     removePlayer(playerId: string): void
 }
@@ -123,6 +124,17 @@ export function GoFishGameplayClient(
                     type: "SCORE",
                     player: playerId,
                     cardIds
+                }
+            })
+        },
+
+        hideOrShowCard(cardId: number): void {
+            client.request({
+                path: `/api/game/${joinedGame}`,
+                method: "POST",
+                payload: {
+                    type: "SHOW_OR_HIDE_CARD",
+                    card: cardId
                 }
             })
         },
