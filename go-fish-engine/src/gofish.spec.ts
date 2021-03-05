@@ -1,6 +1,6 @@
 import { GoFishGame } from "."
 
-describe("A new Go Fish game", function () {
+describe("A game of Go Fish", function () {
     let game: GoFishGame
     let player1id: string
     let player2id: string
@@ -307,6 +307,34 @@ describe("A new Go Fish game", function () {
 
         it('does not break when the player does not exist', function () {
             game.removePlayer("nonsense")
+        })
+    })
+
+    describe('showing and hiding cards', function () {
+        const targetCard = () => game
+            .currentState()
+            .players["player1"]
+            .hand
+            .find(card => card.id === 2)
+
+        beforeEach(function () {
+            game = GoFishGame([{id: 6, value: "X"}], {
+                "player1": {
+                    hand: [{id: 1, value: "A"}, {id: 2, value: "B"}],
+                    sets: [
+                        [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ]
+                    ],
+                    name: "Player 1",
+                }
+            })
+        })
+
+        it('toggles card visibility', function () {
+            expect(targetCard().revealed).toBeFalsy()
+            game.showOrHideCard(2)
+            expect(targetCard().revealed).toBeTruthy()
+            game.showOrHideCard(2)
+            expect(targetCard().revealed).toBeFalsy()
         })
     })
 })

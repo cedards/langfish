@@ -2,6 +2,7 @@ export interface Card {
     id: number
     value: string
     image?: string
+    revealed?: boolean;
 }
 
 export interface PlayerState {
@@ -26,6 +27,7 @@ export interface GoFishGame {
     renamePlayer: (playerId: string, name: string) => void
     endTurn: () => void;
     removePlayer: (playerId: string) => void;
+    showOrHideCard: (cardId: number) => void;
 }
 
 export function GoFishGame(
@@ -97,6 +99,14 @@ export function GoFishGame(
         )
     }
 
+    function showOrHideCard(cardId: number): void {
+        for(let playerId in _players) {
+            _players[playerId].hand.forEach(card => {
+                if(card.id === cardId) card.revealed = !card.revealed
+            })
+        }
+    }
+
     function endTurn(): void {
         const playerList = sortedPlayerIds()
         const currentPlayerIndex = playerList.indexOf(_currentTurn)
@@ -128,7 +138,8 @@ export function GoFishGame(
         draw,
         give,
         score,
+        showOrHideCard,
         endTurn,
-        removePlayer,
+        removePlayer
     }
 }
