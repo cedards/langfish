@@ -41,6 +41,17 @@ export function GoFishGameplayClient(
         })).payload.playerId
     }
 
+    function performGameAction(action: string, options: {[key: string]: any} = {}) {
+        client.request({
+            path: `/api/game/${joinedGame}`,
+            method: "POST",
+            payload: {
+                type: action,
+                ...options
+            }
+        })
+    }
+
     return {
         createGame(template: Array<{ value: string; image?: string }>): Promise<string> {
             return client.request({
@@ -70,73 +81,48 @@ export function GoFishGameplayClient(
         },
 
         renamePlayer(name: string): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "RENAME",
-                    player: playerId,
-                    name: name
-                }
+            performGameAction("RENAME", {
+                player: playerId,
+                name: name
             })
         },
 
         removePlayer(playerId: string): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "REMOVE_PLAYER",
-                    player: playerId
-                }
+            performGameAction("REMOVE_PLAYER", {
+                player: playerId
             })
         },
 
         draw(): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "DRAW",
-                    player: playerId
-                }
+            performGameAction("DRAW", {
+                player: playerId
             })
         },
 
-        give(cardIds: Array<number>, recipientName: string): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "GIVE",
-                    player: playerId,
-                    recipient: recipientName,
-                    cardIds
-                }
+        give(cardIds: Array<number>, recipientId: string): void {
+            performGameAction("GIVE", {
+                player: playerId,
+                recipient: recipientId,
+                cardIds
             })
         },
 
         score(cardIds: number[]): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "SCORE",
-                    player: playerId,
-                    cardIds
-                }
+            performGameAction("SCORE", {
+                player: playerId,
+                cardIds
             })
         },
 
         hideOrShowCard(cardId: number): void {
-            client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "SHOW_OR_HIDE_CARD",
-                    card: cardId
-                }
+            performGameAction("SHOW_OR_HIDE_CARD", {
+                player: playerId,
+                card: cardId
             })
+        },
+
+        async endTurn(): Promise<void> {
+            performGameAction("END_TURN")
         },
 
         onSetPlayerId(callback: (name) => void): void {
@@ -145,16 +131,6 @@ export function GoFishGameplayClient(
 
         onUpdateGameState(callback: (newState) => void): void {
             updateGameStateCallbacks.push(callback)
-        },
-
-        async endTurn(): Promise<void> {
-            await client.request({
-                path: `/api/game/${joinedGame}`,
-                method: "POST",
-                payload: {
-                    type: "END_TURN",
-                }
-            })
         },
 
         connect(): Promise<void> {
