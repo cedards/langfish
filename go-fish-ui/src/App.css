@@ -447,6 +447,10 @@ body {
   margin: 1rem;
 }
 
+.card-list input {
+  transform: scale(2);
+}
+
 .game-table .sidepanel {
   position: sticky;
   top: 0.5rem;
