@@ -267,6 +267,9 @@ function FakeGoFishWebsocketClient(): FakeGoFishWebsocketClientInterface {
         setGameState(gameState): void {
             _setGameStateCallbacks.forEach(callback => callback(gameState))
         },
+        hideOrShowCard: jest.fn(),
+        removePlayer: jest.fn(),
+        endTurn: jest.fn()
     }
 }
 
