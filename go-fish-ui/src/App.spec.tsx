@@ -5,130 +5,159 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
 import {GoFishGameState} from "@langfish/go-fish-engine"
+import {TemplatesClientInterface} from "./creating-a-game/TemplatesClientInterface";
 
-test('playing a game', async () => {
-    const fakeClient = FakeGoFishWebsocketClient()
-    const templatesClient = FakeTemplatesClient([
-        {
-            name: 'Template A',
-            template: [{ value: 'A' }, { value: 'C' }]
-        }, {
-            name: 'Template B',
-            template: [{ value: 'B' }]
-        },
-    ])
+describe('Go Fish UI', function () {
+    let fakeClient: FakeGoFishWebsocketClientInterface
+    let templatesClient: TemplatesClientInterface
 
-    expect(fakeClient.isConnected()).toBeFalsy()
-    const { unmount } = render(<App templatesClient={templatesClient} client={fakeClient}/>)
-    expect(fakeClient.isConnected()).toBeTruthy()
-    await promisesToResolve()
+    function renderApp() {
+        return render(<App templatesClient={templatesClient} client={fakeClient}/>);
+    }
 
-    expect_to_see_available_templates(['Template A', 'Template B'])
-
-    select_template_without_some_cards(/Template A/, ['C']);
-    expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
-    await promisesToResolve()
-
-    expect_to_see_game_link_for(/game1/);
-    follow_game_link_for(/game1/);
-    await promisesToResolve()
-    expect(fakeClient.joinedGame()).toEqual("game1")
-
-    expect_to_see_loading_screen();
-    when_the_server_assigns_me_a_player_id(fakeClient);
-    expect_to_see_loading_screen();
-
-    act(() => {
-        fakeClient.setGameState({
-            deck: [
-                { id: 1, value: 'A' },
-                { id: 2, value: 'B' },
-                { id: 3, value: 'C' },
-                { id: 4, value: 'D' },
-            ],
-            players: {
-                "TALAPAS": {
-                    name: "talapas",
-                    hand: [
-                        { id: 7, value: 'A' },
-                        { id: 8, value: 'B' },
-                        { id: 9, value: 'A' },
-                        { id: 10, value: 'B' },
-                        { id: 11, value: 'A' },
-                    ],
-                    sets: [
-                        [
-                            { id: 12, value: 'C' },
-                            { id: 13, value: 'C' },
-                            { id: 14, value: 'C' },
-                        ]
-                    ]
-                },
-                "LILU": {
-                    name: "lilu",
-                    hand: [
-                        { id: 5, value: 'E' },
-                        { id: 6, value: 'F' },
-                    ],
-                    sets: [
-                        [
-                            { id: 15, value: 'D' },
-                            { id: 16, value: 'D' },
-                            { id: 17, value: 'D' },
-                        ]
-                    ]
-                },
-            }
-        })
+    beforeEach(function () {
+        fakeClient = FakeGoFishWebsocketClient()
+        templatesClient = FakeTemplatesClient([
+            {
+                name: 'Template A',
+                template: [{ value: 'A' }, { value: 'C' }]
+            }, {
+                name: 'Template B',
+                template: [{ value: 'B' }]
+            },
+        ])
     })
 
-    expect_to_see_play_areas_for([/talapas/, /lilu/])
-    expect_deck_to_have_number_of_cards("4");
+    it('connects to the server on load', async function () {
+        expect(fakeClient.isConnected()).toBeFalsy()
 
-    expect_player_hand_to_equal(['A', 'A', 'A', 'B', 'B']);
-    expect_player_to_have_number_of_sets("C", 1);
+        const { unmount } = renderApp()
+        expect(fakeClient.isConnected()).toBeTruthy()
 
-    expect_opponent_to_have_number_of_cards("lilu", 2);
-    expect_opponent_to_have_number_of_sets("lilu", "D", 1)
+        await promisesToResolve() // this avoids "action not wrapped in act()" warnings; I think a component is missing some cleanup.
 
-    draw_a_card();
-    expect(fakeClient.draw).toHaveBeenCalled()
+        unmount()
+        expect(fakeClient.isConnected()).toBeFalsy()
+    })
 
-    select_nth_card_with_value('A', 1)
-    select_nth_card_with_value('B', 0)
-    give_cards_to("lilu")
+    test('creating a game', async function () {
+        renderApp()
+        await visit("/");
 
-    expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
+        expect_to_see_available_templates(['Template A', 'Template B'])
 
-    select_nth_card_with_value('A', 0)
-    select_nth_card_with_value('B', 0)
-    select_nth_card_with_value('B', 0) // deselect
-    give_cards_to("lilu");
-    expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
+        select_template_without_some_cards(/Template A/, ['C']);
+        expect(fakeClient.createGame).toHaveBeenCalledWith([{ value: 'A' }])
+        await promisesToResolve()
 
-    select_nth_card_with_value('A', 0)
-    expect_score_button_not_to_be_available()
+        expect_to_see_game_link_for(/game1/);
+        follow_game_link_for(/game1/);
+        await promisesToResolve()
+        expect(fakeClient.joinedGame()).toEqual("game1")
+    })
 
-    select_nth_card_with_value('A', 1)
-    expect_score_button_not_to_be_available()
+    test('playing a game', async () => {
+        renderApp()
+        await visit("/play/game1")
+        expect(fakeClient.joinedGame()).toEqual("game1")
 
-    select_nth_card_with_value('B', 0)
-    expect_score_button_not_to_be_available() // three cards, but don't all match
+        expect_to_see_loading_screen();
+        when_the_server_assigns_me_a_player_id(fakeClient);
+        expect_to_see_loading_screen();
 
-    select_nth_card_with_value('A', 2)
-    expect_score_button_not_to_be_available() // three A's, but one B selected
+        act(() => {
+            fakeClient.setGameState({
+                deck: [
+                    { id: 1, value: 'A' },
+                    { id: 2, value: 'B' },
+                    { id: 3, value: 'C' },
+                    { id: 4, value: 'D' },
+                ],
+                players: {
+                    "TALAPAS": {
+                        name: "talapas",
+                        hand: [
+                            { id: 7, value: 'A' },
+                            { id: 8, value: 'B' },
+                            { id: 9, value: 'A' },
+                            { id: 10, value: 'B' },
+                            { id: 11, value: 'A' },
+                        ],
+                        sets: [
+                            [
+                                { id: 12, value: 'C' },
+                                { id: 13, value: 'C' },
+                                { id: 14, value: 'C' },
+                            ]
+                        ]
+                    },
+                    "LILU": {
+                        name: "lilu",
+                        hand: [
+                            { id: 5, value: 'E' },
+                            { id: 6, value: 'F' },
+                        ],
+                        sets: [
+                            [
+                                { id: 15, value: 'D' },
+                                { id: 16, value: 'D' },
+                                { id: 17, value: 'D' },
+                            ]
+                        ]
+                    },
+                }
+            })
+        })
 
-    select_nth_card_with_value('B', 0)
-    expect_score_button_to_be_available() // only three A's selected
+        expect_to_see_play_areas_for([/talapas/, /lilu/])
+        expect_deck_to_have_number_of_cards("4");
 
-    score_set()
-    expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
-    expect_score_button_not_to_be_available()
+        expect_player_hand_to_equal(['A', 'A', 'A', 'B', 'B']);
+        expect_player_to_have_number_of_sets("C", 1);
 
-    unmount()
+        expect_opponent_to_have_number_of_cards("lilu", 2);
+        expect_opponent_to_have_number_of_sets("lilu", "D", 1)
 
-    expect(fakeClient.isConnected()).toBeFalsy()
-});
+        draw_a_card();
+        expect(fakeClient.draw).toHaveBeenCalled()
+
+        select_nth_card_with_value('A', 1)
+        select_nth_card_with_value('B', 0)
+        give_cards_to("lilu")
+
+        expect(fakeClient.give).toHaveBeenCalledWith([9,8], "LILU")
+
+        select_nth_card_with_value('A', 0)
+        select_nth_card_with_value('B', 0)
+        select_nth_card_with_value('B', 0) // deselect
+        give_cards_to("lilu");
+        expect(fakeClient.give).toHaveBeenCalledWith([7], "LILU")
+
+        select_nth_card_with_value('A', 0)
+        expect_score_button_not_to_be_available()
+
+        select_nth_card_with_value('A', 1)
+        expect_score_button_not_to_be_available()
+
+        select_nth_card_with_value('B', 0)
+        expect_score_button_not_to_be_available() // three cards, but don't all match
+
+        select_nth_card_with_value('A', 2)
+        expect_score_button_not_to_be_available() // three A's, but one B selected
+
+        select_nth_card_with_value('B', 0)
+        expect_score_button_to_be_available() // only three A's selected
+
+        score_set()
+        expect(fakeClient.score).toHaveBeenCalledWith([7,9,11])
+        expect_score_button_not_to_be_available()
+    });
+})
+
+async function visit(path: string) {
+    window.history.pushState({}, path, path)
+    await promisesToResolve()
+}
 
 function select_template_without_some_cards(templateName: RegExp, cardsToExclude: string[]) {
     userEvent.click(screen.getByText(templateName))
