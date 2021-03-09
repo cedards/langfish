@@ -274,7 +274,7 @@ describe("A game of Go Fish", function () {
         beforeEach(function () {
             game = GoFishGame([{id: 6, value: "X"}], {
                 "player-to-remove": {
-                    hand: [{id: 1, value: "A"}, {id: 2, value: "B"}],
+                    hand: [{id: 1, value: "A"}, {id: 2, value: "B", revealed: true}],
                     sets: [
                         [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ]
                     ],
@@ -299,6 +299,10 @@ describe("A game of Go Fish", function () {
 
         it('returns the removed player\'s cards to the deck', function () {
             expect(game.currentState().deck.map(card => card.id)).toEqual(expect.arrayContaining([1,2,3,4,5,6]))
+        })
+
+        it('hides any revealed cards that are returned to the deck', function () {
+            expect(game.currentState().deck.some(card => card.revealed)).toEqual(false)
         })
 
         it('shifts the current turn if it was the removed player\'s turn', function () {

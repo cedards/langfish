@@ -125,6 +125,7 @@ export function GoFishGame(
         const recoveredCards = playerInfo.sets
             .reduce((cards, set) => cards.concat(set), [])
             .concat(playerInfo.hand)
+            .map(card => ({...card, revealed: false}))
         _deck = _deck.concat(recoveredCards)
 
         delete _players[playerId]
