@@ -8,10 +8,12 @@ export const ConfirmationModal: React.FunctionComponent<{
     if (!show) return null
 
     return <div className="modal">
-        <h1>{children}</h1>
-        <div className="modal-controls">
-            <button onClick={confirm} aria-label="confirm">✅</button>
-            <button onClick={cancel} aria-label="cancel">❌</button>
+        <div className="message">
+          <button className="cancel-button" onClick={cancel} aria-label="cancel">X</button>
+          <h1>{children}</h1>
+          <div className="modal-controls">
+              <button onClick={confirm} aria-label="confirm">✅</button>
+          </div>
         </div>
     </div>
 }
