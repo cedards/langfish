@@ -498,6 +498,11 @@ li.revealed {
   overflow-x: hidden;
   background: var(--play-area-background);
   color: white;
+  cursor: pointer;
+}
+
+.player-list:hover {
+  border-color: var(--highlight-color);
 }
 
 .player-list li {
@@ -505,7 +510,6 @@ li.revealed {
 }
 
 .player-list li.current-turn {
-  cursor: pointer;
   background: var(--selected-color);
   color: var(--play-area-background);
   font-weight: bold;

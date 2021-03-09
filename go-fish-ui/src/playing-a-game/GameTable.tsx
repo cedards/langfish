@@ -24,9 +24,9 @@ export function GameTable(
 
     return <div className="game-table">
         <div className="sidepanel">
-            <ul className="player-list">
+            <ul className="player-list" onClick={endTurn}>
                 {Object.keys(game.players).map(id => id === game.currentTurn
-                    ? <li key={`player-list-${id}`} className="current-turn" onClick={endTurn}>{game.players[id].name || '???'}</li>
+                    ? <li key={`player-list-${id}`} className="current-turn">{game.players[id].name || '???'}</li>
                     : <li key={`player-list-${id}`}>{game.players[id].name || '???'}</li>
                 )}
             </ul>
