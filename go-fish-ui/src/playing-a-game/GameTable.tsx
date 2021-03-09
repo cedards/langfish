@@ -5,12 +5,13 @@ import {MyPlayArea} from "./MyPlayArea";
 import {OpponentPlayArea} from "./OpponentPlayArea";
 
 export function GameTable(
-    {playerId, game, draw, give, score, renamePlayer, endTurn, removePlayer}: {
+    {playerId, game, draw, give, score, hideOrShowCard, renamePlayer, endTurn, removePlayer}: {
         playerId: string,
         game: GoFishGameState,
         draw: () => void,
         give: (cards: Array<number>, recipient: string) => void,
         score: (cards: Array<number>) => void,
+        hideOrShowCard: (id: number) => void,
         renamePlayer: (name: string) => void,
         endTurn: () => void,
         removePlayer: (playerId: string) => void,
@@ -52,6 +53,7 @@ export function GameTable(
                 selectedCards={selectedCards}
                 updateSelectedCards={updateSelectedCards}
                 score={score}
+                hideOrShowCard={hideOrShowCard}
                 renamePlayer={renamePlayer}
                 leaveGame={() => removePlayer(playerId)}
             />

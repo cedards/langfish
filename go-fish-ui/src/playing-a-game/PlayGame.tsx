@@ -25,6 +25,7 @@ export function PlayGame({client}: { client: GoFishGameplayClientInterface }) {
             draw={client.draw}
             give={client.give}
             score={client.score}
+            hideOrShowCard={client.hideOrShowCard}
             renamePlayer={client.renamePlayer}
             endTurn={client.endTurn}
             removePlayer={client.removePlayer}

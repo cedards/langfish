@@ -6,14 +6,15 @@ import {ScoredSet} from "./ScoredSet";
 import {ConfirmationModal} from "../ConfirmationModal";
 
 export function MyPlayArea(
-    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, leaveGame, currentTurn }: {
+    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, hideOrShowCard, leaveGame, currentTurn }: {
         playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
         selectedCards: Array<number>,
         updateSelectedCards: (cardIds: Array<number>) => void,
         score: (cardIds: Array<number>) => void,
         renamePlayer: (name: string) => void,
+        hideOrShowCard: (id: number) => void
         leaveGame: () => void,
-        currentTurn: boolean
+        currentTurn: boolean,
     }
 ) {
     const readyToScore: () => boolean = () => {
@@ -41,6 +42,7 @@ export function MyPlayArea(
             readyToScore={readyToScore()}
             selectedCards={selectedCards}
             updateSelectedCards={updateSelectedCards}
+            hideOrShowCard={hideOrShowCard}
         />
         <MyScoredSets
             readyToScore={readyToScore()}
@@ -125,11 +127,12 @@ function PlayerNameHeader({ name, editPlayerName, handSize, leaveGame }: {
 }
 
 function MyHand(
-    { hand, selectedCards, updateSelectedCards, readyToScore }: {
+    { hand, selectedCards, updateSelectedCards, readyToScore, hideOrShowCard }: {
         hand: Array<Card>,
         selectedCards: Array<number>,
         updateSelectedCards: (cards: Array<number>) => void,
-        readyToScore: boolean
+        readyToScore: boolean,
+        hideOrShowCard: (id: number) => void
     }
 ) {
 
@@ -141,12 +144,17 @@ function MyHand(
         }
     }
 
+    const handleHideOrShow = (cardId: number) => (e: React.MouseEvent) => {
+        e.preventDefault()
+        hideOrShowCard(cardId)
+    }
+
     return <ul className={`my-hand ${readyToScore ? "ready-to-score" : ""}`} aria-label="my hand">
         {sortCards(hand).map(card =>
             <li
-                className="card"
+                className={`card ${card.revealed ? 'revealed' : ''}`}
                 key={card.id}
-                aria-label={`hidden card: ${card.value}`}
+                aria-label={`${card.revealed ? 'revealed' : 'hidden'} card: ${card.value}`}
                 role="checkbox"
                 aria-selected={selectedCards.includes(card.id)}
                 onMouseDown={selectCard(card.id)}
@@ -156,6 +164,12 @@ function MyHand(
                         ? <img src={card.image} alt={card.value}/>
                         : card.value
                 }
+                <button
+                    className="hide-or-show-card"
+                    aria-label={`${card.revealed ? 'hide' : 'reveal'} this ${card.value} card`}
+                    onMouseDown={e => e.stopPropagation()} // don't trigger card selection
+                    onClick={handleHideOrShow(card.id)}
+                />
             </li>
         )}
     </ul>

@@ -81,7 +81,7 @@ describe('Go Fish UI', function () {
                             { id: 8, value: 'B' },
                             { id: 9, value: 'A' },
                             { id: 10, value: 'B' },
-                            { id: 11, value: 'A' },
+                            { id: 11, value: 'A', revealed: true },
                         ],
                         sets: [
                             [
@@ -95,7 +95,7 @@ describe('Go Fish UI', function () {
                         name: "lilu",
                         hand: [
                             { id: 5, value: 'E' },
-                            { id: 6, value: 'F' },
+                            { id: 6, value: 'F', revealed: true },
                         ],
                         sets: [
                             [
@@ -113,13 +113,18 @@ describe('Go Fish UI', function () {
         expect_deck_to_have_number_of_cards("4");
 
         expect_player_hand_to_equal(['A', 'A', 'A', 'B', 'B']);
+        expect_player_to_have_revealed_cards(['A'])
         expect_player_to_have_number_of_sets("C", 1);
 
         expect_opponent_to_have_number_of_cards("lilu", 2);
+        expect_opponent_to_have_revealed_cards("lilu", ["F"])
         expect_opponent_to_have_number_of_sets("lilu", "D", 1)
 
         draw_a_card();
         expect(fakeClient.draw).toHaveBeenCalled()
+
+        reveal_nth_card_with_value('A', 0)
+        expect(fakeClient.hideOrShowCard).toHaveBeenCalledWith(7)
 
         select_nth_card_with_value('A', 1)
         select_nth_card_with_value('B', 0)
@@ -177,7 +182,11 @@ function follow_game_link_for(gameLink: RegExp) {
 }
 
 function select_nth_card_with_value(cardValue: string, cardIndex: number) {
-    userEvent.click(within(screen.getByLabelText(/talapas/)).queryAllByLabelText(`hidden card: ${cardValue}`)[cardIndex])
+    userEvent.click(
+        within(screen.getByLabelText(/talapas/))
+            .queryAllByLabelText(new RegExp(`card: ${cardValue}`))
+            [cardIndex]
+    )
 }
 
 function expect_score_button_not_to_be_available() {
@@ -186,6 +195,14 @@ function expect_score_button_not_to_be_available() {
 
 function expect_score_button_to_be_available() {
     expect(screen.queryByText("+1")).toBeInTheDocument()
+}
+
+function reveal_nth_card_with_value(cardValue: string, cardIndex: number) {
+    userEvent.click(
+        within(screen.getByLabelText(/talapas/))
+            .queryAllByLabelText(`reveal this ${cardValue} card`)
+            [cardIndex]
+    )
 }
 
 function score_set() {
@@ -197,19 +214,47 @@ function give_cards_to(recipientName: string) {
 }
 
 function expect_opponent_to_have_number_of_sets(opponentName: string, cardValue: string, numberOfSets: number) {
-    expect(within(screen.getByLabelText(opponentName)).queryAllByLabelText(`set: ${cardValue}`).length).toEqual(numberOfSets)
+    expect(
+        within(screen.getByLabelText(opponentName))
+            .queryAllByLabelText(`set: ${cardValue}`)
+            .length
+    ).toEqual(numberOfSets)
 }
 
 function expect_player_to_have_number_of_sets(cardValue: string, numberOfSets: number) {
-    expect(within(screen.getByLabelText(/talapas/)).queryAllByLabelText(`set: ${cardValue}`).length).toEqual(numberOfSets)
+    expect(
+        within(screen.getByLabelText(/talapas/))
+            .queryAllByLabelText(`set: ${cardValue}`)
+            .length
+    ).toEqual(numberOfSets)
 }
 
 function expect_player_hand_to_equal(hand: string[]) {
-    expect(within(screen.getByLabelText(/talapas/)).queryAllByRole("checkbox").map(element => element.textContent)).toEqual(hand)
+    expect(
+        within(screen.getByLabelText(/talapas/))
+            .queryAllByRole("checkbox")
+            .map(element => element.textContent)
+    ).toEqual(hand)
+}
+
+function expect_player_to_have_revealed_cards(cardValues: string[]) {
+    expect(
+        within(screen.getByLabelText(/talapas/))
+            .queryAllByLabelText(/revealed card/)
+            .map(element => element.textContent)
+    ).toEqual(cardValues)
 }
 
 function expect_opponent_to_have_number_of_cards(opponentName: string, numberOfCards: number) {
-    expect(within(screen.getByLabelText(opponentName)).queryAllByLabelText("hidden card").length).toEqual(numberOfCards)
+    expect(screen.getByLabelText(opponentName)).toHaveTextContent(numberOfCards)
+}
+
+function expect_opponent_to_have_revealed_cards(playerName: string, cardValues: string[]) {
+    expect(
+        within(screen.getByLabelText(playerName))
+            .queryAllByLabelText(/revealed card/)
+            .map(element => element.textContent)
+    ).toEqual(cardValues)
 }
 
 function draw_a_card() {

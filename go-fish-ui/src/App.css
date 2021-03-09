@@ -1,6 +1,7 @@
 :root {
   --highlight-color: #DD0;
   --selected-color: #5F5;
+  --revealed-color: #FA3;
   --card-back-color: #454;
   --card-border-color: black;
   --play-area-background: #252;
@@ -156,7 +157,7 @@ body {
   }
 }
 
-.my-hand, .other-player-hand, .sets {
+.my-hand, .other-player-hand, .sets, .other-player-revealed-hand {
   padding: 0;
   margin: 0;
   display: flex;
@@ -172,13 +173,38 @@ body {
   list-style-type: none;
   width: 6rem;
   height: 8rem;
+  position: relative;
 }
 
-.my-hand li img, .scored-set img {
+.my-hand li img, .scored-set img, .other-player-revealed-hand li img {
   height: 100%;
 }
 
-.other-player-hand li {
+.hide-or-show-card {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.1rem;
+  background: 0;
+  border: 0;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1rem;
+}
+
+.hide-or-show-card::before {
+  content: "👁";
+}
+
+.revealed .hide-or-show-card {
+  background: var(--revealed-color);
+}
+
+li.revealed {
+  border-color: var(--revealed-color);
+}
+
+.other-player-hand li, .other-player-revealed-hand li {
   list-style-type: none;
   width: 3rem;
   height: 4rem;
@@ -187,6 +213,10 @@ body {
   font-weight: bold;
   line-height: 3.8rem;
   text-align: center;
+}
+
+.other-player-revealed-hand li {
+  margin: 0.2rem;
 }
 
 .other-player-hand {

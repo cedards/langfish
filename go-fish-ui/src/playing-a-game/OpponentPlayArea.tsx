@@ -23,7 +23,8 @@ export function OpponentPlayArea(
         updateSelectedCards([])
     }
 
-    const cardsToShow = playerInfo.hand.slice(0, 7)
+    const revealedCards = playerInfo.hand.filter(card => card.revealed)
+    const hiddenCardsToShow = playerInfo.hand.filter(card => !card.revealed).slice(0, 7)
 
     return <section aria-labelledby={playerId} className={`play-area opponent-play-area ${currentTurn ? 'current-turn' : ''}`}>
         <h3>
@@ -33,13 +34,30 @@ export function OpponentPlayArea(
                 🥾 {playerInfo.name || '???'} 🚪️ ?
             </ConfirmationModal>
         </h3>
-        <ul className="other-player-hand">
-            {sortCards(cardsToShow).map((card, index) =>
-                <li className="hidden-card" aria-label="hidden card" key={card.id}>
-                    {index === cardsToShow.length-1 ? playerInfo.hand.length : ''}
-                </li>
-            )}
-        </ul>
+        { hiddenCardsToShow.length > 0
+            ? <ul className="other-player-hand">
+                {hiddenCardsToShow.map((card, index) =>
+                    <li className="hidden-card" aria-label="hidden card" key={card.id}>
+                        {index === hiddenCardsToShow.length-1 ? playerInfo.hand.length : ''}
+                    </li>
+                )}
+            </ul>
+            : null
+        }
+        { revealedCards.length > 0
+            ? <ul className="other-player-revealed-hand">
+                {sortCards(revealedCards).map(card =>
+                    <li className="revealed-card" aria-label="revealed card" key={card.id}>
+                        {
+                            card.image
+                                ? <img src={card.image} alt={card.value}/>
+                                : card.value
+                        }
+                    </li>
+                )}
+            </ul>
+            : null
+        }
         <ul className="sets" aria-label={`sets for ${playerId}`}>
             {playerInfo.sets.map((set, setNumber) =>
                 <ScoredSet
