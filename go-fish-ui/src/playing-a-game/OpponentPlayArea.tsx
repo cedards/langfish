@@ -34,30 +34,22 @@ export function OpponentPlayArea(
                 🥾 {playerInfo.name || '???'} 🚪️ ?
             </ConfirmationModal>
         </h3>
-        { hiddenCardsToShow.length > 0
-            ? <ul className="other-player-hand">
-                {hiddenCardsToShow.map((card, index) =>
-                    <li className="hidden-card" aria-label="hidden card" key={card.id}>
-                        {index === hiddenCardsToShow.length-1 ? playerInfo.hand.length : ''}
-                    </li>
-                )}
-            </ul>
-            : null
-        }
-        { revealedCards.length > 0
-            ? <ul className="other-player-revealed-hand">
-                {sortCards(revealedCards).map(card =>
-                    <li className="revealed-card" aria-label="revealed card" key={card.id}>
-                        {
-                            card.image
-                                ? <img src={card.image} alt={card.value}/>
-                                : card.value
-                        }
-                    </li>
-                )}
-            </ul>
-            : null
-        }
+        <ul className="other-player-hand">
+            {hiddenCardsToShow.map((card, index) =>
+                <li className="hidden-card" aria-label="hidden card" key={card.id}>
+                    {index === hiddenCardsToShow.length-1 ? playerInfo.hand.length : ''}
+                </li>
+            )}
+            {sortCards(revealedCards).map(card =>
+                <li className="revealed-card card" aria-label="revealed card" key={card.id}>
+                    {
+                        card.image
+                            ? <img src={card.image} alt={card.value}/>
+                            : card.value
+                    }
+                </li>
+            )}
+        </ul>
         <ul className="sets" aria-label={`sets for ${playerId}`}>
             {playerInfo.sets.map((set, setNumber) =>
                 <ScoredSet
