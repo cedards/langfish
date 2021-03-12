@@ -5,10 +5,12 @@ import { GoFishGameState } from "@langfish/go-fish-engine";
 import {GameTable} from "./GameTable";
 import {LoadingScreen} from "../LoadingScreen";
 
-export function PlayGame({client}: { client: GoFishGameplayClientInterface }) {
+export const PlayGame: React.FunctionComponent<{
+    client: GoFishGameplayClientInterface
+}> = ({client}) => {
     const [playerId, updatePlayerId] = useState<string | null>(null)
     const [gameState, updateGameState] = useState<GoFishGameState | null>(null)
-    let {gameId} = useParams<{ gameId: string }>();
+    const {gameId} = useParams<{ gameId: string }>();
 
     useEffect(() => {
         client.connect().then(() => {
@@ -31,4 +33,4 @@ export function PlayGame({client}: { client: GoFishGameplayClientInterface }) {
             removePlayer={client.removePlayer}
         />
         : <LoadingScreen/>
-}
+};

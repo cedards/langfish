@@ -15,7 +15,7 @@ function save(repo: SchemaInLocalStorage) {
 }
 
 export function LocalStorageGameMembershipRepository(): GameMembershipRepository {
-    let oldRepo: SchemaInLocalStorage = get()
+    const oldRepo: SchemaInLocalStorage = get()
     const repoWithoutOldEntries = Object.keys(oldRepo)
         .filter(gameId => oldRepo[gameId].expirationTime > new Date().getTime())
         .reduce((entries, nextGameId) => ({...entries, [nextGameId]: oldRepo[nextGameId]}), {})

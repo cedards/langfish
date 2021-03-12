@@ -4,17 +4,17 @@ import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 import {ConfirmationModal} from "../ConfirmationModal";
 
-export function OpponentPlayArea(
-    { playerId, playerInfo, selectedCards, updateSelectedCards, give, currentTurn, kickPlayer }: {
-        playerId: string,
-        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
-        selectedCards: Array<number>,
-        updateSelectedCards: (cardIds: Array<number>) => void,
-        give: (cards: Array<number>, recipient: string) => void,
-        currentTurn: boolean,
-        kickPlayer: () => void,
-    }
-) {
+export const OpponentPlayArea: React.FunctionComponent<{
+    playerId: string,
+    playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
+    selectedCards: Array<number>,
+    updateSelectedCards: (cardIds: Array<number>) => void,
+    give: (cards: Array<number>, recipient: string) => void,
+    currentTurn: boolean,
+    kickPlayer: () => void,
+}> = (
+    { playerId, playerInfo, selectedCards, updateSelectedCards, give, currentTurn, kickPlayer }
+) => {
     const [showKickModal, updateShowKickModal] = useState(false)
 
     const giveTo = (recipient: string) => (e: React.MouseEvent) => {
@@ -59,4 +59,4 @@ export function OpponentPlayArea(
             )}
         </ul>
     </section>
-}
+};

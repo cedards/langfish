@@ -1,13 +1,14 @@
 import React from "react/index";
+import {Card} from "@langfish/go-fish-engine";
 
-export function Deck({draw, deck, highlight}: {
+export const Deck: React.FunctionComponent<{
     draw: () => void,
-    deck: any,
+    deck: Card[],
     highlight: boolean
-}) {
+}> = ({draw, deck, highlight}) => {
     const onClick = (e: React.MouseEvent) => {
         e.preventDefault()
         draw()
     }
     return <button aria-label="deck" className={`deck ${highlight ? 'highlight' : ''}`} onClick={onClick}>{deck.length}</button>;
-}
+};

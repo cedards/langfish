@@ -1,6 +1,6 @@
 import React from 'react'
 import {Card} from "@langfish/go-fish-engine"
-import {act, render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MyPlayArea } from "./MyPlayArea"
 
@@ -10,7 +10,6 @@ xdescribe('MyPlayArea', function () {
     let updateSelectedCards: (cardIds: Array<number>) => void
     let renamePlayer: (name: string) => void
     let score: (cardIds: Array<number>) => void
-    let rerender: (component: React.ReactElement) => void;
 
     beforeEach(function () {
         playerInfo = {
@@ -22,12 +21,15 @@ xdescribe('MyPlayArea', function () {
         score = jest.fn()
         renamePlayer = jest.fn()
 
-        rerender = render(<MyPlayArea
+        render(<MyPlayArea
             playerInfo={playerInfo}
             selectedCards={selectedCards}
             updateSelectedCards={updateSelectedCards}
             score={score}
             renamePlayer={renamePlayer}
+            hideOrShowCard={jest.fn()}
+            leaveGame={jest.fn()}
+            currentTurn={true}
         />).rerender
     })
 

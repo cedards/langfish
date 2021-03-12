@@ -12,7 +12,7 @@ interface AppProps {
     templatesClient: TemplatesClientInterface
 }
 
-function App({ client, templatesClient }: AppProps) {
+const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => {
     const [connected, updateConnected] = useState(false)
 
     useEffect(() => {
@@ -36,6 +36,6 @@ function App({ client, templatesClient }: AppProps) {
             }
         </BrowserRouter></div>
     );
-}
+};
 
 export default App;

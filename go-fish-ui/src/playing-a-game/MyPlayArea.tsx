@@ -5,18 +5,18 @@ import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 import {ConfirmationModal} from "../ConfirmationModal";
 
-export function MyPlayArea(
-    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, hideOrShowCard, leaveGame, currentTurn }: {
-        playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
-        selectedCards: Array<number>,
-        updateSelectedCards: (cardIds: Array<number>) => void,
-        score: (cardIds: Array<number>) => void,
-        renamePlayer: (name: string) => void,
-        hideOrShowCard: (id: number) => void
-        leaveGame: () => void,
-        currentTurn: boolean,
-    }
-) {
+export const MyPlayArea: React.FunctionComponent<{
+    playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
+    selectedCards: Array<number>,
+    updateSelectedCards: (cardIds: Array<number>) => void,
+    score: (cardIds: Array<number>) => void,
+    renamePlayer: (name: string) => void,
+    hideOrShowCard: (id: number) => void
+    leaveGame: () => void,
+    currentTurn: boolean,
+}> = (
+    { playerInfo, selectedCards, updateSelectedCards, score, renamePlayer, hideOrShowCard, leaveGame, currentTurn }
+) => {
     const readyToScore: () => boolean = () => {
         if(selectedCards.length !== 3) return false
         const selectedCardValues = playerInfo.hand
@@ -50,7 +50,7 @@ export function MyPlayArea(
             sets={playerInfo.sets}
         />
     </section>
-}
+};
 
 function PlayerName(
     { playerName, renamePlayer, handSize, leaveGame }: {

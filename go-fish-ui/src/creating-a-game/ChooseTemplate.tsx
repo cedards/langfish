@@ -2,10 +2,10 @@ import React, {useState} from "react/index";
 import {Link} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 
-export function ChooseTemplate({templates, gameplayClient}: {
+export const ChooseTemplate: React.FunctionComponent<{
     templates: Array<{ name: string, template: Array<{ value: string, image?: string }> }>,
     gameplayClient: GoFishGameplayClientInterface,
-}) {
+}> = ({templates, gameplayClient}) => {
     const [gameId, updateGameId] = useState<string | null>(null)
 
     const onSelect = (template: Array<{ value: string, image?: string }>) => {
@@ -31,7 +31,7 @@ export function ChooseTemplate({templates, gameplayClient}: {
             />)
         }</ul>
     </div>
-}
+};
 
 function Template({templateInfo, onSelect}: {
     templateInfo: { name: string, template: Array<{ value: string, image?: string }> },

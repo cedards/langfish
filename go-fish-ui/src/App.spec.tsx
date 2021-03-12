@@ -184,8 +184,7 @@ function follow_game_link_for(gameLink: RegExp) {
 function select_nth_card_with_value(cardValue: string, cardIndex: number) {
     userEvent.click(
         within(screen.getByLabelText(/talapas/))
-            .queryAllByLabelText(new RegExp(`card: ${cardValue}`))
-            [cardIndex]
+            .queryAllByLabelText(new RegExp(`card: ${cardValue}`))[cardIndex]
     )
 }
 
@@ -200,8 +199,7 @@ function expect_score_button_to_be_available() {
 function reveal_nth_card_with_value(cardValue: string, cardIndex: number) {
     userEvent.click(
         within(screen.getByLabelText(/talapas/))
-            .queryAllByLabelText(`reveal this ${cardValue} card`)
-            [cardIndex]
+            .queryAllByLabelText(`reveal this ${cardValue} card`)[cardIndex]
     )
 }
 
@@ -246,7 +244,7 @@ function expect_player_to_have_revealed_cards(cardValues: string[]) {
 }
 
 function expect_opponent_to_have_number_of_cards(opponentName: string, numberOfCards: number) {
-    expect(screen.getByLabelText(opponentName)).toHaveTextContent(numberOfCards)
+    expect(screen.getByLabelText(opponentName)).toHaveTextContent(`${numberOfCards}`)
 }
 
 function expect_opponent_to_have_revealed_cards(playerName: string, cardValues: string[]) {

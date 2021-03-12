@@ -4,10 +4,10 @@ import {TemplatesClientInterface} from "./TemplatesClientInterface";
 import {ChooseTemplate} from "./ChooseTemplate";
 import {LoadingScreen} from "../LoadingScreen";
 
-export function CreateGame({templatesClient, gameplayClient}: {
+export const CreateGame: React.FunctionComponent<{
     templatesClient: TemplatesClientInterface,
     gameplayClient: GoFishGameplayClientInterface
-}) {
+}> = ({templatesClient, gameplayClient}) => {
     const [templates, updateTemplates] = useState<Array<{ name: string, template: Array<{ value: string, image?: string }> }> | null>(null)
 
     useEffect(() => {
@@ -21,4 +21,4 @@ export function CreateGame({templatesClient, gameplayClient}: {
                 : <LoadingScreen>Fetching templates...</LoadingScreen>
         }
     </div>
-}
+};
