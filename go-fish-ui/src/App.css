@@ -544,6 +544,8 @@ li.revealed {
   width: auto;
   margin: 0 auto;
   padding: 1rem 4rem;
+  border: solid 3px white;
+  border-radius: 2rem;
 }
 
 .modal button {
@@ -576,9 +578,10 @@ li.revealed {
   background: none;
   border: none;
   color: white;
+  font-weight: bold;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0.5rem;
+  right: 0.5rem;
   border-radius: 1rem;
 }
 
