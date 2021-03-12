@@ -3,7 +3,7 @@ import {useHistory} from "react-router-dom";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
-import {ConfirmationModal} from "../ConfirmationModal";
+import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
 
 export const MyPlayArea: React.FunctionComponent<{
     playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
@@ -121,7 +121,7 @@ function PlayerNameHeader({ name, editPlayerName, handSize, leaveGame }: {
         <button className={`player-name-form-button ${name ? '' : 'highlight'}`} aria-label="edit name" onClick={editPlayerName}>✍️</button>
         <button className="player-name-form-button leave-button" aria-label="leave game" onClick={() => updateShowModal(true)}>🚪️</button>
         <ConfirmationModal show={showModal} confirm={handleLeaveGame} cancel={() => updateShowModal(false)}>
-            {'~~>'} 🚪️ ?
+            ⟹ 🚪️ ?
         </ConfirmationModal>
     </h1>
 }

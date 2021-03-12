@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import { GoFishGameState } from "@langfish/go-fish-engine";
 import {GameTable} from "./GameTable";
-import {LoadingScreen} from "../LoadingScreen";
+import {LoadingScreen} from "../utility-screens/LoadingScreen";
 
 export const PlayGame: React.FunctionComponent<{
     client: GoFishGameplayClientInterface

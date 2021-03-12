@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
-import {LoadingScreen} from "./LoadingScreen";
+import {LoadingScreen} from "./utility-screens/LoadingScreen";
 import {TemplatesClientInterface} from "./creating-a-game/TemplatesClientInterface";
 import {CreateGame} from "./creating-a-game/CreateGame";
 import './App.css';

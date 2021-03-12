@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
-import {ConfirmationModal} from "../ConfirmationModal";
+import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
 
 export const OpponentPlayArea: React.FunctionComponent<{
     playerId: string,
