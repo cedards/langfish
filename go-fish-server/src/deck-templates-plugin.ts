@@ -1,16 +1,19 @@
-import {ResponseToolkit, Server} from "@hapi/hapi";
+import {Server} from "@hapi/hapi";
 
 export interface DeckTemplateSource {
-    getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }>}>>
+    getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }> }>>
 }
 
 export const DeckTemplatesPlugin = {
     name: "go-fish-deck-templates",
-    register: async function (server: Server, options: {deckTemplateSource: DeckTemplateSource}) {
+    register: async function (
+        server: Server,
+        options: { deckTemplateSource: DeckTemplateSource }
+    ): Promise<void> {
         server.route({
             method: 'GET',
             path: '/templates',
-            handler: (request, h: ResponseToolkit) => {
+            handler: () => {
                 try {
                     return options.deckTemplateSource.getTemplates()
                 } catch (e) {

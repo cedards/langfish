@@ -28,7 +28,7 @@ export function GoFishGameplayClient(
     let joinedGame: string | null = null
 
     let connectionPromise: Promise<void> | null = null
-    let isConnected = () => !!client.id
+    const isConnected = () => !!client.id
 
     async function useExistingPlayer(gameId) {
         return gameMembershipRepository.getPlayerIdFor(gameId)
@@ -41,7 +41,7 @@ export function GoFishGameplayClient(
         })).payload.playerId
     }
 
-    function performGameAction(action: string, options: {[key: string]: any} = {}) {
+    function performGameAction(action: string, options: Record<string, unknown> = {}) {
         client.request({
             path: `/api/game/${joinedGame}`,
             method: "POST",

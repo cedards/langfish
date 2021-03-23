@@ -4,7 +4,7 @@ import * as Path from "path";
 
 export const FrontendPlugin = {
     name: "go-fish-frontend",
-    register: async function (server: Server, options: ServerOptions) {
+    register: async function (server: Server): Promise<void> {
         await server.register(Inert)
         server.route({
             method: 'GET',

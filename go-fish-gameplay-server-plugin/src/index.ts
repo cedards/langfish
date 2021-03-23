@@ -32,7 +32,12 @@ export function InMemoryGameRepository(): GameRepository {
 
 export const GoFishGameplayPlugin = {
     name: "go-fish-gameplay-plugin",
-    register: async function (server, options) {
+    register: async function (
+        server: Nes.Server,
+        options: {
+            gameRepository: GameRepository
+        }
+    ): Promise<void> {
         await server.register(Nes)
 
         async function publishNewGameState(gameId: string) {
@@ -48,7 +53,7 @@ export const GoFishGameplayPlugin = {
             path: `/api/game`,
             options: {
                 id: 'createGame',
-                handler: (request, h) => {
+                handler: (request) => {
                     const deck = request.payload.template
                         .map(cloneTimes(6))
                         .reduce((nextItem, result) => result.concat(nextItem), [])
@@ -63,7 +68,7 @@ export const GoFishGameplayPlugin = {
             path: `/api/game/{gameId}`,
             options: {
                 id: 'getGameState',
-                handler: (request, h) => {
+                handler: (request) => {
                     return options.gameRepository
                         .getGame(request.params.gameId)
                         .then(game => game.currentState())
@@ -76,7 +81,7 @@ export const GoFishGameplayPlugin = {
             path: `/api/game/{gameId}`,
             options: {
                 id: 'performGameAction',
-                handler: async (request, h) => {
+                handler: async (request) => {
                     const payload = request.payload
                     const game = await options.gameRepository.getGame(request.params.gameId)
                     switch (payload.type) {
@@ -121,7 +126,7 @@ export const GoFishGameplayPlugin = {
             path: `/api/game/{gameId}/player`,
             options: {
                 id: 'addPlayerToGame',
-                handler: async (request, h) => {
+                handler: async (request) => {
                     const game = await options.gameRepository.getGame(request.params.gameId)
                     const playerId = game.addPlayer()
                     await publishNewGameState(request.params.gameId)

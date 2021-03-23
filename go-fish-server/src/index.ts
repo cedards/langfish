@@ -24,6 +24,6 @@ const start = async () => {
     await server.register(FrontendPlugin)
 
     await server.start()
-    console.log('Server running on %s', server.info.uri);
 };
-start()
+
+start().then(() => console.log('Server running on %s', server.info.uri))
