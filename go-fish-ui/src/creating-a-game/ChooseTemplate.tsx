@@ -8,9 +8,12 @@ export const ChooseTemplate: React.FunctionComponent<{
     templates: Array<{ name: string, template: Array<{ value: string, image?: string }> }>,
     gameplayClient: GoFishGameplayClientInterface,
 }> = ({templates, gameplayClient}) => {
+    const [showGameCreatedModal, updateShowGameCreatedModal] = useState(false)
     const [gameId, updateGameId] = useState<string | null>(null)
 
     const onSelect = (template: Array<{ value: string, image?: string }>) => {
+        updateShowGameCreatedModal(true)
+        updateGameId(null)
         gameplayClient
             .createGame(template)
             .then(updateGameId)
@@ -18,11 +21,17 @@ export const ChooseTemplate: React.FunctionComponent<{
 
     return <div className="choose-template">
         <h1>Choose the deck template for your game.</h1>
-        <Modal show={!!gameId} close={() => updateGameId(null)}>
-            <p>Your game has been created!</p>
-            <p>Send your players to <Link to={`/play/${gameId}`}>
-                {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
-            </Link></p>
+        <Modal show={showGameCreatedModal} close={() => updateShowGameCreatedModal(false)}>
+            {
+                gameId
+                    ? <>
+                        <p>Your game has been created!</p>
+                        <p>Send your players to <Link to={`/play/${gameId}`}>
+                            {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
+                        </Link></p>
+                    </>
+                    : <p>Creating game...</p>
+            }
         </Modal>
         <ul className="template-list">{
             templates.map(templateInfo => <Template

@@ -58,7 +58,9 @@ export const GoFishGameplayPlugin = {
                         .map(cloneTimes(6))
                         .reduce((nextItem, result) => result.concat(nextItem), [])
                         .map((cardTemplate, index) => ({ ...cardTemplate, id: index+1 }))
-                    return options.gameRepository.saveGame(GoFishGame(shuffle(deck)))
+                    return options
+                        .gameRepository
+                        .saveGame(GoFishGame(shuffle(deck)))
                 }
             }
         })
