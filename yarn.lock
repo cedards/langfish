@@ -1631,6 +1631,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/eslintrc@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@eslint/eslintrc@npm:0.4.0"
+  dependencies:
+    ajv: ^6.12.4
+    debug: ^4.1.1
+    espree: ^7.3.0
+    globals: ^12.1.0
+    ignore: ^4.0.6
+    import-fresh: ^3.2.1
+    js-yaml: ^3.13.1
+    minimatch: ^3.0.4
+    strip-json-comments: ^3.1.1
+  checksum: d3f51b741997cbf36662d8b5a52985bfa5d2873e48cadccd95c67fcce1706327ec98ebb6f0be79c6ecbc31bdeca32c2b1c4f66fd1cf3934c434d1ac269cbceac
+  languageName: node
+  linkType: hard
+
 "@hapi/accept@npm:^5.0.1":
   version: 5.0.2
   resolution: "@hapi/accept@npm:5.0.2"
@@ -2227,6 +2244,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@langfish/go-fish-csv-plugin@1.0.0, @langfish/go-fish-csv-plugin@workspace:go-fish-csv-plugin":
+  version: 0.0.0-use.local
+  resolution: "@langfish/go-fish-csv-plugin@workspace:go-fish-csv-plugin"
+  dependencies:
+    "@types/jest": ^26.0.20
+    "@types/node": ^14.14.35
+    "@typescript-eslint/eslint-plugin": ^4.14.2
+    "@typescript-eslint/parser": ^4.14.2
+    eslint: ^7.19.0
+    jest: 26.6.0
+    ts-jest: ^26.5.0
+    typescript: ^4.1.3
+  languageName: unknown
+  linkType: soft
+
 "@langfish/go-fish-engine@1.0.0, @langfish/go-fish-engine@workspace:go-fish-engine":
   version: 0.0.0-use.local
   resolution: "@langfish/go-fish-engine@workspace:go-fish-engine"
@@ -2283,6 +2315,7 @@ __metadata:
     "@hapi/hapi": ^20.1.0
     "@hapi/inert": ^6.0.3
     "@hapi/nes": ^12.0.4
+    "@langfish/go-fish-csv-plugin": 1.0.0
     "@langfish/go-fish-engine": 1.0.0
     "@langfish/go-fish-gameplay-server-plugin": 1.0.0
     "@types/hapi__hapi": ^20.0.5
@@ -2936,6 +2969,13 @@ __metadata:
   version: 12.20.4
   resolution: "@types/node@npm:12.20.4"
   checksum: 16d002434239f11379819fc3d2a85f0c2652cf9fb0dcaf581e8652b85aef3816bba915552388d7db72f4f6d079822ab0f16a571980eeedb2acceedf2a9e5c940
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.14.35":
+  version: 14.14.35
+  resolution: "@types/node@npm:14.14.35"
+  checksum: 0f6320bf5370d1ff82105fb7f26aa0658499c97d3ec78561e65b65724280244f281602541182b63470d2c8a98db22fbb4f91409c5c7c97da8c3bb8f97fbc5dbc
   languageName: node
   linkType: hard
 
@@ -6865,6 +6905,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint@npm:^7.22.0":
+  version: 7.22.0
+  resolution: "eslint@npm:7.22.0"
+  dependencies:
+    "@babel/code-frame": 7.12.11
+    "@eslint/eslintrc": ^0.4.0
+    ajv: ^6.10.0
+    chalk: ^4.0.0
+    cross-spawn: ^7.0.2
+    debug: ^4.0.1
+    doctrine: ^3.0.0
+    enquirer: ^2.3.5
+    eslint-scope: ^5.1.1
+    eslint-utils: ^2.1.0
+    eslint-visitor-keys: ^2.0.0
+    espree: ^7.3.1
+    esquery: ^1.4.0
+    esutils: ^2.0.2
+    file-entry-cache: ^6.0.1
+    functional-red-black-tree: ^1.0.1
+    glob-parent: ^5.0.0
+    globals: ^13.6.0
+    ignore: ^4.0.6
+    import-fresh: ^3.0.0
+    imurmurhash: ^0.1.4
+    is-glob: ^4.0.0
+    js-yaml: ^3.13.1
+    json-stable-stringify-without-jsonify: ^1.0.1
+    levn: ^0.4.1
+    lodash: ^4.17.21
+    minimatch: ^3.0.4
+    natural-compare: ^1.4.0
+    optionator: ^0.9.1
+    progress: ^2.0.0
+    regexpp: ^3.1.0
+    semver: ^7.2.1
+    strip-ansi: ^6.0.0
+    strip-json-comments: ^3.1.0
+    table: ^6.0.4
+    text-table: ^0.2.0
+    v8-compile-cache: ^2.0.3
+  bin:
+    eslint: bin/eslint.js
+  checksum: 9be0a215b6b1e2941318b3e0c11ada8ba9a4adacf5960ab916d07f1d619828af40cba00e8ed7d151b8c715ba8ea81f4c2a56e46a2558d9795788b4f410a95ec4
+  languageName: node
+  linkType: hard
+
 "espree@npm:^7.3.0, espree@npm:^7.3.1":
   version: 7.3.1
   resolution: "espree@npm:7.3.1"
@@ -7236,7 +7323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-entry-cache@npm:^6.0.0":
+"file-entry-cache@npm:^6.0.0, file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
   dependencies:
@@ -7746,6 +7833,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"globals@npm:^13.6.0":
+  version: 13.7.0
+  resolution: "globals@npm:13.7.0"
+  dependencies:
+    type-fest: ^0.20.2
+  checksum: 98e36151746f1457c28553db5d2ceb0fc11838f81bf4868d43df30fb1f03d0abf11b0fe16eeb8d390def5c91142a3e1a42a0f505ca67ec659aa1a30a82302268
+  languageName: node
+  linkType: hard
+
 "globby@npm:11.0.1":
   version: 11.0.1
   resolution: "globby@npm:11.0.1"
@@ -7793,6 +7889,7 @@ fsevents@^1.2.7:
   dependencies:
     "@typescript-eslint/eslint-plugin": ^4.15.2
     "@typescript-eslint/parser": ^4.17.0
+    eslint: ^7.22.0
   languageName: unknown
   linkType: soft
 
@@ -9980,7 +10077,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.x, lodash@npm:>=3.5 <5, lodash@npm:^4.17.11, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.5":
+"lodash@npm:4.x, lodash@npm:>=3.5 <5, lodash@npm:^4.17.11, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.5":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 4983720b9abca930a4a46f18db163d7dad8dd00dbed6db0cc7b499b33b717cce69f80928b27bbb1ff2cbd3b19d251ee90669a8b5ea466072ca81c2ebe91e7468
@@ -14977,6 +15074,13 @@ resolve@1.18.1:
   version: 0.11.0
   resolution: "type-fest@npm:0.11.0"
   checksum: 02e5cadf13590a5724cacf8d9133320efd173f6fb1b695fcb29e56551a315bf0f07ca988a780a1999b7b55bb3eaaa7f37223615207236d393af17bba6749dc95
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "type-fest@npm:0.20.2"
+  checksum: 1f887bc6150e632fb772fd28e33c22a4ab036c6f484fa9ac2e2115f6cae9d62bba7ca0368e3332b539d85bd2c8391c7bff22ad410abcbc9ab3774d61e250b210
   languageName: node
   linkType: hard
 

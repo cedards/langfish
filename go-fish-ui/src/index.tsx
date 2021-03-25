@@ -23,7 +23,11 @@ const client = GoFishGameplayClient(websocketUrl, gameMembershipRepo)
 
 const templatesClient = {
     getTemplates(): Promise<Array<{ name: string, template: Array<{ value: string, image?: string }>}>> {
-        return fetch("/templates").then(response => response.json())
+        return fetch("/templates")
+            .then(response => {
+                if(!response.ok) throw new Error("Call to get templates was not successful")
+                return response.json()
+            })
     }
 }
 

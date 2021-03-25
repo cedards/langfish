@@ -8,11 +8,16 @@ export const CreateGame: React.FunctionComponent<{
     templatesClient: TemplatesClientInterface,
     gameplayClient: GoFishGameplayClientInterface
 }> = ({templatesClient, gameplayClient}) => {
+    const [fetchingTemplatesFailed, updateFetchingTemplatesFailed] = useState(false)
     const [templates, updateTemplates] = useState<Array<{ name: string, template: Array<{ value: string, image?: string }> }> | null>(null)
 
     useEffect(() => {
-        templatesClient.getTemplates().then(updateTemplates)
+        templatesClient.getTemplates()
+            .then(updateTemplates)
+            .catch(() => { updateFetchingTemplatesFailed(true) })
     }, [])
+
+    if(fetchingTemplatesFailed) return <div><LoadingScreen>Something went wrong while trying to fetch templates. You should ask the web master to look at the application logs.</LoadingScreen></div>
 
     return <div>
         {

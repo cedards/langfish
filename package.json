@@ -11,10 +11,11 @@
     "go-fish-server",
     "go-fish-ui",
     "go-fish-gameplay-client",
-    "go-fish-gameplay-server-plugin"
+    "go-fish-gameplay-server-plugin",
+    "go-fish-csv-plugin"
   ],
   "scripts": {
-    "build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-gameplay-server-plugin run build && yarn workspace @langfish/go-fish-gameplay-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
+    "build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-csv-plugin run build && yarn workspace @langfish/go-fish-gameplay-server-plugin run build && yarn workspace @langfish/go-fish-gameplay-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
     "dev-server": "yarn workspace @langfish/go-fish-ui run start",
     "start": "yarn workspace @langfish/go-fish-server run start",
     "test": "yarn workspaces foreach run test"
@@ -23,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^4.15.2"
   },
   "dependencies": {
-    "@typescript-eslint/parser": "^4.17.0"
+    "@typescript-eslint/parser": "^4.17.0",
+    "eslint": "^7.22.0"
   }
 }

@@ -15,7 +15,12 @@ export const DeckTemplatesPlugin = {
             path: '/templates',
             handler: () => {
                 try {
-                    return options.deckTemplateSource.getTemplates()
+                    return options.deckTemplateSource
+                        .getTemplates()
+                        .catch(e => {
+                            console.error(e)
+                            return e
+                        })
                 } catch (e) {
                     console.error(e)
                     throw e
