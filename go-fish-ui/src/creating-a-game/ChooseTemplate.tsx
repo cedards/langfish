@@ -1,6 +1,8 @@
 import React, {useState} from "react/index";
 import {Link} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
+import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
+import {Modal} from "../utility-screens/Modal";
 
 export const ChooseTemplate: React.FunctionComponent<{
     templates: Array<{ name: string, template: Array<{ value: string, image?: string }> }>,
@@ -16,13 +18,12 @@ export const ChooseTemplate: React.FunctionComponent<{
 
     return <div className="choose-template">
         <h1>Choose the deck template for your game.</h1>
-        {
-            gameId
-                ? <p>Your game has been created! Send your players to <Link to={`/play/${gameId}`}>
-                    {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
-                </Link></p>
-                : ''
-        }
+        <Modal show={!!gameId} close={() => updateGameId(null)}>
+            <p>Your game has been created!</p>
+            <p>Send your players to <Link to={`/play/${gameId}`}>
+                {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
+            </Link></p>
+        </Modal>
         <ul className="template-list">{
             templates.map(templateInfo => <Template
                 key={templateInfo.name}

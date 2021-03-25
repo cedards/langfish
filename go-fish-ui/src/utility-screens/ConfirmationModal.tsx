@@ -1,4 +1,5 @@
 import React from "react/index";
+import {Modal} from "./Modal";
 
 export const ConfirmationModal: React.FunctionComponent<{
     show: boolean,
@@ -7,13 +8,10 @@ export const ConfirmationModal: React.FunctionComponent<{
 }> = ({show, confirm, cancel, children}) => {
     if (!show) return null
 
-    return <div className="modal">
-        <div className="message">
-          <button className="cancel-button" onClick={cancel} aria-label="cancel">X</button>
-          <h1>{children}</h1>
-          <div className="modal-controls">
-              <button onClick={confirm} aria-label="confirm">✅</button>
-          </div>
+    return <Modal show={show} close={cancel}>
+        <h1>{children}</h1>
+        <div className="modal-controls">
+            <button onClick={confirm} aria-label="confirm">✅</button>
         </div>
-    </div>
+    </Modal>
 }
