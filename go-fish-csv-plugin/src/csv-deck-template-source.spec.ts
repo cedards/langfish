@@ -1,7 +1,7 @@
 import * as http from "http"
 import {CsvDeckTemplateSource} from "./index"
 
-const validCsvData = `template,NAME,Image Url
+const validCsvData = `deck name,CARD NAME,Image Url
 Alutiiq,SPOON,spoon-url
 Alutiiq,SEAGULL,seagull-url
 Qawalangim Tunuu,APPLE,apple-url

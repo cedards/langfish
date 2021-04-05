@@ -1,6 +1,6 @@
 import {parseCsv} from "./csv-parser";
 
-const csvContent = `template,NAME,Image Url
+const csvContent = `deck name,CARD NAME,Image Url
 Alutiiq,SPOON,spoon-url
 Alutiiq,SEAGULL,seagull-url
 Qawalangim Tunuu,APPLE,apple-url

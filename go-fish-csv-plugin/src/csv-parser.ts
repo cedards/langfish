@@ -1,6 +1,6 @@
 interface CsvRow {
-    template: string,
-    name: string,
+    "deck name": string,
+    "card name": string,
     "image url": string
 }
 
@@ -19,15 +19,15 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
             .reduce<CsvRow>((obj, item, currentIndex) => ({
                 ...obj,
                 [headers[currentIndex]]: item
-            }), {template: "", "image url": "", name: ""}))
-        .filter((row: CsvRow) => !!row.template)
+            }), {"deck name": "", "image url": "", "card name": ""}))
+        .filter((row: CsvRow) => !!row["deck name"])
 
     const groupedRows = (rows as CsvRow[])
         .reduce((groups, row) => ({
             ...groups,
-            [row.template]: (groups[row.template] || []).concat({
-                value: row.name,
-                image: row['image url']
+            [row["deck name"]]: (groups[row["deck name"]] || []).concat({
+                value: row["card name"],
+                image: row["image url"]
             })
         }), {});
 
