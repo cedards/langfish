@@ -37,15 +37,18 @@ $ heroku config:unset NPM_CONFIG_PRODUCTION YARN_PRODUCTION
 
 ### Startup process
 
-The server follows the typical pattern for starting up Node.js applications:
+The server follows the typical pattern for starting up Node.js applications using Yarn:
 
 ```bash
-$ npm install
-$ npm build
-$ npm start
+$ yarn install
+$ yarn build
+$ yarn start
 ```
 (If you're deploying on Heroku, Heroku will do this by default
-and shouldn't need any help.)
+and shouldn't need any help.
+If you're not deploying on Heroku,
+you should ensure Yarn is installed on your infrastructure
+before running these commands.)
 
 ### Deck Template Formats
 
