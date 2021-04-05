@@ -124,7 +124,7 @@ with this structure:
 #### Card Images
 
 Card images should ideally be around 150x200 pixels for fastest load times.
-They can be any formatted supported by web browsers,
+They can be any format supported by web browsers,
 so your best bet is one of:
 
 - PNG
