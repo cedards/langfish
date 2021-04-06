@@ -1,7 +1,6 @@
 import React, {useState} from "react/index";
 import {Link} from "react-router-dom";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
-import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
 import {Modal} from "../utility-screens/Modal";
 
 export const ChooseTemplate: React.FunctionComponent<{
@@ -55,11 +54,10 @@ function Template({templateInfo, onSelect}: {
         updateExpanded(old => !old)
     }
 
-    const handleToggleCard = (cardValue: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        updateSelectedCards(e.target.checked
+    const handleToggleCard = (cardValue: string) => () => {
+        updateSelectedCards(!selectedCards.includes(cardValue)
             ? Array.from(new Set(selectedCards.concat([cardValue])))
-            : selectedCards.filter(v => v !== cardValue)
-        )
+            : selectedCards.filter(v => v !== cardValue))
     }
 
     const createGame = (e: React.MouseEvent) => {
@@ -72,20 +70,21 @@ function Template({templateInfo, onSelect}: {
         <button className="choose-template-button" onClick={handleExpand}>{templateInfo.name}</button>
         {expanded
             ? <div>
-                <p>Which cards do you want to include?</p>
+                <p className="choose-template-selection-count">Which cards do you want to include? ({selectedCards.length} selected)</p>
                 <ul className="card-list">
                     {templateInfo.template.map(({value, image}) => <li key={value}>
-                        <label>
-                            <input
-                                type="checkbox"
-                                onChange={handleToggleCard(value)}
-                                checked={selectedCards.includes(value)}
-                            />
+                        <div
+                            className={`card-choice card-choice-${selectedCards.includes(value) ? 'selected' : 'unselected'}`}
+                            onClick={handleToggleCard(value)}
+                            role="checkbox"
+                            aria-checked={selectedCards.includes(value)}
+                            aria-label={value}
+                        >
                             {image
                                 ? <img src={image} alt=""/>
-                                : null}
-                            <span>{value}</span>
-                        </label>
+                                : <p className="card-name">{value}</p>
+                            }
+                        </div>
                     </li>)}
                 </ul>
                 <button className="create-game-button" onClick={createGame}>Create Game</button>

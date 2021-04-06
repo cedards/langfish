@@ -438,6 +438,48 @@ li.revealed {
   margin-right: 1rem;
 }
 
+.choose-template-selection-count {
+  position: sticky;
+  top: 0;
+  background: var(--play-area-background);
+  margin: 0;
+  font-size: 1.4rem;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.card-choice {
+  text-align: center;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+.card-choice img {
+  height: 150px;
+}
+
+.card-name {
+  margin: 0;
+}
+
+.card-choice-selected:hover {
+  filter: drop-shadow(0 0 1rem var(--highlight-color));
+}
+
+.card-choice-unselected {
+  opacity: 0.3;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-list li {
+  white-space: nowrap;
+  flex-grow: 2;
+}
+
 .create-game-button {
   background: none;
   cursor: pointer;
@@ -455,19 +497,10 @@ li.revealed {
   color: var(--play-area-background);
 }
 
-.choose-template p {
-  font-size: 2rem;
-}
-
 .choose-template a {
   color: var(--highlight-color)
 }
 
-.card-list img {
-  height: 100px;
-  vertical-align: middle;
-  margin: 0 1rem;
-}
 .card-list > li {
   list-style-type: none;
   text-align: left;
@@ -546,6 +579,10 @@ li.revealed {
   padding: 1rem 4rem;
   border: solid 3px white;
   border-radius: 2rem;
+}
+
+.modal-body {
+  font-size: 2rem;
 }
 
 .modal button {

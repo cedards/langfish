@@ -9,7 +9,7 @@ export const Modal: React.FunctionComponent<{
     return <div className="modal">
         <div className="message">
             <button className="cancel-button" onClick={close} aria-label="cancel">X</button>
-            <div className="modalBody">{children}</div>
+            <div className="modal-body">{children}</div>
         </div>
     </div>
 }
