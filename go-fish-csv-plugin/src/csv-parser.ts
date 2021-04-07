@@ -4,6 +4,8 @@ interface CsvRow {
     "image url": string
 }
 
+const REQUIRED_HEADERS = ["deck name", "card name"];
+
 export function parseCsv(csvContent: string): Array<{ name: string, template: Array<{ value: string, image?: string }> }> {
     const lines = csvContent
         .split("\n")
@@ -12,10 +14,19 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
         .split(",")
         .map(header => header.toLowerCase())
 
+    REQUIRED_HEADERS.forEach(header => {
+        if(!headers.includes(header)) throw new Error(`the ${header} column is missing`)
+    })
+
+    const splitColumns = (rowString: string) => {
+        const columns = rowString.split(",")
+        if(columns.length > headers.length) throw new Error(`there are illegal commas in this row: ${rowString}`)
+        return columns
+    }
+
     const rows = lines
         .splice(1)
-        .map(row => row
-            .split(",")
+        .map(row => splitColumns(row)
             .reduce<CsvRow>((obj, item, currentIndex) => ({
                 ...obj,
                 [headers[currentIndex]]: item
