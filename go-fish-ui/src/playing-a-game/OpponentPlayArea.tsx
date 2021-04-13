@@ -40,15 +40,7 @@ export const OpponentPlayArea: React.FunctionComponent<{
                     {index === hiddenCardsToShow.length-1 ? playerInfo.hand.length : ''}
                 </li>
             )}
-            {sortCards(revealedCards).map(card =>
-                <li className="revealed-card card" aria-label="revealed card" key={card.id}>
-                    {
-                        card.image
-                            ? <img src={card.image} alt={card.value}/>
-                            : card.value
-                    }
-                </li>
-            )}
+            {sortCards(revealedCards).map(card => <RevealedCard key={card.id} card={card}/>)}
         </ul>
         <ul className="sets" aria-label={`sets for ${playerId}`}>
             {playerInfo.sets.map((set, setNumber) =>
@@ -60,3 +52,20 @@ export const OpponentPlayArea: React.FunctionComponent<{
         </ul>
     </section>
 };
+
+const RevealedCard: React.FC<{card: Card}> = ({card}) => {
+    const [magnify, updateMagnify] = useState(false)
+
+    return <li
+        className={`revealed-card card ${magnify ? 'magnify' : ''}`}
+        aria-label="revealed card"
+        onMouseOver={() => updateMagnify(true)}
+        onMouseOut={() => updateMagnify(false)}
+    >
+        {
+            card.image
+                ? <img src={card.image} alt={card.value}/>
+                : card.value
+        }
+    </li>
+}
