@@ -638,13 +638,12 @@ li.revealed {
   filter: drop-shadow(0 0 0.6rem #FA0);
 }
 
-.magnify {
+.magnify:hover {
   overflow: visible;
 }
 
-.magnify img {
+.magnify:hover img {
   height: 200px;
-  /*transform: scale(2);*/
   border: solid black;
   z-index: 100;
   transition: height 0.2s ease-out;

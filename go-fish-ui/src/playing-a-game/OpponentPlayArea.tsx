@@ -54,13 +54,9 @@ export const OpponentPlayArea: React.FunctionComponent<{
 };
 
 const RevealedCard: React.FC<{card: Card}> = ({card}) => {
-    const [magnify, updateMagnify] = useState(false)
-
     return <li
-        className={`revealed-card card ${magnify ? 'magnify' : ''}`}
+        className="revealed-card card magnify"
         aria-label="revealed card"
-        onMouseOver={() => updateMagnify(true)}
-        onMouseOut={() => updateMagnify(false)}
     >
         {
             card.image
