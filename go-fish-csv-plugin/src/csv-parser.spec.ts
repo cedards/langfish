@@ -1,10 +1,10 @@
 import {parseCsv} from "./csv-parser";
 
-const csvContent = `deck name,CARD NAME,Image Url
-Alutiiq,SPOON,spoon-url
-Alutiiq,SEAGULL,seagull-url
-Qawalangim Tunuu,APPLE,apple-url
-Qawalangim Tunuu,HARBOR SEAL,harbor-seal-url
+const csvContent = `deck name,CARD NAME,Image Url\r
+Alutiiq,SPOON,spoon-url\r
+Alutiiq,SEAGULL,seagull-url\r
+Qawalangim Tunuu,APPLE,apple-url\r
+Qawalangim Tunuu,HARBOR SEAL,harbor-seal-url\r
 
 `
 

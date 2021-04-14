@@ -12,14 +12,18 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
 
     const headers = lines[0]
         .split(",")
-        .map(header => header.toLowerCase())
+        .map(header => header.toLowerCase().trim())
+
 
     REQUIRED_HEADERS.forEach(header => {
         if(!headers.includes(header)) throw new Error(`the ${header} column is missing`)
     })
 
     const splitColumns = (rowString: string) => {
-        const columns = rowString.split(",")
+        const columns = rowString
+            .split(",")
+            .map(value => value.trim())
+
         if(columns.length > headers.length) throw new Error(`there are illegal commas in this row: ${rowString}`)
         return columns
     }
