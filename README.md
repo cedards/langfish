@@ -11,46 +11,90 @@ but it doesn't rely on any Heroku-specific infrastructure,
 so you should be able to deploy it on your server
 or cloud infrastructure of choice.
 
-### Necessary environment variables
+### Deploying on Heroku
 
-The system expects the following environment variables to be set when it starts:
+The easiest way to deploy langfish is on Heroku.
+Langfish does not require any add-ons or special infrastructure,
+so the game should run fine on a free dyno,
+without needing to pay for extra resources.
 
-- `PORT`: The port on which the server should start.
-  If not set, this will default to 5000.
-- One of the following (see "Deck Template Formats" below):
-  - `LANGFISH_DECK_TEMPLATE_CSV_URL`:
-    a url pointing to a publicly-accessible CSV file
-    containing deck template information.
-    (Publicly-accessible means anyone can visit the given URL
-    and see the contents of the CSV without having to log in to anything.)
-  - `LANGFISH_DECK_TEMPLATES`: a JSON string
-    containing serialized deck template information.
+[Because langfish uses Yarn 2 with Plug'n'Play](https://devcenter.heroku.com/articles/migrating-to-yarn-2#update-heroku-environment-with-plug-n-play),
+Heroku needs a few settings to be a set a particular way to run the app.
+The full process to deploy onto Heroku is:
 
-If you are deploying on Heroku, there are a few other variables
-you may need to update,
-[since langfish uses Yarn 2 with Plug'n'Play](https://devcenter.heroku.com/articles/migrating-to-yarn-2#update-heroku-environment-with-plug-n-play):
+1. Clone this repository onto your machine.
+2. Ensure you [have a Heroku account](https://signup.heroku.com/),
+   [have the Heroku CLI installed](https://devcenter.heroku.com/articles/heroku-cli) on your machine,
+   and have run `heroku login` on the command line.
+3. Create a new app in Heroku by running the following,
+   replacing `your-app-name` with the name you want
+   for your instance of langfish.
+   
+   ```bash
+   $ heroku apps:create your-app-name
+   ```
+4. Point langfish at your newly created Heroku app by running
+   the following in the project directory you
+   created in Step 1,
+   replacing `your-app-name` with the name you chose in Step 3.
+   
+   ```bash
+   $ heroku git:remote -a your-app-name
+   ```
+5. Run the following to set the necessary settings so that
+   Heroku will know how to properly build the app.
+   This step must be done **before** you push the app.
+   If you push the app first and try to fix these settings later,
+   it won't work; you'll need to delete the app in Heroku
+   and start over from Step 2.
+   
+   ```bash
+   $ heroku config:set NODE_MODULES_CACHE=false
+   $ heroku config:unset NPM_CONFIG_PRODUCTION YARN_PRODUCTION
+   ```
+6. Use the `heroku config:set` command to provide the game with your deck templates.
+   See "Deck Template Formats" below for details on how to do this and what your options are.
+7. Finally, deploy the app to Heroku by running the following in the project directory!
+   
+   ```bash
+   $ git push heroku main
+   ```
 
-```bash
-$ heroku config:set NODE_MODULES_CACHE=false
-$ heroku config:unset NPM_CONFIG_PRODUCTION YARN_PRODUCTION
-```
+### Deploying on other infrastructure
 
-### Startup process
+Langfish doesn't depend on any Heroku-specific features,
+so you can also deploy it onto your own infrastructure
+or a cloud provider of your choice. You will need to:
 
-The server follows the typical pattern for starting up Node.js applications using Yarn:
-
-```bash
-$ yarn install
-$ yarn build
-$ yarn start
-```
-(If you're deploying on Heroku, Heroku will do this by default
-and shouldn't need any help.
-If you're not deploying on Heroku,
-you should ensure Yarn is installed on your infrastructure
-before running these commands.)
+1. Set a `PORT` environment variable with the port where you want the app to listen.
+2. Set an appropriate environment variable with your deck template information.
+   See "Deck Template Formats" below for details on how to do this and what your options are.
+3. Ensure that [yarn](https://yarnpkg.com/) is installed on the server where you are running the app.
+4. Start up the app as follows:
+   
+   ```bash
+   $ yarn install
+   $ yarn build
+   $ yarn start
+   ```
 
 ### Deck Template Formats
+
+You have two options for how you provide langfish with your deck templates.
+Both ways involve setting an appropriate environment variable on the server
+where the app is running. You can:
+
+- Describe your deck templates in a CSV file.
+  This file must be publicly accessible on the Internet
+  (in an Amazon S3 bucket, for instance).
+  Publicly-accessible means anyone can visit the given URL
+  and see the contents of the CSV without having to log in to anything.
+  
+  Set the env variable `LANGFISH_DECK_TEMPLATE_CSV_URL`
+  with the CSV file's url.
+
+- Or, set the env variable `LANGFISH_DECK_TEMPLATES` with
+  a JSON string containing serialized deck template information.
 
 #### CSV
 
@@ -74,8 +118,10 @@ so all the cards you want to be in the same deck must have
 you'll need to list it multiple times,
 once for each deck.)
 
-The card's Name will appear in the list when users are selecting
-which cards to include in a given game.
+The card's Name needs to be unique within a deck.
+For example, you can have a card in Deck A named APPLE,
+and a card in Deck B named APPLE,
+but you should not have two cards in Deck A both named APPLE.
 
 The Image Url must point to a publicly-accessible image.
 See "Card Images" below.  
