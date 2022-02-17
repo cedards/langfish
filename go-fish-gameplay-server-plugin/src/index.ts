@@ -83,9 +83,22 @@ export const GoFishGameplayPlugin = {
             path: `/api/game/{gameId}`,
             options: {
                 id: 'performGameAction',
-                handler: async (request) => {
+                handler: async (request, h) => {
                     const payload = request.payload
+
+                    if(payload.type === "RESTORE") {
+                        await options.gameRepository.updateGame(
+                          request.params.gameId,
+                          GoFishGame(
+                            payload.gameState.deck,
+                            payload.gameState.players,
+                            payload.gameState.currentTurn
+                          )
+                        )
+                    }
                     const game = await options.gameRepository.getGame(request.params.gameId)
+                    if(!game) return h.response({}).code(404)
+
                     switch (payload.type) {
                         case "RENAME":
                             game.renamePlayer(payload.player, payload.name)

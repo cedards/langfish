@@ -22,10 +22,22 @@ export function GoFishGameplayClient(
     gameMembershipRepository: GameMembershipRepository = InMemoryGameMembershipRepository()
 ): GoFishGameplayClientInterface {
     const client = new Nes.Client(websocketUrl)
+    client.onError = err => {
+        console.error("caught an NES CLIENT ERROR:", err)
+    }
+    let reconnecting = false
+    client.onConnect = () => {
+        reconnecting = false
+    }
+    client.onDisconnect = (willReconnect) => {
+        reconnecting = willReconnect
+    }
+
     const setPlayerIdCallbacks: Array<(name) => void> = []
     const updateGameStateCallbacks: Array<(GameState) => void> = []
     let playerId: string | null = null
     let joinedGame: string | null = null
+    let latestGameState: any | null = null
 
     let connectionPromise: Promise<void> | null = null
     const isConnected = () => !!client.id
@@ -41,15 +53,34 @@ export function GoFishGameplayClient(
         })).payload.playerId
     }
 
-    function performGameAction(action: string, options: Record<string, unknown> = {}) {
-        client.request({
+    async function performGameAction(action: string, options: Record<string, unknown> = {}) {
+        const request = {
             path: `/api/game/${joinedGame}`,
             method: "POST",
             payload: {
                 type: action,
                 ...options
             }
-        })
+        }
+
+        try {
+            return await client.request(request)
+        } catch(e) {
+            if(e.statusCode === 404) {
+                await client.request({
+                    path: `/api/game/${joinedGame}`,
+                    method: "POST",
+                    payload: {
+                        type: "RESTORE",
+                        gameState: latestGameState
+                    }
+                })
+                return await client.request(request)
+            } else {
+                console.error("Received unsuccessful status from server:", e)
+                return {}
+            }
+        }
     }
 
     return {
@@ -65,6 +96,7 @@ export function GoFishGameplayClient(
 
         async joinGame(gameId: string): Promise<void> {
             await client.subscribe(`/api/game/${gameId}`, payload => {
+                latestGameState = payload.state
                 updateGameStateCallbacks.forEach(callback => callback(payload.state))
             })
             joinedGame = gameId
@@ -73,11 +105,12 @@ export function GoFishGameplayClient(
             gameMembershipRepository.savePlayerIdFor(gameId, playerId)
             setPlayerIdCallbacks.forEach(callback => callback(playerId))
 
-            const getGameStateResponse = await client.request({
+            const gameState = (await client.request({
                 path: `/api/game/${gameId}`,
                 method: "GET",
-            })
-            updateGameStateCallbacks.forEach(callback => callback(getGameStateResponse.payload))
+            })).payload
+            latestGameState = gameState
+            updateGameStateCallbacks.forEach(callback => callback(gameState))
         },
 
         renamePlayer(name: string): void {
@@ -93,8 +126,21 @@ export function GoFishGameplayClient(
             })
         },
 
-        draw(): void {
-            performGameAction("DRAW", {
+        async draw(): Promise<void> {
+            // console.log("draw called! reconnecting is:", reconnecting)
+            // if(reconnecting) {
+            //     console.log("trying to act while reconnecting, waiting for connection")
+            //     await new Promise<void>(res => {
+            //         const retryLoop = setInterval(() => {
+            //             if(!reconnecting) {
+            //                 console.log("connection reestablished!")
+            //                 clearInterval(retryLoop)
+            //                 res()
+            //             }
+            //         }, 1)
+            //     })
+            // }
+            await performGameAction("DRAW", {
                 player: playerId
             })
         },

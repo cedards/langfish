@@ -351,7 +351,7 @@ describe('Go Fish gameplay client', function () {
         })
     })
 
-    describe('sad paths', function () {
+    describe('sad paths when connecting', function () {
         beforeEach(async function () {
             await client.disconnect()
         })
@@ -364,6 +364,57 @@ describe('Go Fish gameplay client', function () {
         it('does not fail when connect is called multiple times in quick succession', async function () {
             client.connect()
             await client.connect()
+        })
+    })
+
+    describe("recovering from a server restart", () => {
+        let playerIdSpy: jest.Mock
+        let gameStatesSpy: jest.Mock
+        let playerId: string
+        let newServer: Hapi.Server
+        let originalPort: number
+
+        beforeEach(async function () {
+            jest.setTimeout(10000);
+            originalPort = server.info.port
+            playerIdSpy = jest.fn()
+            gameStatesSpy = jest.fn()
+            client.onSetPlayerId(playerIdSpy)
+            client.onUpdateGameState(gameStatesSpy)
+        })
+
+        it("works", async () => {
+            await client.joinGame(existingGameId)
+
+            await eventually(() => { expect(playerIdSpy).toHaveBeenCalled() })
+            playerId = latestCallTo(playerIdSpy)[0]
+
+            client.draw()
+            await eventually(() => {
+                expect(latestCallTo(gameStatesSpy)[0].players[playerId].hand.length).toEqual(1)
+            })
+
+            await server.stop({ timeout: 0 })
+
+            newServer = new Hapi.Server({port: originalPort})
+            await newServer.register({
+                plugin: GoFishGameplayPlugin,
+                options: {
+                    gameRepository: InMemoryGameRepository() // restarted server has forgotten all game data
+                }
+            })
+            await newServer.start()
+
+            await new Promise(res => setTimeout(res, 2000))
+
+            await client.draw()
+            await eventually(() => {
+                expect(latestCallTo(gameStatesSpy)[0].players[playerId].hand.length).toEqual(2)
+            })
+        })
+
+        afterEach(async function () {
+            await newServer.stop()
         })
     })
 })
