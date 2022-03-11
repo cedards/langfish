@@ -3,7 +3,8 @@ import {GameMembershipRepository, InMemoryGameMembershipRepository} from "./game
 
 export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
-    disconnect: () => Promise<void>
+    disconnect: () => Promise<void>,
+    isConnected: () => boolean,
     onSetPlayerId(callback: (name) => void): void
     onUpdateGameState(callback: (newState) => void): void
     createGame(template: Array<{ value: string, image?: string }>): Promise<string>
@@ -21,26 +22,20 @@ export function GoFishGameplayClient(
     websocketUrl: string,
     gameMembershipRepository: GameMembershipRepository = InMemoryGameMembershipRepository()
 ): GoFishGameplayClientInterface {
+    /* Connection management */
     const client = new Nes.Client(websocketUrl)
-    client.onError = err => {
-        console.error("caught an NES CLIENT ERROR:", err)
-    }
-    let reconnecting = false
-    client.onConnect = () => {
-        reconnecting = false
-    }
-    client.onDisconnect = (willReconnect) => {
-        reconnecting = willReconnect
-    }
+    let connected = false
+    let connectionPromise: Promise<void> | null = null
+    client.onConnect = () => { connected = true }
+    client.onDisconnect = () => { connected = false }
+    client.onError = err => { console.error("NES CLIENT ERROR:", err) }
 
+    /* Client state */
     const setPlayerIdCallbacks: Array<(name) => void> = []
     const updateGameStateCallbacks: Array<(GameState) => void> = []
     let playerId: string | null = null
     let joinedGame: string | null = null
     let latestGameState: any | null = null
-
-    let connectionPromise: Promise<void> | null = null
-    const isConnected = () => !!client.id
 
     async function useExistingPlayer(gameId) {
         return gameMembershipRepository.getPlayerIdFor(gameId)
@@ -51,6 +46,17 @@ export function GoFishGameplayClient(
             path: `/api/game/${gameId}/player`,
             method: "POST"
         })).payload.playerId
+    }
+
+    function restoreGameFromLocalState() {
+        return client.request({
+            path: `/api/game/${joinedGame}`,
+            method: "POST",
+            payload: {
+                type: "RESTORE",
+                gameState: latestGameState
+            }
+        });
     }
 
     async function performGameAction(action: string, options: Record<string, unknown> = {}) {
@@ -67,20 +73,19 @@ export function GoFishGameplayClient(
             return await client.request(request)
         } catch(e) {
             if(e.statusCode === 404) {
-                await client.request({
-                    path: `/api/game/${joinedGame}`,
-                    method: "POST",
-                    payload: {
-                        type: "RESTORE",
-                        gameState: latestGameState
-                    }
-                })
-                return await client.request(request)
+               await restoreGameFromLocalState()
+               return await client.request(request)
+                 .catch(e2 => console.error("Still received unsuccessful status from server after restoring the game:", e2))
             } else {
                 console.error("Received unsuccessful status from server:", e)
-                return {}
+                return null
             }
         }
+    }
+
+    function updateGameState(gameState) {
+        latestGameState = gameState
+        updateGameStateCallbacks.forEach(callback => callback(gameState))
     }
 
     return {
@@ -95,10 +100,10 @@ export function GoFishGameplayClient(
         },
 
         async joinGame(gameId: string): Promise<void> {
-            await client.subscribe(`/api/game/${gameId}`, payload => {
-                latestGameState = payload.state
-                updateGameStateCallbacks.forEach(callback => callback(payload.state))
-            })
+            await client.subscribe(
+              `/api/game/${gameId}`,
+              payload => { updateGameState(payload.state) }
+            )
             joinedGame = gameId
 
             playerId = await useExistingPlayer(gameId) || await createNewPlayer(gameId)
@@ -109,8 +114,7 @@ export function GoFishGameplayClient(
                 path: `/api/game/${gameId}`,
                 method: "GET",
             })).payload
-            latestGameState = gameState
-            updateGameStateCallbacks.forEach(callback => callback(gameState))
+            updateGameState(gameState);
         },
 
         renamePlayer(name: string): void {
@@ -127,19 +131,6 @@ export function GoFishGameplayClient(
         },
 
         async draw(): Promise<void> {
-            // console.log("draw called! reconnecting is:", reconnecting)
-            // if(reconnecting) {
-            //     console.log("trying to act while reconnecting, waiting for connection")
-            //     await new Promise<void>(res => {
-            //         const retryLoop = setInterval(() => {
-            //             if(!reconnecting) {
-            //                 console.log("connection reestablished!")
-            //                 clearInterval(retryLoop)
-            //                 res()
-            //             }
-            //         }, 1)
-            //     })
-            // }
             await performGameAction("DRAW", {
                 player: playerId
             })
@@ -181,7 +172,7 @@ export function GoFishGameplayClient(
 
         connect(): Promise<void> {
             if(connectionPromise) return connectionPromise
-            if(isConnected()) return Promise.resolve()
+            if(connected) return Promise.resolve()
 
             return connectionPromise = client.connect().then(() => {
                 connectionPromise = null
@@ -190,6 +181,8 @@ export function GoFishGameplayClient(
 
         disconnect(): Promise<void> {
             return client.disconnect()
-        }
+        },
+
+        isConnected: () => connected
     }
 }

@@ -286,7 +286,6 @@ function expect_to_see_available_templates(templates: Array<string>) {
 }
 
 interface FakeGoFishWebsocketClientInterface extends GoFishGameplayClientInterface {
-    isConnected(): boolean;
     joinedGame(): string | null;
     setPlayerId(name: string): void;
     setGameState(gameState: GoFishGameState): void;

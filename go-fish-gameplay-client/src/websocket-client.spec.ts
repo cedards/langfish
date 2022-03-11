@@ -396,6 +396,10 @@ describe('Go Fish gameplay client', function () {
 
             await server.stop({ timeout: 0 })
 
+            await eventually(() => {
+                expect(client.isConnected()).toEqual(false)
+            })
+
             newServer = new Hapi.Server({port: originalPort})
             await newServer.register({
                 plugin: GoFishGameplayPlugin,
@@ -405,7 +409,9 @@ describe('Go Fish gameplay client', function () {
             })
             await newServer.start()
 
-            await new Promise(res => setTimeout(res, 2000))
+            await eventually(() => {
+                expect(client.isConnected()).toEqual(true)
+            })
 
             await client.draw()
             await eventually(() => {
