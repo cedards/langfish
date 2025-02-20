@@ -6,6 +6,9 @@
   "author": "Cedar Edwards",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "go-fish-engine",
     "go-fish-server",
