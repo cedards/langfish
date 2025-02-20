@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": "22.x"
+    "node": "18.x"
   },
   "workspaces": [
     "go-fish-engine",
