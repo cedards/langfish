@@ -1,9 +1,9 @@
-import React from "react/index";
+import React, {PropsWithChildren} from "react";
 
-export const Modal: React.FunctionComponent<{
+export const Modal: React.FunctionComponent<PropsWithChildren<{
     show: boolean,
     close: () => void,
-}> = ({show, close, children}) => {
+}>> = ({show, close, children}) => {
     if (!show) return null
 
     return <div className="modal">

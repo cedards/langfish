@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
 import {LoadingScreen} from "./utility-screens/LoadingScreen";
 import {TemplatesClientInterface} from "./creating-a-game/TemplatesClientInterface";
@@ -24,14 +24,10 @@ const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => 
         <div className="App"><BrowserRouter>
             {
                 connected
-                    ? <Switch>
-                        <Route path="/play/:gameId">
-                            <PlayGame client={client}/>
-                        </Route>
-                        <Route path="/">
-                            <CreateGame templatesClient={templatesClient} gameplayClient={client}/>
-                        </Route>
-                    </Switch>
+                    ? <Routes>
+                        <Route path="/play/:gameId" element={<PlayGame client={client}/>}/>
+                        <Route path="/" element={<CreateGame templatesClient={templatesClient} gameplayClient={client}/>}/>
+                    </Routes>
                     : <LoadingScreen/>
             }
         </BrowserRouter></div>

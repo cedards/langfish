@@ -1,5 +1,5 @@
-import React, {useState} from "react/index";
-import {Link} from "react-router-dom";
+import React, {useState} from "react";
+import {Link} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import {Modal} from "../utility-screens/Modal";
 

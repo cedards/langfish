@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react/index";
-import {useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import { GoFishGameState } from "@langfish/go-fish-engine";
 import {GameTable} from "./GameTable";
@@ -14,7 +14,7 @@ export const PlayGame: React.FunctionComponent<{
 
     useEffect(() => {
         client.connect().then(() => {
-            client.joinGame(gameId)
+            client.joinGame(gameId!)
             client.onSetPlayerId(updatePlayerId)
             client.onUpdateGameState(updateGameState)
         })

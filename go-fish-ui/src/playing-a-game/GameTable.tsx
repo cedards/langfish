@@ -1,4 +1,4 @@
-import React, {useState} from "react/index";
+import React, {useState} from "react";
 import {GoFishGameState} from "@langfish/go-fish-engine";
 import {Deck} from "./Deck";
 import {MyPlayArea} from "./MyPlayArea";

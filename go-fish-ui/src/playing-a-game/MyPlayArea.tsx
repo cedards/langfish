@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
@@ -107,12 +107,12 @@ function PlayerNameHeader({ name, editPlayerName, handSize, leaveGame }: {
     handSize: number,
     leaveGame: () => void
 }) {
-    const history = useHistory()
+    const navigate = useNavigate()
     const [ showModal, updateShowModal ] = useState(false)
 
     const handleLeaveGame = () => {
         leaveGame()
-        history.push("/")
+        navigate("/")
     }
 
     return <h1 id="myName">

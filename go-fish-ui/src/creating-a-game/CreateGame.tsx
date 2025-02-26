@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react/index";
+import React, {useEffect, useState} from "react";
 import { GoFishGameplayClientInterface } from "@langfish/go-fish-gameplay-client";
 import {TemplatesClientInterface} from "./TemplatesClientInterface";
 import {ChooseTemplate} from "./ChooseTemplate";

@@ -1,11 +1,11 @@
-import React from "react/index";
+import { FunctionComponent, PropsWithChildren } from "react";
 import {Modal} from "./Modal";
 
-export const ConfirmationModal: React.FunctionComponent<{
+export const ConfirmationModal: FunctionComponent<PropsWithChildren<{
     show: boolean,
     confirm: () => void,
     cancel: () => void,
-}> = ({show, confirm, cancel, children}) => {
+}>> = ({show, confirm, cancel, children}) => {
     if (!show) return null
 
     return <Modal show={show} close={cancel}>

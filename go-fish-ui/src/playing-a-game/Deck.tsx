@@ -1,4 +1,4 @@
-import React from "react/index";
+import React from "react";
 import {Card} from "@langfish/go-fish-engine";
 
 export const Deck: React.FunctionComponent<{
