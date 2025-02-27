@@ -6567,7 +6567,6 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:19.0.0"],\
           ["react-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:19.0.0"],\
           ["react-router", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:7.2.0"],\
-          ["react-router-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:7.2.0"],\
           ["react-scripts", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:5.0.1"],\
           ["typescript", "patch:typescript@npm%3A4.1.5#optional!builtin<compat/typescript>::version=4.1.5&hash=4a8eb8"],\
           ["web-vitals", "npm:1.1.0"]\
@@ -21022,33 +21021,6 @@ const RAW_RUNTIME_STATE =
           ["react-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:19.0.0"],\
           ["set-cookie-parser", "npm:2.7.1"],\
           ["turbo-stream", "npm:2.4.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/react-dom",\
-          "@types/react",\
-          "react-dom",\
-          "react"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["react-router-dom", [\
-      ["npm:7.2.0", {\
-        "packageLocation": "./.yarn/cache/react-router-dom-npm-7.2.0-65e477d8a5-0dc607c6a5.zip/node_modules/react-router-dom/",\
-        "packageDependencies": [\
-          ["react-router-dom", "npm:7.2.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:7.2.0", {\
-        "packageLocation": "./.yarn/__virtual__/react-router-dom-virtual-e3b3a7766f/0/cache/react-router-dom-npm-7.2.0-65e477d8a5-0dc607c6a5.zip/node_modules/react-router-dom/",\
-        "packageDependencies": [\
-          ["react-router-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:7.2.0"],\
-          ["@types/react", "npm:19.0.10"],\
-          ["@types/react-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:19.0.4"],\
-          ["react", "npm:19.0.0"],\
-          ["react-dom", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:19.0.0"],\
-          ["react-router", "virtual:ec49a61eb3a50f9015e0835d72910593adab1f4e312d259257ea36e5fb2c83b4aaec3baa79d5ed3fea63ca2680bffa6a2a357699c38f00ce453e138c8d3e918f#npm:7.2.0"]\
         ],\
         "packagePeers": [\
           "@types/react-dom",\
