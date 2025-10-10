@@ -22,6 +22,15 @@ const start = async () => {
     })
     await server.register(FrontendPlugin)
 
+    server.ext('onPreResponse', (request, reply) => {
+        const response: any = request.response;
+        if (response.isBoom) { // if not error then continue :)
+            console.log("BOOM");
+            console.log(response);
+        }
+        return response;
+    });
+
     await server.start()
 };
 
