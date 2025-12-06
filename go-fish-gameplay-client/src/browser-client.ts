@@ -174,7 +174,6 @@ export function GoFishGameplayClient(
             if(connectionPromise) return connectionPromise
             if(connected) return Promise.resolve()
 
-            console.log("About to connect, client is:", client);
             return connectionPromise = client.connect().then(() => {
                 connectionPromise = null
             }).catch(reason => {
