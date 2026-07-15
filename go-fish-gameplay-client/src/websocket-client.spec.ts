@@ -372,7 +372,7 @@ describe('Go Fish gameplay client', function () {
         let gameStatesSpy: jest.Mock
         let playerId: string
         let newServer: Hapi.Server
-        let originalPort: number
+        let originalPort: string | number
 
         beforeEach(async function () {
             jest.setTimeout(10000);

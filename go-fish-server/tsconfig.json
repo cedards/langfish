@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "allowJs": false,
-    "target": "es2015",
+    "target": "es2020",
     "sourceMap": true,
     "module": "commonjs",
     "moduleResolution": "node"

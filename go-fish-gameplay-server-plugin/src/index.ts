@@ -1,5 +1,6 @@
+import { Server } from "@hapi/hapi";
 import * as Nes from "@hapi/nes";
-import {GoFishGame} from "@langfish/go-fish-engine";
+import { GoFishGame, GoFishGameState } from "@langfish/go-fish-engine";
 
 export interface GameRepository {
     getGame: (gameId: string) => Promise<GoFishGame | null>
@@ -33,12 +34,12 @@ export function InMemoryGameRepository(): GameRepository {
 export const GoFishGameplayPlugin = {
     name: "go-fish-gameplay-plugin",
     register: async function (
-        server: Nes.Server,
+        server: Server,
         options: {
             gameRepository: GameRepository
         }
     ): Promise<void> {
-        await server.register(Nes)
+        await server.register(Nes);
 
         async function publishNewGameState(gameId: string) {
             const game = await options.gameRepository.getGame(gameId)
@@ -54,7 +55,7 @@ export const GoFishGameplayPlugin = {
             options: {
                 id: 'createGame',
                 handler: (request) => {
-                    const deck = request.payload.template
+                    const deck = (request.payload as any).template
                         .map(cloneTimes(6))
                         .reduce((nextItem, result) => result.concat(nextItem), [])
                         .map((cardTemplate, index) => ({ ...cardTemplate, id: index+1 }))
@@ -72,7 +73,7 @@ export const GoFishGameplayPlugin = {
                 id: 'getGameState',
                 handler: (request) => {
                     return options.gameRepository
-                        .getGame(request.params.gameId)
+                        .getGame(request.params["gameId"])
                         .then(game => game.currentState())
                 }
             }
@@ -84,11 +85,12 @@ export const GoFishGameplayPlugin = {
             options: {
                 id: 'performGameAction',
                 handler: async (request, h) => {
-                    const payload = request.payload
+                    const payload: any = request.payload;
+                    const gameId = request.params["gameId"];
 
                     if(payload.type === "RESTORE") {
                         await options.gameRepository.updateGame(
-                          request.params.gameId,
+                          gameId,
                           GoFishGame(
                             payload.gameState.deck,
                             payload.gameState.players,
@@ -96,39 +98,39 @@ export const GoFishGameplayPlugin = {
                           )
                         )
                     }
-                    const game = await options.gameRepository.getGame(request.params.gameId)
+                    const game = await options.gameRepository.getGame(gameId)
                     if(!game) return h.response({}).code(404)
 
                     switch (payload.type) {
                         case "RENAME":
                             game.renamePlayer(payload.player, payload.name)
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "DRAW":
                             game.draw(payload.player)
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "GIVE":
                             payload.cardIds.forEach(cardId => {
                                 game.give(payload.player, payload.recipient, cardId)
                             })
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "SCORE":
                             game.score(payload.player, payload.cardIds)
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "SHOW_OR_HIDE_CARD":
                             game.showOrHideCard(payload.card)
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "END_TURN":
                             game.endTurn()
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                         case "REMOVE_PLAYER":
                             game.removePlayer(payload.player)
-                            await publishNewGameState(request.params.gameId)
+                            await publishNewGameState(gameId)
                             break
                     }
                     return true
@@ -142,9 +144,9 @@ export const GoFishGameplayPlugin = {
             options: {
                 id: 'addPlayerToGame',
                 handler: async (request) => {
-                    const game = await options.gameRepository.getGame(request.params.gameId)
+                    const game = await options.gameRepository.getGame(request.params["gameId"])
                     const playerId = game.addPlayer()
-                    await publishNewGameState(request.params.gameId)
+                    await publishNewGameState(request.params["gameId"])
                     return { playerId: playerId }
                 }
             }

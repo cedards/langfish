@@ -1,0 +1,11 @@
+packages:
+  - go-fish-csv-plugin
+  - go-fish-engine
+  - go-fish-gameplay-client
+  - go-fish-gameplay-server-plugin
+  - go-fish-server
+  - go-fish-ui
+allowBuilds:
+  core-js: false
+  core-js-pure: false
+  unrs-resolver: true

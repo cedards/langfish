@@ -1,5 +1,6 @@
 import * as Nes from "@hapi/nes/lib/client";
 import {GameMembershipRepository, InMemoryGameMembershipRepository} from "./game-membership-repository";
+import { GoFishGameState } from "@langfish/go-fish-engine";
 
 export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
@@ -19,7 +20,7 @@ export interface GoFishGameplayClientInterface {
 }
 
 export function GoFishGameplayClient(
-    websocketUrl: string,
+    websocketUrl: `ws://${string}` | `wss://${string}`,
     gameMembershipRepository: GameMembershipRepository = InMemoryGameMembershipRepository()
 ): GoFishGameplayClientInterface {
     /* Connection management */
@@ -102,7 +103,7 @@ export function GoFishGameplayClient(
         async joinGame(gameId: string): Promise<void> {
             await client.subscribe(
               `/api/game/${gameId}`,
-              payload => { updateGameState(payload.state) }
+              (payload: { state: GoFishGameState }) => { updateGameState(payload.state) }
             )
             joinedGame = gameId
 

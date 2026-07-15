@@ -3,6 +3,9 @@
 # dependencies
 node_modules
 
+# Turbo
+.turbo
+
 # Yarn
 .yarn/*
 !.yarn/cache

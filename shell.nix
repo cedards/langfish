@@ -3,10 +3,9 @@
 with pkgs;
 mkShell {
   buildInputs = [
-    nodejs_18
-    nodePackages_latest.pnpm
-    nodePackages_latest.yarn
-    _1password
+    nodejs_26
+    pnpm
+    _1password-cli
     heroku
   ];
 

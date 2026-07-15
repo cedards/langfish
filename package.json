@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": "18.x"
+    "node": "26.x"
   },
   "workspaces": [
     "go-fish-engine",
@@ -18,13 +18,21 @@
     "go-fish-csv-plugin"
   ],
   "scripts": {
-    "build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-csv-plugin run build && yarn workspace @langfish/go-fish-gameplay-server-plugin run build && yarn workspace @langfish/go-fish-gameplay-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
+    "build": "turbo build",
+    "old-build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-csv-plugin run build && yarn workspace @langfish/go-fish-gameplay-server-plugin run build && yarn workspace @langfish/go-fish-gameplay-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
     "dev-server": "yarn workspace @langfish/go-fish-ui run start",
     "start": "yarn workspace @langfish/go-fish-server run start",
-    "test": "yarn workspaces foreach -A run test"
+    "test": "turbo test"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.11.0"
+    }
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.15.2"
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "turbo": "^2.10.5"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^4.17.0",
