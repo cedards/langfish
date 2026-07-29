@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2016",
+    "target": "es2020",
     "declaration": true,
-    "outDir": "./dist",
-    "moduleResolution": "node"
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "include": [
     "src/**/*"
-  ]
+  ],
 }

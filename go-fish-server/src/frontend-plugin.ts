@@ -1,25 +1,16 @@
-import {Server, ServerOptions} from "@hapi/hapi";
+import {Server} from "@hapi/hapi";
 import * as Inert from "@hapi/inert"
-import * as Path from "path";
+import { join, dirname } from "path";
+import { findPackageJSON } from "node:module";
+import { pathToFileURL } from "node:url";
 
 export const FrontendPlugin = {
     name: "go-fish-frontend",
     register: async function (server: Server): Promise<void> {
         await server.register(Inert)
-        server.route({
-            method: 'GET',
-            path: '/{path*}',
-            options: {
-                auth: false,
-                cors: { origin: ['*'] },
-            },
-            handler: {
-                directory: {
-                    path: Path.join(__dirname, 'build'),
-                    listing: true
-                }
-            }
-        })
+
+        const goFishManageGamesUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/go-fish-manage-games-ui", __filename) || "").pathname)
+        const goFishUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/go-fish-ui", __filename) || "").pathname)
 
         server.route({
             method: 'GET',
@@ -30,9 +21,40 @@ export const FrontendPlugin = {
             },
             handler: {
                 file: {
-                    path: Path.join(__dirname, 'build', 'index.html'),
+                    path: join(goFishUiDirectory, "build", "index.html"),
                 }
             }
         })
+
+        server.route({
+            method: 'GET',
+            path: '/gameplay/{path*}',
+            options: {
+                auth: false,
+                cors: { origin: ['*'] },
+            },
+            handler: {
+                directory: {
+                    path: join(goFishUiDirectory, "build"),
+                    listing: true
+                }
+            }
+        })
+
+        server.route({
+            method: 'GET',
+            path: '/{path*}',
+            options: {
+                auth: false,
+                cors: { origin: ['*'] },
+            },
+            handler: {
+                directory: {
+                    path: join(goFishManageGamesUiDirectory, "build"),
+                    listing: true
+                }
+            }
+        })
+
     }
 }

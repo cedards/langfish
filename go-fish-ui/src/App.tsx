@@ -1,18 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {BrowserRouter, Route, Routes} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
 import {LoadingScreen} from "./utility-screens/LoadingScreen";
-import {TemplatesClientInterface} from "./creating-a-game/TemplatesClientInterface";
-import {CreateGame} from "./creating-a-game/CreateGame";
 import './App.css';
 import {PlayGame} from "./playing-a-game/PlayGame";
 
 interface AppProps {
     client: GoFishGameplayClientInterface,
-    templatesClient: TemplatesClientInterface
+    gameId: string,
 }
 
-const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => {
+const App: React.FunctionComponent<AppProps> = ({ client, gameId }) => {
     const [connected, updateConnected] = useState(false)
 
     useEffect(() => {
@@ -21,16 +18,13 @@ const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => 
     }, [])
 
     return (
-        <div className="App"><BrowserRouter>
+        <div className="App">
             {
                 connected
-                    ? <Routes>
-                        <Route path="/play/:gameId" element={<PlayGame client={client}/>}/>
-                        <Route path="/" element={<CreateGame templatesClient={templatesClient} gameplayClient={client}/>}/>
-                    </Routes>
+                    ? <PlayGame client={client} gameId={gameId}/>
                     : <LoadingScreen/>
             }
-        </BrowserRouter></div>
+        </div>
     );
 };
 

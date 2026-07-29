@@ -28,7 +28,7 @@ export function CsvDeckTemplateSource(csvUrl: string): DeckTemplateSource {
                     res.on("end", () => {
                         try {
                             resolve(parseCsv(results))
-                        } catch(e) {
+                        } catch(e: any) {
                             reject(new Error(`Could not parse the CSV file at ${csvUrl} because ${e.message}`))
                         }
                     });

@@ -12,16 +12,14 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "echo 'This plugin is tested purely through integration with the websocket client; see @langfish/go-fish-gameplay-client'"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
+    "@types/node": "^26.1.1",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "eslint": "^7.19.0",
-    "jest": "^30.4.2",
     "joi": "^18.2.3",
-    "ts-jest": "^29.4.11",
-    "typescript": "^4.1.3"
+    "typescript": "^6.0.3"
   }
 }

@@ -6,8 +6,8 @@ export interface GoFishGameplayClientInterface {
     connect: () => Promise<void>
     disconnect: () => Promise<void>,
     isConnected: () => boolean,
-    onSetPlayerId(callback: (name) => void): void
-    onUpdateGameState(callback: (newState) => void): void
+    onSetPlayerId(callback: (name: string) => void): void
+    onUpdateGameState(callback: (newState: GoFishGameState) => void): void
     createGame(template: Array<{ value: string, image?: string }>): Promise<string>
     joinGame(gameId: string): void
     renamePlayer(name: string): void
@@ -32,26 +32,26 @@ export function GoFishGameplayClient(
     client.onError = err => { console.error("NES CLIENT ERROR:", err) }
 
     /* Client state */
-    const setPlayerIdCallbacks: Array<(name) => void> = []
-    const updateGameStateCallbacks: Array<(GameState) => void> = []
+    const setPlayerIdCallbacks: Array<(playerId: string) => void> = []
+    const updateGameStateCallbacks: Array<(newState: GoFishGameState) => void> = []
     let playerId: string | null = null
     let joinedGame: string | null = null
     let latestGameState: any | null = null
 
-    async function useExistingPlayer(gameId) {
+    async function useExistingPlayer(gameId: string) {
         return gameMembershipRepository.getPlayerIdFor(gameId)
     }
 
-    async function createNewPlayer(gameId) {
+    async function createNewPlayer(gameId: string) {
         return (await client.request({
-            path: `/api/game/${gameId}/player`,
+            path: `/gameplay/api/game/${gameId}/player`,
             method: "POST"
         })).payload.playerId
     }
 
     function restoreGameFromLocalState() {
         return client.request({
-            path: `/api/game/${joinedGame}`,
+            path: `/gameplay/api/game/${joinedGame}`,
             method: "POST",
             payload: {
                 type: "RESTORE",
@@ -62,7 +62,7 @@ export function GoFishGameplayClient(
 
     async function performGameAction(action: string, options: Record<string, unknown> = {}) {
         const request = {
-            path: `/api/game/${joinedGame}`,
+            path: `/gameplay/api/game/${joinedGame}`,
             method: "POST",
             payload: {
                 type: action,
@@ -72,7 +72,7 @@ export function GoFishGameplayClient(
 
         try {
             return await client.request(request)
-        } catch(e) {
+        } catch(e: any) {
             if(e.statusCode === 404) {
                await restoreGameFromLocalState()
                return await client.request(request)
@@ -84,7 +84,7 @@ export function GoFishGameplayClient(
         }
     }
 
-    function updateGameState(gameState) {
+    function updateGameState(gameState: GoFishGameState) {
         latestGameState = gameState
         updateGameStateCallbacks.forEach(callback => callback(gameState))
     }
@@ -102,17 +102,17 @@ export function GoFishGameplayClient(
 
         async joinGame(gameId: string): Promise<void> {
             await client.subscribe(
-              `/api/game/${gameId}`,
-              (payload: { state: GoFishGameState }) => { updateGameState(payload.state) }
+              `/gameplay/api/game/${gameId}`,
+              (payload) => { updateGameState((payload as { state: GoFishGameState }).state) }
             )
             joinedGame = gameId
 
             playerId = await useExistingPlayer(gameId) || await createNewPlayer(gameId)
-            gameMembershipRepository.savePlayerIdFor(gameId, playerId)
-            setPlayerIdCallbacks.forEach(callback => callback(playerId))
+            gameMembershipRepository.savePlayerIdFor(gameId, playerId!)
+            setPlayerIdCallbacks.forEach(callback => callback(playerId!))
 
             const gameState = (await client.request({
-                path: `/api/game/${gameId}`,
+                path: `/gameplay/api/game/${gameId}`,
                 method: "GET",
             })).payload
             updateGameState(gameState);
@@ -163,11 +163,11 @@ export function GoFishGameplayClient(
             performGameAction("END_TURN")
         },
 
-        onSetPlayerId(callback: (name) => void): void {
+        onSetPlayerId(callback: (name: string) => void): void {
             setPlayerIdCallbacks.push(callback)
         },
 
-        onUpdateGameState(callback: (newState) => void): void {
+        onUpdateGameState(callback: (newState: GoFishGameState) => void): void {
             updateGameStateCallbacks.push(callback)
         },
 

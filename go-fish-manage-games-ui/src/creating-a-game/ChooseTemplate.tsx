@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {Link} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import {Modal} from "../utility-screens/Modal";
 
@@ -25,9 +24,9 @@ export const ChooseTemplate: React.FunctionComponent<{
                 gameId
                     ? <>
                         <p>Your game has been created!</p>
-                        <p>Send your players to <Link to={`/play/${gameId}`}>
+                        <p>Send your players to <a href={`/play/${gameId}`}>
                             {`${window.location.protocol}//${window.location.host}${window.location.pathname}play/${gameId}`}
-                        </Link></p>
+                        </a></p>
                     </>
                     : <p>Creating game...</p>
             }
@@ -49,7 +48,7 @@ function Template({templateInfo, onSelect}: {
     const [expanded, updateExpanded] = useState(false)
     const [selectedCards, updateSelectedCards] = useState(templateInfo.template.map(({value}) => value))
 
-    const handleExpand = (e: React.MouseEvent) => {
+    const handleExpand = (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         updateExpanded(old => !old)
     }
@@ -60,7 +59,7 @@ function Template({templateInfo, onSelect}: {
             : selectedCards.filter(v => v !== cardValue))
     }
 
-    const createGame = (e: React.MouseEvent) => {
+    const createGame = (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         onSelect(templateInfo.template.filter(cardInfo => selectedCards.includes(cardInfo.value)))
         updateExpanded(false)

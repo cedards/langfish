@@ -1,5 +1,5 @@
 import * as Hapi from "@hapi/hapi"
-import {GoFishGame} from "@langfish/go-fish-engine"
+import { Card, GoFishGame } from "@langfish/go-fish-engine"
 import {
     GameRepository,
     GoFishGameplayPlugin,
@@ -59,7 +59,7 @@ describe('Go Fish gameplay client', function () {
 
         beforeEach(async function () {
             const gameId = await client.createGame(template)
-            game = await gameRepository.getGame(gameId)
+            game = (await gameRepository.getGame(gameId))!
         })
 
         it('returns the id of the new game', async function () {
@@ -85,7 +85,7 @@ describe('Go Fish gameplay client', function () {
         it('puts the deck in a random order', async function () {
             const deck = game.currentState().deck
             const otherGameId = await client.createGame(template)
-            const otherGame = await gameRepository.getGame(otherGameId)
+            const otherGame = (await gameRepository.getGame(otherGameId))!
             const otherDeck = otherGame.currentState().deck
 
             expect(deck.map(card => card.value)).not.toEqual(otherDeck.map(card => card.value))
@@ -93,12 +93,12 @@ describe('Go Fish gameplay client', function () {
     })
 
     describe('given I have joined a game previously', function () {
-        let existingPlayerId
+        let existingPlayerId: string
         let gameStatesSpy: jest.Mock
 
         beforeEach(async function () {
             gameStatesSpy = jest.fn()
-            const game = await gameRepository.getGame(existingGameId)
+            const game = (await gameRepository.getGame(existingGameId))!
 
             existingPlayerId = game.addPlayer()
             gameMembershipRepository.savePlayerIdFor(existingGameId, existingPlayerId)
@@ -108,7 +108,7 @@ describe('Go Fish gameplay client', function () {
         })
 
         it('does not create another player', async function () {
-            const game = await gameRepository.getGame(existingGameId)
+            const game = (await gameRepository.getGame(existingGameId))!
             expect(Object.keys(game.currentState().players)).toEqual([existingPlayerId])
         })
 
@@ -144,7 +144,7 @@ describe('Go Fish gameplay client', function () {
         })
 
         it('receives the current game state', async function () {
-            const existingGame = await gameRepository.getGame(existingGameId)
+            const existingGame = (await gameRepository.getGame(existingGameId))!
             return eventually(() => {
                 expect(latestCallTo(gameStatesSpy)[0]).toEqual(existingGame.currentState())
             })
@@ -179,7 +179,7 @@ describe('Go Fish gameplay client', function () {
         })
 
         describe('and show one of my cards', function () {
-            let playerId
+            let playerId: string
 
             beforeEach(async function () {
                 await eventually(() => { expect(playerIdSpy).toHaveBeenCalled() })
@@ -276,9 +276,9 @@ describe('Go Fish gameplay client', function () {
                 })
 
                 describe('and then gives me a card', function () {
-                    let myId = null
-                    let otherPlayerId = null
-                    let cardsToGive = null
+                    let myId: string
+                    let otherPlayerId: string
+                    let cardsToGive: Card[]
 
                     beforeEach(async function () {
                         await eventually(() => {
@@ -310,7 +310,7 @@ describe('Go Fish gameplay client', function () {
     })
 
     describe('when I score a set', function () {
-        let assignedId: string | null
+        let assignedId: string
         let gameStatesSpy: jest.Mock
 
         beforeEach(async function () {
@@ -321,7 +321,7 @@ describe('Go Fish gameplay client', function () {
             ]))
 
             gameStatesSpy = jest.fn()
-            assignedId = null
+            assignedId = ""
             client.onSetPlayerId(name => assignedId = name)
             client.onUpdateGameState(gameStatesSpy)
             await client.joinGame(gameWithIdenticalCards)

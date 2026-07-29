@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
 import { GoFishGameState } from "@langfish/go-fish-engine";
 import {GameTable} from "./GameTable";
 import {LoadingScreen} from "../utility-screens/LoadingScreen";
 
 export const PlayGame: React.FunctionComponent<{
-    client: GoFishGameplayClientInterface
-}> = ({client}) => {
+    client: GoFishGameplayClientInterface,
+    gameId: string,
+}> = ({client, gameId}) => {
     const [playerId, updatePlayerId] = useState<string | null>(null)
     const [gameState, updateGameState] = useState<GoFishGameState | null>(null)
-    const {gameId} = useParams<{ gameId: string }>();
 
     useEffect(() => {
         client.connect().then(() => {
-            client.joinGame(gameId!)
+            client.joinGame(gameId)
             client.onSetPlayerId(updatePlayerId)
             client.onUpdateGameState(updateGameState)
         })

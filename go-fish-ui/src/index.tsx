@@ -32,9 +32,11 @@ const templatesClient = {
     }
 }
 
+const gameId = /\/play\/(.*)/.exec(window.location.pathname)![1];
+
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App client={client} templatesClient={templatesClient}/>
+    <App client={client} gameId={gameId}/>
   </React.StrictMode>,
 );
 

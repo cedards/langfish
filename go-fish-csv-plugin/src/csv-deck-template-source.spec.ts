@@ -1,4 +1,4 @@
-import * as http from "http"
+import { createServer, Server } from "node:http"
 import {CsvDeckTemplateSource} from "./index"
 
 const validCsvData = `Deck Name,Card Name,Image Url
@@ -42,9 +42,7 @@ Qawalangim Tunuu,HARBOR SEAL,harbor-seal-url
 `
 
 describe('CsvDeckTemplateSource', function () {
-    let server;
-    let port;
-    const responses = {
+    const responses: any = {
         "/valid": validCsvData,
         "/wonky": validButWonkyCsvData,
         "/missing-deck-name": missingDeckNameCsvData,
@@ -118,15 +116,19 @@ describe('CsvDeckTemplateSource', function () {
         })
     })
 
+    let server: any;
+    let port: any;
 
     beforeEach(function (done) {
-        server = http.createServer()
+        server = createServer()
         server.listen(0, () => {
-            port = server.address().port
+            const address = server.address()
+            if(!address) throw new Error("Could not get address of server")
+            port = (typeof address === "string") ? 0 : address.port
             done()
         })
 
-        server.on("request", (request, response) => {
+        server.on("request", (request: any, response: any) => {
             if (responses[request.url]) {
                 response.statusCode = 200
                 response.write(responses[request.url])

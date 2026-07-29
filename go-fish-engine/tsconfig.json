@@ -3,7 +3,11 @@
     "module": "commonjs",
     "target": "es2016",
     "declaration": true,
-    "outDir": "./dist"
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": [
+      "jest"
+    ]
   },
   "include": [
     "src/**/*"

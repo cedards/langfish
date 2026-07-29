@@ -44,7 +44,7 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
                 value: row["card name"],
                 image: row["image url"]
             })
-        }), {});
+        }), {} as {[deckName: string]: { value: string, image: string }[]});
 
     return Object.keys(groupedRows).map(key => ({
         name: key,

@@ -5,7 +5,7 @@ export interface GameMembershipRepository {
 }
 
 export function InMemoryGameMembershipRepository(): GameMembershipRepository {
-    const _repo = {}
+    const _repo: {[gameId: string]: string} = {}
 
     return {
         getPlayerIdFor(gameId: string): string | null {

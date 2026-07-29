@@ -17,7 +17,7 @@ export const OpponentPlayArea: React.FunctionComponent<{
 ) => {
     const [showKickModal, updateShowKickModal] = useState(false)
 
-    const giveTo = (recipient: string) => (e: React.MouseEvent) => {
+    const giveTo = (recipient: string) => (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         give(selectedCards, recipient)
         updateSelectedCards([])

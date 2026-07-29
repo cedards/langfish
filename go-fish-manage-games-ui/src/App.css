@@ -1,0 +1,650 @@
+:root {
+  --highlight-color: #DD0;
+  --selected-color: #5F5;
+  --revealed-color: #FA3;
+  --card-back-color: #454;
+  --card-border-color: black;
+  --play-area-background: #252;
+}
+
+body {
+  background: #696;
+}
+
+.App {
+  text-align: center;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.game-table {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+}
+
+#myName {
+  width: 100%;
+  font-size: 1.6rem;
+  overflow-y: visible;
+}
+
+#myName .name {
+  display: inline-block;
+  min-width: 10rem;
+  font-size: inherit;
+  margin: 0 0.5rem;
+  cursor: pointer;
+}
+
+.player-name-form-button {
+  height: 100%;
+  font-size: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#myName input {
+  width: 10rem;
+  text-align: center;
+  font-weight: bold;
+  background: #131;
+  color: var(--selected-color);
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
+}
+
+#myName .highlight {
+  animation-name: encourageRename;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes encourageRename {
+  from {
+    filter: drop-shadow(0 0 0);
+    color: inherit;
+  }
+
+  50% {
+    filter: drop-shadow(0 0 1rem var(--highlight-color));
+    color: var(--highlight-color)
+  }
+
+  to {
+    filter: drop-shadow(0 0 0);
+    color: inherit;
+  }
+}
+
+.deck {
+  flex-basis: auto;
+  align-self: flex-end;
+
+  border-color: var(--card-border-color);
+  border-width: 3px 9px 9px 3px;
+  border-style: solid double double solid;
+  border-radius: 6px;
+
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+
+  margin: 1rem 1rem 7rem 1rem;
+  background-color: var(--card-back-color);
+  min-width: 6rem;
+  height: 8rem;
+
+  cursor: grab;
+}
+
+.deck.highlight {
+  position: relative;
+  box-sizing: border-box;
+  animation-name: encourageDraw;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.deck.highlight::before {
+  content: "🤚";
+  position: absolute;
+  top: 8rem;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  animation-name: reachingHand;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.deck.highlight:hover {
+  box-shadow: 0 0 5rem var(--highlight-color);
+  background-color: var(--highlight-color);
+  animation: none;
+}
+
+@keyframes encourageDraw {
+  from {
+    box-shadow: 0 0 0;
+    background-color: var(--card-back-color);
+  }
+
+  50% {
+    box-shadow: 0 0 3rem var(--highlight-color);
+    background-color: var(--highlight-color);
+  }
+
+  to {
+    box-shadow: 0 0 0;
+    background-color: var(--card-back-color);
+  }
+}
+
+@keyframes reachingHand {
+  from {
+    top: 9rem;
+  }
+
+  50% {
+    top: 6rem;
+  }
+
+  to {
+    top: 9rem;
+  }
+}
+
+.my-hand, .other-player-hand, .sets, .other-player-revealed-hand {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.my-hand {
+  min-height: 9rem;
+}
+
+.my-hand li {
+  list-style-type: none;
+  width: 6rem;
+  height: 8rem;
+  position: relative;
+}
+
+.my-hand li img, .scored-set img, .other-player-revealed-hand li img, .other-player-hand img {
+  height: 100%;
+}
+
+.hide-or-show-card {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.1rem;
+  background: 0;
+  border: 0;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1rem;
+}
+
+.hide-or-show-card::before {
+  content: "👁";
+}
+
+.revealed .hide-or-show-card {
+  background: var(--revealed-color);
+}
+
+li.revealed {
+  border-color: var(--revealed-color);
+}
+
+.other-player-hand li, .other-player-revealed-hand li {
+  list-style-type: none;
+  width: 3rem;
+  height: 4rem;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 3.8rem;
+  text-align: center;
+}
+
+.other-player-revealed-hand li {
+  margin: 0.2rem;
+}
+
+.other-player-hand {
+  min-height: 5rem;
+  padding: 0;
+}
+
+.other-player-hand .hidden-card {
+  margin-left: -2.7rem;
+}
+
+.other-player-hand .hidden-card:first-child {
+  margin-left: 0;
+}
+
+.card, .hidden-card {
+  border: solid var(--card-border-color) 3px;
+  border-radius: 6px;
+  margin: 0.2rem;
+}
+
+.card {
+  cursor: pointer;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+}
+
+.card[aria-selected="true"] {
+  border: solid var(--selected-color) 3px;
+  box-shadow: 0 0 1rem var(--selected-color);
+}
+
+.ready-to-score .card[aria-selected="true"] {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 1rem var(--highlight-color);
+}
+
+.hidden-card {
+  background-color: var(--card-back-color);
+}
+
+#myName, h3 {
+  margin: 0 0 1rem 0;
+}
+
+.opponent-name-button {
+  height: 2.5rem;
+  box-sizing: border-box;
+  color: inherit;
+  background: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  border: none;
+}
+
+.opponent-name-button:not([disabled]) {
+  color: var(--selected-color);
+  cursor: pointer;
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
+  padding: 0 1rem;
+}
+
+.opponent-name-button:not([disabled]):hover {
+  background-color: var(--selected-color);
+  color: var(--play-area-background);
+  cursor: pointer;
+  border: solid var(--selected-color) 3px;
+  border-radius: 1rem;
+  padding: 0 1rem;
+}
+
+.opponent-name-button:not([disabled])::before {
+  content: "⇒️ ";
+}
+
+.sets {
+  min-height: 5rem;
+  align-items: center;
+}
+
+.sets li {
+  list-style-type: none;
+}
+
+.scored-set, .score-button {
+  width: 2rem;
+  height: 3rem;
+  text-align: center;
+  margin: 0.2rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+
+  border-color: var(--card-border-color);
+  border-width: 2px 6px 6px 2px;
+  border-style: solid double double solid;
+
+  overflow: hidden;
+}
+
+@keyframes readytoscore {
+  from {
+    border-color: var(--play-area-background);
+    width: 2rem;
+    height: 3rem;
+    margin: 0.2rem;
+    font-size: 1.25rem;
+  }
+
+  50% {
+    border-color: var(--highlight-color);
+    width: 3rem;
+    height: 4.5rem;
+    margin: -0.6rem -0.3rem;
+    font-size: 2rem;
+  }
+
+  to {
+    border-color: var(--play-area-background);
+    width: 2rem;
+    height: 3rem;
+    margin: 0.2rem;
+    font-size: 1.25rem;
+  }
+}
+
+.score-button {
+  background: transparent;
+  border: dashed var(--highlight-color) 3px;
+  animation-name: readytoscore;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+.score-button button {
+  color: var(--highlight-color);
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.play-areas {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.play-area {
+  color: white;
+  background: var(--play-area-background);
+  padding: 1rem;
+  border-radius: 2rem;
+  margin: 0.5rem;
+  max-width: 60rem;
+  width: 100%;
+  flex-grow: 2;
+  border: solid 5px var(--play-area-background);
+  position: relative;
+}
+
+.play-area.current-turn {
+  border-color: var(--selected-color);
+}
+
+.opponent-play-area {
+  width: auto;
+  flex-grow: 1;
+  padding: 1rem 2rem;
+}
+
+.choose-template {
+  color: white;
+}
+
+.choose-template .template-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.template {
+  list-style-type: none;
+  flex-grow: 1;
+  font-size: 2rem;
+  border-radius: 2rem;
+  background: var(--play-area-background);
+  color: white;
+  margin: 1rem;
+  width: 100%;
+  position: relative;
+}
+
+.choose-template-button {
+  background: none;
+  font-size: inherit;
+  color: inherit;
+  width: 100%;
+  padding: 2rem;
+  border: none;
+  cursor: pointer;
+}
+
+.choose-template-button::before {
+  content: "▶";
+  margin-right: 1rem;
+  position: absolute;
+  left: 2rem;
+}
+
+.expanded .choose-template-button::before {
+  content: "▼";
+  margin-right: 1rem;
+}
+
+.choose-template-selection-count {
+  position: sticky;
+  top: 0;
+  background: var(--play-area-background);
+  margin: 0;
+  font-size: 1.4rem;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.card-choice {
+  text-align: center;
+  cursor: pointer;
+  padding: 1rem;
+}
+
+.card-choice img {
+  height: 150px;
+}
+
+.card-name {
+  margin: 0;
+}
+
+.card-choice-selected:hover {
+  filter: drop-shadow(0 0 1rem var(--highlight-color));
+}
+
+.card-choice-unselected {
+  opacity: 0.3;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-list li {
+  white-space: nowrap;
+  flex-grow: 2;
+}
+
+.create-game-button {
+  background: none;
+  cursor: pointer;
+  padding: 1.2rem;
+  margin: 1rem;
+  width: auto;
+  font-size: 1.4rem;
+  border: solid 3px var(--selected-color);
+  border-radius: 2rem;
+  color: var(--selected-color);
+}
+
+.create-game-button:hover {
+  background: var(--selected-color);
+  color: var(--play-area-background);
+}
+
+.choose-template a {
+  color: var(--highlight-color)
+}
+
+.card-list > li {
+  list-style-type: none;
+  text-align: left;
+  font-size: 1.4rem;
+  min-height: 3rem;
+  margin: 1rem;
+}
+
+.card-list input {
+  transform: scale(2);
+}
+
+.game-table .sidepanel {
+  position: sticky;
+  top: 0.5rem;
+  left: 0;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+}
+
+.player-list {
+  padding: 1rem 0;
+  margin: 0;
+  list-style-type: none;
+  text-align: left;
+  border: solid black 3px;
+  border-radius: 1rem;
+  width: 8rem;
+  overflow-x: hidden;
+  background: var(--play-area-background);
+  color: white;
+  cursor: pointer;
+}
+
+.player-list:hover {
+  border-color: var(--highlight-color);
+}
+
+.player-list li {
+  padding: 0.4rem 0 0.4rem 1rem;
+}
+
+.player-list li.current-turn {
+  background: var(--selected-color);
+  color: var(--play-area-background);
+  font-weight: bold;
+}
+
+.player-list li.current-turn::before {
+  content: "↓";
+  display: inline-block;
+  width: 1rem;
+  margin-left: -1rem;
+}
+
+.player-list li.current-turn:last-child::before {
+  content: "↑";
+}
+
+.modal {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal .message {
+  position: relative;
+  width: auto;
+  margin: 0 auto;
+  padding: 1rem 4rem;
+  border: solid 3px white;
+  border-radius: 2rem;
+}
+
+.modal-body {
+  font-size: 2rem;
+}
+
+.modal button {
+  height: auto;
+  width: auto;
+}
+
+.modal-controls {
+  display: flex;
+  margin: 0 auto;
+  width: auto;
+  justify-content: center;
+}
+
+.modal-controls button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.modal-controls button:hover, .modal-controls button:focus {
+  filter: drop-shadow(0 0 1rem var(--highlight-color));
+}
+
+.modal .cancel-button {
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border-radius: 1rem;
+}
+
+.modal .cancel-button:hover, .modal .cancel-button:focus {
+  background-color: var(--highlight-color);
+  color: black;
+}
+
+.leave-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  height: auto;
+}
+
+.leave-button:hover {
+  filter: drop-shadow(0 0 0.6rem #FA0);
+}
+
+.magnify:hover {
+  overflow: visible;
+}
+
+.magnify:hover img {
+  height: 200px;
+  border: solid black;
+  z-index: 100;
+  transition: height 0.2s ease-out;
+}

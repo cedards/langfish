@@ -5,6 +5,7 @@ packages:
   - go-fish-gameplay-server-plugin
   - go-fish-server
   - go-fish-ui
+  - go-fish-manage-games-ui
 allowBuilds:
   core-js: false
   core-js-pure: false

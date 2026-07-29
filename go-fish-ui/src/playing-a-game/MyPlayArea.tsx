@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router";
 import {Card} from "@langfish/go-fish-engine";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
 import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
+import { TargetedEvent } from "preact";
 
 export const MyPlayArea: React.FunctionComponent<{
     playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },
@@ -78,9 +78,9 @@ function PlayerNameForm({ name, renamePlayer, handSize }: {
 }) {
     const [ enteredName, updateEnteredName ] = useState(name || "")
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (e: TargetedEvent<HTMLInputElement, Event>) => {
         e.preventDefault()
-        updateEnteredName(e.target.value)
+        updateEnteredName(e.currentTarget.value)
     }
     const saveName = (e: React.FormEvent) => {
         e.preventDefault()
@@ -107,12 +107,11 @@ function PlayerNameHeader({ name, editPlayerName, handSize, leaveGame }: {
     handSize: number,
     leaveGame: () => void
 }) {
-    const navigate = useNavigate()
     const [ showModal, updateShowModal ] = useState(false)
 
     const handleLeaveGame = () => {
         leaveGame()
-        navigate("/")
+        window.location.pathname = "/"
     }
 
     return <h1 id="myName">
@@ -144,7 +143,7 @@ function MyHand(
         }
     }
 
-    const handleHideOrShow = (cardId: number) => (e: React.MouseEvent) => {
+    const handleHideOrShow = (cardId: number) => (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         hideOrShowCard(cardId)
     }
@@ -182,7 +181,7 @@ function MyScoredSets(
         score: () => void
     }
 ) {
-    const handleScore = (e: React.MouseEvent) => {
+    const handleScore = (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         score()
     }

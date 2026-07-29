@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "./dist",
+    "types": [
+      "node"
+    ],
     "allowJs": false,
     "target": "es2020",
     "sourceMap": true,
-    "module": "commonjs",
-    "moduleResolution": "node"
+    "module": "commonjs"
   },
   "include": [
     "./src/**/*"

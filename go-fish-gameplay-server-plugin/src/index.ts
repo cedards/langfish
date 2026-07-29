@@ -1,6 +1,6 @@
 import { Server } from "@hapi/hapi";
 import * as Nes from "@hapi/nes";
-import { GoFishGame, GoFishGameState } from "@langfish/go-fish-engine";
+import { Card, GoFishGame } from "@langfish/go-fish-engine";
 
 export interface GameRepository {
     getGame: (gameId: string) => Promise<GoFishGame | null>
@@ -43,7 +43,8 @@ export const GoFishGameplayPlugin = {
 
         async function publishNewGameState(gameId: string) {
             const game = await options.gameRepository.getGame(gameId)
-            await server.publish(`/api/game/${gameId}`, {
+            if(!game) throw new Error(`Cannot publish new game state for game ${gameId} because it is not in the repository`);
+            await server.publish(`/gameplay/api/game/${gameId}`, {
                 type: 'UPDATE_GAME_STATE',
                 state: game.currentState()
             })
@@ -55,9 +56,9 @@ export const GoFishGameplayPlugin = {
             options: {
                 id: 'createGame',
                 handler: (request) => {
-                    const deck = (request.payload as any).template
+                    const deck = (request.payload as {template: Array<Card>}).template
                         .map(cloneTimes(6))
-                        .reduce((nextItem, result) => result.concat(nextItem), [])
+                        .reduce((nextItem, result) => result.concat(nextItem), [] as Array<Card>)
                         .map((cardTemplate, index) => ({ ...cardTemplate, id: index+1 }))
                     return options
                         .gameRepository
@@ -68,20 +69,23 @@ export const GoFishGameplayPlugin = {
 
         server.route({
             method: 'GET',
-            path: `/api/game/{gameId}`,
+            path: `/gameplay/api/game/{gameId}`,
             options: {
                 id: 'getGameState',
                 handler: (request) => {
                     return options.gameRepository
                         .getGame(request.params["gameId"])
-                        .then(game => game.currentState())
+                        .then(game => {
+                          if(!game) throw new Error(`Cannot get game state, no game with id ${request.params["gameId"]}`)
+                          return game.currentState()
+                        })
                 }
             }
         })
 
         server.route({
             method: 'POST',
-            path: `/api/game/{gameId}`,
+            path: `/gameplay/api/game/{gameId}`,
             options: {
                 id: 'performGameAction',
                 handler: async (request, h) => {
@@ -111,7 +115,7 @@ export const GoFishGameplayPlugin = {
                             await publishNewGameState(gameId)
                             break
                         case "GIVE":
-                            payload.cardIds.forEach(cardId => {
+                            payload.cardIds.forEach((cardId: number) => {
                                 game.give(payload.player, payload.recipient, cardId)
                             })
                             await publishNewGameState(gameId)
@@ -140,11 +144,12 @@ export const GoFishGameplayPlugin = {
 
         server.route({
             method: 'POST',
-            path: `/api/game/{gameId}/player`,
+            path: `/gameplay/api/game/{gameId}/player`,
             options: {
                 id: 'addPlayerToGame',
                 handler: async (request) => {
                     const game = await options.gameRepository.getGame(request.params["gameId"])
+                    if(!game) throw new Error(`Cannot add player, no game with id ${request.params["gameId"]}`)
                     const playerId = game.addPlayer()
                     await publishNewGameState(request.params["gameId"])
                     return { playerId: playerId }
@@ -152,7 +157,7 @@ export const GoFishGameplayPlugin = {
             }
         })
 
-        server.subscription('/api/game/{gameId}')
+        server.subscription('/gameplay/api/game/{gameId}')
     }
 }
 

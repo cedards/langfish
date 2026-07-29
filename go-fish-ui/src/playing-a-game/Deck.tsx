@@ -6,7 +6,7 @@ export const Deck: React.FunctionComponent<{
     deck: Card[],
     highlight: boolean
 }> = ({draw, deck, highlight}) => {
-    const onClick = (e: React.MouseEvent) => {
+    const onClick = (e: React.MouseEvent<EventTarget>) => {
         e.preventDefault()
         draw()
     }

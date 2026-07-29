@@ -7,8 +7,8 @@ describe("A game of Go Fish", function () {
 
     beforeEach(function () {
         game = GoFishGame()
-        player1id = null
-        player2id = null
+        player1id = ""
+        player2id = ""
     })
 
     it("has empty game state", function () {
@@ -269,7 +269,7 @@ describe("A game of Go Fish", function () {
     })
 
     describe('removing a player', function () {
-        let removedPlayerId
+        let removedPlayerId: string
 
         beforeEach(function () {
             game = GoFishGame([{id: 6, value: "X"}], {
@@ -334,11 +334,11 @@ describe("A game of Go Fish", function () {
         })
 
         it('toggles card visibility', function () {
-            expect(targetCard().revealed).toBeFalsy()
+            expect(targetCard()!.revealed).toBeFalsy()
             game.showOrHideCard(2)
-            expect(targetCard().revealed).toBeTruthy()
+            expect(targetCard()!.revealed).toBeTruthy()
             game.showOrHideCard(2)
-            expect(targetCard().revealed).toBeFalsy()
+            expect(targetCard()!.revealed).toBeFalsy()
         })
     })
 })

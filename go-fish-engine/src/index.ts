@@ -49,7 +49,7 @@ export function GoFishGame(
         };
     }
 
-    function setDeck(deck) {
+    function setDeck(deck: Array<Card>) {
         _deck = deck
     }
 
@@ -81,17 +81,18 @@ export function GoFishGame(
 
     function give(fromPlayer: string, toPlayer: string, cardId: number): void {
         const card = _players[fromPlayer].hand.find(card => card.id === cardId)
+        if(!card) return
         _players[fromPlayer].hand = _players[fromPlayer].hand.filter(card => card.id !== cardId)
         _players[toPlayer].hand.push(card)
     }
 
     function score(playerName: string, cardIds: number[]): void {
-        if(cardIds.length !== 3) return
-        const cards = cardIds.map(cardId =>
-            _players[playerName].hand.find(card => card.id === cardId)
-        )
+        const cards = cardIds.map(cardId => {
+            return _players[playerName].hand.find(card => card.id === cardId)
+        }).filter(cardOrUndefined => !!cardOrUndefined)
+        if(cards.length !== 3) return
         if(cards.some(card => !card)) return
-        if(!cards.every(card => card.value === cards[0].value)) return
+        if(!cards.every(card => card.value === cards[0]!.value)) return
 
         _players[playerName].sets.push(cards)
         _players[playerName].hand = _players[playerName].hand.filter(card =>
@@ -100,7 +101,7 @@ export function GoFishGame(
     }
 
     function showOrHideCard(cardId: number): void {
-        for(let playerId in _players) {
+        for(const playerId in _players) {
             _players[playerId].hand.forEach(card => {
                 if(card.id === cardId) card.revealed = !card.revealed
             })
@@ -109,6 +110,7 @@ export function GoFishGame(
 
     function endTurn(): void {
         const playerList = sortedPlayerIds()
+        if(!_currentTurn) throw new Error("Cannot end turn because no turn has started");
         const currentPlayerIndex = playerList.indexOf(_currentTurn)
         const nextPlayerIndex = currentPlayerIndex === playerList.length - 1
             ? 0
