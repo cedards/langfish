@@ -19,8 +19,6 @@
   ],
   "scripts": {
     "build": "turbo build",
-    "old-build": "yarn workspace @langfish/go-fish-engine run build && yarn workspace @langfish/go-fish-csv-plugin run build && yarn workspace @langfish/go-fish-gameplay-server-plugin run build && yarn workspace @langfish/go-fish-gameplay-client run build && yarn workspace @langfish/go-fish-server run build && yarn workspace @langfish/go-fish-ui run build",
-    "dev-server": "yarn workspace @langfish/go-fish-ui run start",
     "start": "pnpm exec turbo start --filter @langfish/go-fish-server",
     "test": "turbo test"
   },
