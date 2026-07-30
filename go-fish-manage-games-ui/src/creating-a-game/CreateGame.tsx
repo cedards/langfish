@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { GoFishGameplayClientInterface } from "@langfish/go-fish-gameplay-client";
+import {LoadingScreen} from "@langfish/common-ui-components";
 import {TemplatesClientInterface} from "./TemplatesClientInterface";
 import {ChooseTemplate} from "./ChooseTemplate";
-import {LoadingScreen} from "../utility-screens/LoadingScreen";
 
 export const CreateGame: React.FunctionComponent<{
     templatesClient: TemplatesClientInterface,

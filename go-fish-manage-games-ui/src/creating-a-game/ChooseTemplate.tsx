@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client";
-import {Modal} from "../utility-screens/Modal";
+import {Modal} from "@langfish/common-ui-components";
 
 export const ChooseTemplate: React.FunctionComponent<{
     templates: Array<{ name: string, template: Array<{ value: string, image?: string }> }>,

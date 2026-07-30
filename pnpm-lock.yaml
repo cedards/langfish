@@ -221,6 +221,25 @@ importers:
         specifier: ^2.10.5
         version: 2.10.5
 
+  common-ui-components:
+    dependencies:
+      preact:
+        specifier: ^10.29.7
+        version: 10.29.7
+    devDependencies:
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^4.14.2
+        version: 4.33.0(@typescript-eslint/parser@4.33.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
+      '@typescript-eslint/parser':
+        specifier: ^4.14.2
+        version: 4.33.0(eslint@7.32.0)(typescript@6.0.3)
+      eslint:
+        specifier: ^7.19.0
+        version: 7.32.0
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   go-fish-csv-plugin:
     devDependencies:
       '@types/jest':
@@ -345,6 +364,9 @@ importers:
       '@babel/core':
         specifier: ^7.16.0
         version: 7.29.7
+      '@langfish/common-ui-components':
+        specifier: workspace:*
+        version: link:../common-ui-components
       '@langfish/go-fish-engine':
         specifier: workspace:*
         version: link:../go-fish-engine
@@ -581,6 +603,9 @@ importers:
       '@babel/core':
         specifier: ^7.16.0
         version: 7.29.7
+      '@langfish/common-ui-components':
+        specifier: workspace:*
+        version: link:../common-ui-components
       '@langfish/go-fish-engine':
         specifier: workspace:*
         version: link:../go-fish-engine
@@ -589,7 +614,7 @@ importers:
         version: link:../go-fish-gameplay-client
       '@pmmmwh/react-refresh-webpack-plugin':
         specifier: ^0.5.3
-        version: 0.5.17(react-refresh@0.11.0)(type-fest@0.21.3)(webpack@5.108.4)
+        version: 0.5.17(react-refresh@0.11.0)(type-fest@4.41.0)(webpack@5.108.4)
       '@svgr/webpack':
         specifier: ^5.5.0
         version: 5.5.0
@@ -7729,20 +7754,6 @@ snapshots:
 
   '@pkgr/core@0.3.6': {}
 
-  '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.11.0)(type-fest@0.21.3)(webpack@5.108.4)':
-    dependencies:
-      ansi-html: 0.0.9
-      core-js-pure: 3.49.0
-      error-stack-parser: 2.1.4
-      html-entities: 2.6.0
-      loader-utils: 2.0.4
-      react-refresh: 0.11.0
-      schema-utils: 4.3.3
-      source-map: 0.7.6
-      webpack: 5.108.4
-    optionalDependencies:
-      type-fest: 0.21.3
-
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.11.0)(type-fest@4.41.0)(webpack@5.108.4(postcss@8.5.16))':
     dependencies:
       ansi-html: 0.0.9
@@ -7754,6 +7765,20 @@ snapshots:
       schema-utils: 4.3.3
       source-map: 0.7.6
       webpack: 5.108.4(postcss@8.5.16)
+    optionalDependencies:
+      type-fest: 4.41.0
+
+  '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.11.0)(type-fest@4.41.0)(webpack@5.108.4)':
+    dependencies:
+      ansi-html: 0.0.9
+      core-js-pure: 3.49.0
+      error-stack-parser: 2.1.4
+      html-entities: 2.6.0
+      loader-utils: 2.0.4
+      react-refresh: 0.11.0
+      schema-utils: 4.3.3
+      source-map: 0.7.6
+      webpack: 5.108.4
     optionalDependencies:
       type-fest: 4.41.0
 

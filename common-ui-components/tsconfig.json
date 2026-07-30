@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "declaration": true,
+    "rootDir": "src",
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "react-dom/*": ["./node_modules/preact/compat/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

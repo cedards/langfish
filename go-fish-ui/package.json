@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
+    "@langfish/common-ui-components": "workspace:*",
     "@langfish/go-fish-engine": "workspace:*",
     "@langfish/go-fish-gameplay-client": "workspace:*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",

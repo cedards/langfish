@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {GoFishGameplayClientInterface} from "@langfish/go-fish-gameplay-client"
-import {LoadingScreen} from "./utility-screens/LoadingScreen";
+import {LoadingScreen} from "@langfish/common-ui-components";
 import './App.css';
 import {PlayGame} from "./playing-a-game/PlayGame";
 

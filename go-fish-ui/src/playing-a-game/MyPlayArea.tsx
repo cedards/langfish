@@ -1,9 +1,9 @@
 import React, {useState} from "react";
+import { TargetedEvent } from "preact";
 import {Card} from "@langfish/go-fish-engine";
+import {ConfirmationModal} from "@langfish/common-ui-components";
 import {sortCards} from "./sortCards";
 import {ScoredSet} from "./ScoredSet";
-import {ConfirmationModal} from "../utility-screens/ConfirmationModal";
-import { TargetedEvent } from "preact";
 
 export const MyPlayArea: React.FunctionComponent<{
     playerInfo: { hand: Array<Card>, sets: Array<Array<Card>>, name?: string },

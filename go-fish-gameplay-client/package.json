@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Browser client for communicating with the Go Fish backend",
   "main": "dist/index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@hapi/nes": "^14.0.1",
