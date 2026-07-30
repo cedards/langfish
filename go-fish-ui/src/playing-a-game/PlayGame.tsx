@@ -17,7 +17,7 @@ export const PlayGame: React.FunctionComponent<{
             client.onSetPlayerId(updatePlayerId)
             client.onUpdateGameState(updateGameState)
         })
-    }, [])
+    }, [client, gameId])
 
     return (playerId && gameState && gameState.players[playerId])
         ? <GameTable

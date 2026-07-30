@@ -247,12 +247,12 @@ li.revealed {
   font-size: 4rem;
 }
 
-.card[aria-selected="true"] {
+.card[aria-checked="true"] {
   border: solid var(--selected-color) 3px;
   box-shadow: 0 0 1rem var(--selected-color);
 }
 
-.ready-to-score .card[aria-selected="true"] {
+.ready-to-score .card[aria-checked="true"] {
   border-color: var(--highlight-color);
   box-shadow: 0 0 1rem var(--highlight-color);
 }

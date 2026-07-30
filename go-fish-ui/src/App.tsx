@@ -15,7 +15,7 @@ const App: React.FunctionComponent<AppProps> = ({ client, gameId }) => {
     useEffect(() => {
         client.connect().then(() => { updateConnected(true) })
         return () => { client.disconnect() }
-    }, [])
+    }, [client])
 
     return (
         <div className="App">

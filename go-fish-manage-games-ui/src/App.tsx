@@ -16,7 +16,7 @@ const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => 
     useEffect(() => {
         client.connect().then(() => { updateConnected(true) })
         return () => { client.disconnect() }
-    }, [])
+    }, [client])
 
     return (
         <div className="App">

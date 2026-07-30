@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Card} from "@langfish/go-fish-engine";
 
 export const ScoredSet: React.FunctionComponent<{

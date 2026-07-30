@@ -155,7 +155,7 @@ function MyHand(
                 key={card.id}
                 aria-label={`${card.revealed ? 'revealed' : 'hidden'} card: ${card.value}`}
                 role="checkbox"
-                aria-selected={selectedCards.includes(card.id)}
+                aria-checked={selectedCards.includes(card.id)}
                 onMouseDown={selectCard(card.id)}
             >
                 {

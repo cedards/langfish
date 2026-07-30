@@ -21,7 +21,7 @@ export const CreateGame: React.FunctionComponent<{
             }))
             .then(updateTemplates)
             .catch(() => { updateFetchingTemplatesFailed(true) })
-    }, [])
+    }, [templatesClient])
 
     if(fetchingTemplatesFailed) return <div><LoadingScreen>Something went wrong while trying to fetch templates. You should ask the web master to look at the application logs.</LoadingScreen></div>
 
