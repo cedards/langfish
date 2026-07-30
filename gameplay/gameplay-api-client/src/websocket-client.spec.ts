@@ -1,16 +1,36 @@
 import * as Hapi from "@hapi/hapi"
-import { Card, GoFishGame } from "@langfish/go-fish-engine"
-import {
-    GameRepository,
-    GoFishGameplayPlugin,
-    InMemoryGameRepository,
-} from "@langfish/gameplay-server-plugin"
+import { Card, GameRepository, GoFishGame } from "@langfish/go-fish-engine"
+import { GoFishGameplayPlugin } from "@langfish/gameplay-server-plugin"
 import {
     GameMembershipRepository,
     GoFishGameplayClient,
     GoFishGameplayClientInterface,
     InMemoryGameMembershipRepository,
 } from ".";
+
+function InMemoryGameRepository(games: { [key: string]: GoFishGame } = {}): GameRepository & {_games: { [key: string]: GoFishGame }} {
+  const _games: { [key: string]: GoFishGame } = games
+
+  const randomId = () => Math.floor(Math.random() * 1e7)
+  let _nextId = randomId()
+
+  return {
+    _games,
+    saveGame(game): Promise<string> {
+      while(_games[`game-${_nextId}`]) _nextId = randomId()
+      const id = `game-${_nextId}`
+      _games[id] = game
+      return Promise.resolve(id);
+    },
+    updateGame(gameId: string, game): Promise<void> {
+      games[gameId] = game
+      return Promise.resolve();
+    },
+    getGame(gameId: string): Promise<GoFishGame | null> {
+      return Promise.resolve(games[gameId] || null);
+    }
+  }
+}
 
 describe('Go Fish gameplay client', function () {
     let server: Hapi.Server
@@ -20,13 +40,15 @@ describe('Go Fish gameplay client', function () {
     let gameMembershipRepository: GameMembershipRepository
 
     beforeEach(async function () {
-        gameRepository = InMemoryGameRepository()
-        gameMembershipRepository = InMemoryGameMembershipRepository()
-        existingGameId = await gameRepository.saveGame(GoFishGame([
+        gameRepository = InMemoryGameRepository({
+          "existing-game": GoFishGame([
             {id: 1, value: 'A'},
             {id: 2, value: 'B'},
             {id: 3, value: 'C'},
-        ]))
+          ])
+        })
+        gameMembershipRepository = InMemoryGameMembershipRepository()
+        existingGameId = "existing-game"
 
         server = new Hapi.Server({port: 0})
         await server.register({
@@ -35,6 +57,12 @@ describe('Go Fish gameplay client', function () {
                 gameRepository: gameRepository
             }
         })
+        server.ext('onPreResponse', (request, reply) => {
+            const response: any = request.response;
+            if (response.isBoom) console.log(response);
+            return response;
+        });
+
         await server.start()
 
         client = GoFishGameplayClient(

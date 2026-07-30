@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@hapi/hapi": "^21.4.9",
+    "@langfish/managing-games-domain": "workspace:*",
     "@langfish/managing-games-server-plugin": "workspace:*",
     "@types/jest": "^26.0.20",
     "@typescript-eslint/eslint-plugin": "^8.65.0",

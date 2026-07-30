@@ -548,6 +548,9 @@ importers:
       '@langfish/managing-games-csv-plugin':
         specifier: workspace:*
         version: link:../managing-games/managing-games-csv-plugin
+      '@langfish/managing-games-domain':
+        specifier: workspace:*
+        version: link:../managing-games/managing-games-domain
       '@langfish/managing-games-gameplay-adapter':
         specifier: workspace:*
         version: link:../managing-games/managing-games-gameplay-adapter
@@ -589,6 +592,9 @@ importers:
       '@hapi/hapi':
         specifier: ^21.4.9
         version: 21.4.9
+      '@langfish/managing-games-domain':
+        specifier: workspace:*
+        version: link:../managing-games-domain
       '@langfish/managing-games-server-plugin':
         specifier: workspace:*
         version: link:../managing-games-server-plugin
@@ -641,17 +647,38 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
+  managing-games/managing-games-domain:
+    devDependencies:
+      '@types/jest':
+        specifier: ^26.0.20
+        version: 26.0.24
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.65.0
+        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
+      '@typescript-eslint/parser':
+        specifier: ^8.65.0
+        version: 8.65.0(eslint@7.32.0)(typescript@6.0.3)
+      eslint:
+        specifier: ^7.19.0
+        version: 7.32.0
+      jest:
+        specifier: ^30.4.2
+        version: 30.4.2(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)
+      ts-jest:
+        specifier: ^29.4.11
+        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2))(typescript@6.0.3)
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   managing-games/managing-games-gameplay-adapter:
     devDependencies:
-      '@langfish/gameplay-server-plugin':
-        specifier: workspace:*
-        version: link:../../gameplay/gameplay-server-plugin
       '@langfish/go-fish-engine':
         specifier: workspace:*
         version: link:../../gameplay/go-fish-engine
-      '@langfish/managing-games-server-plugin':
+      '@langfish/managing-games-domain':
         specifier: workspace:*
-        version: link:../managing-games-server-plugin
+        version: link:../managing-games-domain
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.65.0
         version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
@@ -676,6 +703,9 @@ importers:
       '@langfish/go-fish-engine':
         specifier: workspace:*
         version: link:../../gameplay/go-fish-engine
+      '@langfish/managing-games-domain':
+        specifier: workspace:*
+        version: link:../managing-games-domain
     devDependencies:
       '@types/node':
         specifier: ^26.1.1
@@ -710,6 +740,9 @@ importers:
       '@langfish/managing-games-api-client':
         specifier: workspace:*
         version: link:../managing-games-api-client
+      '@langfish/managing-games-domain':
+        specifier: workspace:*
+        version: link:../managing-games-domain
       '@pmmmwh/react-refresh-webpack-plugin':
         specifier: ^0.5.3
         version: 0.5.17(react-refresh@0.11.0)(type-fest@4.41.0)(webpack@5.108.4)

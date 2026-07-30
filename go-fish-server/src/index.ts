@@ -1,11 +1,11 @@
 import {Server} from "@hapi/hapi"
 import {GoFishGameplayPlugin} from "@langfish/gameplay-server-plugin"
+import {DeckTemplateSource} from "@langfish/managing-games-domain";
 import {GoFishManagingGamesPlugin} from "@langfish/managing-games-server-plugin"
 import {InMemoryGameRepository} from "@langfish/managing-games-gameplay-adapter"
-import {FrontendPlugin} from "./frontend-plugin"
-import {DeckTemplateSource, DeckTemplatesPlugin} from "./deck-templates-plugin";
-import {EnvironmentVariableDeckTemplateSource} from "./environment-variable-deck-template-source";
 import {CsvDeckTemplateSource} from "@langfish/managing-games-csv-plugin";
+import {FrontendPlugin} from "./frontend-plugin"
+import {EnvironmentVariableDeckTemplateSource} from "./environment-variable-deck-template-source";
 
 const server = new Server({port: process.env.PORT || 5000})
 
@@ -18,11 +18,10 @@ const start = async () => {
     })
     await server.register({
         plugin: GoFishManagingGamesPlugin,
-        options: {gameRepository: gameRepository}
-    })
-    await server.register({
-        plugin: DeckTemplatesPlugin,
-        options: {deckTemplateSource: chooseTemplateSource()}
+        options: {
+          gameRepository: gameRepository,
+          deckTemplateSource: chooseTemplateSource(),
+        }
     })
     await server.register(FrontendPlugin)
 

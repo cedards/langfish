@@ -30,6 +30,12 @@ export interface GoFishGame {
     showOrHideCard: (cardId: number) => void;
 }
 
+export interface GameRepository {
+  saveGame: (game: GoFishGame) => Promise<string>
+  getGame: (gameId: string) => Promise<GoFishGame | null>
+  updateGame: (gameId: string, game: GoFishGame) => Promise<void>
+}
+
 export function GoFishGame(
     deck?: Array<Card>,
     players?: { [key: string]: PlayerState },

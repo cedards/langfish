@@ -24,6 +24,7 @@
     "@langfish/gameplay-server-plugin": "workspace:*",
     "@langfish/go-fish-engine": "workspace:*",
     "@langfish/managing-games-csv-plugin": "workspace:*",
+    "@langfish/managing-games-domain": "workspace:*",
     "@langfish/managing-games-gameplay-adapter": "workspace:*",
     "@langfish/managing-games-server-plugin": "workspace:*",
     "@langfish/managing-games-ui": "workspace:*",

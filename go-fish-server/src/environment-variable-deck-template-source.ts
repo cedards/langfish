@@ -1,4 +1,4 @@
-import {DeckTemplateSource} from "./deck-templates-plugin";
+import { DeckTemplateSource } from "@langfish/managing-games-domain";
 
 export function EnvironmentVariableDeckTemplateSource(variableName: string): DeckTemplateSource {
     return {

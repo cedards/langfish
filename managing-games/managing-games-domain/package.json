@@ -1,7 +1,7 @@
 {
-  "name": "@langfish/managing-games-gameplay-adapter",
+  "name": "@langfish/managing-games-domain",
   "version": "1.0.0",
-  "description": "Cross-context adapter for connecting managing-games and gameplay use-cases for Go Fish",
+  "description": "Core domain logic for managing-games use-cases for Go Fish",
   "main": "dist/index.js",
   "license": "Apache-2.0",
   "private": true,
@@ -9,11 +9,12 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.20",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
-    "@langfish/go-fish-engine": "workspace:*",
-    "@langfish/managing-games-domain": "workspace:*",
     "eslint": "^7.19.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   }
 }

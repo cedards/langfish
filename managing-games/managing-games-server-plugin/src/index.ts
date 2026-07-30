@@ -1,13 +1,8 @@
 import { Server } from "@hapi/hapi";
-import { Card, GoFishGame } from "@langfish/go-fish-engine";
-
-export interface GameRepository {
-    getGame: (gameId: string) => Promise<GoFishGame | null>
-    saveGame: (game: GoFishGame) => Promise<string>
-}
+import { DeckTemplateSource, Game, Card, GameRepository } from "@langfish/managing-games-domain";
 
 export function InMemoryGameRepository(): GameRepository {
-    const _games: { [key: string]: GoFishGame } = {}
+    const _games: { [key: string]: Game } = {}
 
     const randomId = () => Math.floor(Math.random() * 1e7)
     let _nextId = randomId()
@@ -19,7 +14,7 @@ export function InMemoryGameRepository(): GameRepository {
             _games[id] = game
             return Promise.resolve(id);
         },
-        getGame(gameId: string): Promise<GoFishGame | null> {
+        getGame(gameId: string): Promise<Game | null> {
             return Promise.resolve(_games[gameId] || null);
         }
     }
@@ -30,7 +25,8 @@ export const GoFishManagingGamesPlugin = {
     register: async function (
         server: Server,
         options: {
-            gameRepository: GameRepository
+            gameRepository: GameRepository,
+            deckTemplateSource: DeckTemplateSource,
         }
     ): Promise<void> {
 
@@ -46,7 +42,25 @@ export const GoFishManagingGamesPlugin = {
                         .map((cardTemplate, index) => ({ ...cardTemplate, id: index+1 }))
                     return options
                         .gameRepository
-                        .saveGame(GoFishGame(shuffle(deck)))
+                        .saveGame(Game(shuffle(deck)))
+                }
+            }
+        })
+
+        server.route({
+            method: 'GET',
+            path: '/api/templates',
+            handler: () => {
+                try {
+                    return options.deckTemplateSource
+                        .getTemplates()
+                        .catch(e => {
+                            console.error(e)
+                            return e
+                        })
+                } catch (e) {
+                    console.error(e)
+                    throw e
                 }
             }
         })

@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo 'This plugin is tested purely through integration with the websocket clients that call it; see the tests in @langfish/go-fish-gameplay-client and @langfish/go-fish-managing-games-client'"
+    "test": "echo 'This plugin is tested purely through integration with the websocket client that calls it; see the tests in @langfish/go-fish-gameplay-client'"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

@@ -7,6 +7,7 @@
     "@langfish/common-ui-components": "workspace:*",
     "@langfish/go-fish-engine": "workspace:*",
     "@langfish/managing-games-api-client": "workspace:*",
+    "@langfish/managing-games-domain": "workspace:*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/dom": "^10.4.0",

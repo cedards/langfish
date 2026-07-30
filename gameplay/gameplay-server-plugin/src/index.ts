@@ -1,35 +1,6 @@
 import { Server } from "@hapi/hapi";
 import * as Nes from "@hapi/nes";
-import { GoFishGame } from "@langfish/go-fish-engine";
-
-export interface GameRepository {
-    getGame: (gameId: string) => Promise<GoFishGame | null>
-    saveGame: (game: GoFishGame) => Promise<string>
-    updateGame: (gameId: string, game: GoFishGame) => Promise<void>
-}
-
-export function InMemoryGameRepository(): GameRepository {
-    const _games: { [key: string]: GoFishGame } = {}
-
-    const randomId = () => Math.floor(Math.random() * 1e7)
-    let _nextId = randomId()
-
-    return {
-        saveGame(game): Promise<string> {
-            while(_games[`game-${_nextId}`]) _nextId = randomId()
-            const id = `game-${_nextId}`
-            _games[id] = game
-            return Promise.resolve(id);
-        },
-        updateGame(gameId: string, game): Promise<void> {
-            _games[gameId] = game
-            return Promise.resolve();
-        },
-        getGame(gameId: string): Promise<GoFishGame | null> {
-            return Promise.resolve(_games[gameId] || null);
-        }
-    }
-}
+import { GameRepository, GoFishGame } from "@langfish/go-fish-engine";
 
 export const GoFishGameplayPlugin = {
     name: "go-fish-gameplay-plugin",
@@ -55,13 +26,11 @@ export const GoFishGameplayPlugin = {
             path: `/gameplay/api/game/{gameId}`,
             options: {
                 id: 'getGameState',
-                handler: (request) => {
-                    return options.gameRepository
-                        .getGame(request.params["gameId"])
-                        .then(game => {
-                          if(!game) throw new Error(`Cannot get game state, no game with id ${request.params["gameId"]}`)
-                          return game.currentState()
-                        })
+                handler: async (request) => {
+                  let game = await options.gameRepository
+                    .getGame(request.params["gameId"]);
+                  if (!game) throw new Error(`Cannot get game state, no game with id ${request.params["gameId"]}`)
+                  return game.currentState()
                 }
             }
         })
