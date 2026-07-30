@@ -21,10 +21,12 @@
     "@hapi/hapi": "^21.4.9",
     "@hapi/inert": "^7.1.2",
     "@hapi/nes": "^14.0.1",
-    "@langfish/go-fish-csv-plugin": "workspace:*",
+    "@langfish/gameplay-server-plugin": "workspace:*",
     "@langfish/go-fish-engine": "workspace:*",
-    "@langfish/go-fish-gameplay-server-plugin": "workspace:*",
-    "@langfish/go-fish-manage-games-ui": "workspace:*",
-    "@langfish/go-fish-ui": "workspace:*"
+    "@langfish/managing-games-csv-plugin": "workspace:*",
+    "@langfish/managing-games-gameplay-adapter": "workspace:*",
+    "@langfish/managing-games-server-plugin": "workspace:*",
+    "@langfish/managing-games-ui": "workspace:*",
+    "@langfish/gameplay-ui": "workspace:*"
   }
 }

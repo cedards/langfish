@@ -1,0 +1,25 @@
+{
+  "name": "@langfish/managing-games-server-plugin",
+  "version": "1.0.0",
+  "description": "Hapi server plugin for providing API endpoints for managing-games use cases for Go Fish",
+  "main": "dist/index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "@hapi/hapi": "^21.4.9",
+    "@hapi/nes": "^14.0.1",
+    "@langfish/go-fish-engine": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'This plugin is tested purely through integration with the API client that calls it; see the tests in @langfish/go-fish-managing-games-client'"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "eslint": "^7.19.0",
+    "joi": "^18.2.3",
+    "typescript": "^6.0.3"
+  }
+}

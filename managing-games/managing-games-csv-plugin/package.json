@@ -1,20 +1,22 @@
 {
-  "name": "@langfish/common-ui-components",
+  "name": "@langfish/managing-games-csv-plugin",
   "version": "1.0.0",
-  "description": "Cross-domain shared UI components for Go Fish",
+  "description": "Amazon S3 adapter for Go Fish",
   "main": "dist/index.js",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "tsc"
-  },
-  "dependencies": {
-    "preact": "^10.29.7"
+    "build": "tsc",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^26.1.1",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
     "eslint": "^7.19.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   }
 }

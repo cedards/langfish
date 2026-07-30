@@ -1,0 +1,27 @@
+{
+  "name": "@langfish/managing-games-api-client",
+  "version": "1.0.0",
+  "description": "Browser client for communicating with the Go Fish backend for managing-games use cases",
+  "main": "dist/index.js",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "@hapi/nes": "^14.0.1",
+    "@langfish/go-fish-engine": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@hapi/hapi": "^21.4.9",
+    "@langfish/managing-games-server-plugin": "workspace:*",
+    "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "eslint": "^7.19.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3"
+  }
+}

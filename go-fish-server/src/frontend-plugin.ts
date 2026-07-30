@@ -9,8 +9,8 @@ export const FrontendPlugin = {
     register: async function (server: Server): Promise<void> {
         await server.register(Inert)
 
-        const goFishManageGamesUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/go-fish-manage-games-ui", __filename) || "").pathname)
-        const goFishUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/go-fish-ui", __filename) || "").pathname)
+        const goFishManageGamesUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/managing-games-ui", __filename) || "").pathname)
+        const goFishUiDirectory = dirname(pathToFileURL(findPackageJSON("@langfish/gameplay-ui", __filename) || "").pathname)
 
         server.route({
             method: 'GET',
