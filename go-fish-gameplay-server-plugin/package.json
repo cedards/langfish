@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Hapi server plugin for providing websocket connections to the Go Fish frontend",
   "main": "dist/index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@hapi/hapi": "^21.4.9",

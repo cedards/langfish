@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Backend server for Go Fish game",
   "main": "dist/index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "build": "tsc",
