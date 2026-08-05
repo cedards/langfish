@@ -206,17 +206,16 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.65.0
+        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
       '@typescript-eslint/parser':
         specifier: ^8.65.0
         version: 8.65.0(eslint@7.32.0)(typescript@6.0.3)
       eslint:
         specifier: ^7.22.0
         version: 7.32.0
-    devDependencies:
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^8.65.0
-        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
       turbo:
         specifier: ^2.10.5
         version: 2.10.5
@@ -672,13 +671,14 @@ importers:
         version: 6.0.3
 
   managing-games/managing-games-gameplay-adapter:
-    devDependencies:
+    dependencies:
       '@langfish/go-fish-engine':
         specifier: workspace:*
         version: link:../../gameplay/go-fish-engine
       '@langfish/managing-games-domain':
         specifier: workspace:*
         version: link:../managing-games-domain
+    devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.65.0
         version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)

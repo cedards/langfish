@@ -38,11 +38,15 @@ const start = async () => {
 };
 
 function chooseTemplateSource(): DeckTemplateSource {
-    if (process.env.LANGFISH_DECK_TEMPLATE_CSV_URL)
+    if (process.env.LANGFISH_DECK_TEMPLATE_CSV_URL) {
+        console.log("Using CSV url deck template source:", process.env.LANGFISH_DECK_TEMPLATE_CSV_URL);
         return CsvDeckTemplateSource(process.env.LANGFISH_DECK_TEMPLATE_CSV_URL)
+    }
 
-    if (process.env.LANGFISH_DECK_TEMPLATES)
+    if (process.env.LANGFISH_DECK_TEMPLATES) {
+        console.log("Using environment variable deck template source:", process.env.LANGFISH_DECK_TEMPLATES);
         return EnvironmentVariableDeckTemplateSource("LANGFISH_DECK_TEMPLATES")
+    }
 
     throw new Error(`I couldn't configure the source for deck templates.
     You should check the environment variables where the server is running. You can:
