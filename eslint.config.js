@@ -22,6 +22,7 @@ export default defineConfig([
   },
   {
     files: ["**/*.spec.{js,ts,tsx}"],
+    ignores: ["node_modules/**", "**/node_modules/**", "**/dist/**", "**/build/**"],
     plugins: { jest: pluginJest },
     languageOptions: {
       globals: pluginJest.environments.globals.globals,
