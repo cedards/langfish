@@ -136,12 +136,9 @@ function MyHand(
 ) {
 
     const selectCard = (cardId: number) => () => {
-        console.log("select card triggered, selectedCards is:", selectedCards)
         if(selectedCards.includes(cardId)) {
-            console.log("deselecting card", cardId)
             updateSelectedCards(selectedCards.filter(id => id !== cardId))
         } else {
-            console.log("selecting card", cardId)
             updateSelectedCards(selectedCards.concat(cardId))
         }
     }
