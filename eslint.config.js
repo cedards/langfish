@@ -16,6 +16,7 @@ export default defineConfig([
     rules: {
       semi: ["error"],
       "@stylistic/indent": ["error", 2],
+      "@stylistic/indent-binary-ops": ["error", 2]
     },
   },
   {
