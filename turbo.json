@@ -21,7 +21,8 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+    },
+    "lintfix": {
     },
     "dev": {
       "dependsOn": ["build","^build"],

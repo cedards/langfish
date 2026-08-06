@@ -17,6 +17,7 @@
     "go-fish-gameplay-server-plugin",
     "go-fish-csv-plugin"
   ],
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "start": "node ./go-fish-server/dist/index.js",
@@ -31,9 +32,14 @@
     }
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
-    "eslint": "^7.22.0",
-    "turbo": "^2.10.5"
+    "eslint": "^10.8.0",
+    "eslint-plugin-jest": "^29.16.0",
+    "turbo": "^2.10.5",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "8.65.0"
   }
 }
