@@ -13,13 +13,12 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo 'This plugin is tested purely through integration with the API client that calls it; see the tests in @langfish/go-fish-managing-games-client'"
+    "test": "echo 'This plugin is tested purely through integration with the API client that calls it; see the tests in @langfish/go-fish-managing-games-client'",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
-    "@typescript-eslint/parser": "^8.65.0",
-    "eslint": "^7.19.0",
     "joi": "^18.2.3",
     "typescript": "^6.0.3"
   }

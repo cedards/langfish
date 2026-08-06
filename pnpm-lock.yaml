@@ -656,15 +656,6 @@ importers:
       '@types/node':
         specifier: ^26.1.1
         version: 26.1.1
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^8.65.0
-        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
-      '@typescript-eslint/parser':
-        specifier: ^8.65.0
-        version: 8.65.0(eslint@7.32.0)(typescript@6.0.3)
-      eslint:
-        specifier: ^7.19.0
-        version: 7.32.0
       joi:
         specifier: ^18.2.3
         version: 18.2.3
