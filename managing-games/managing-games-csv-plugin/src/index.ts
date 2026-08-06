@@ -34,6 +34,6 @@ export function CsvDeckTemplateSource(csvUrl: string): DeckTemplateSource {
           });
         });
       });
-    }
+    },
   };
 }

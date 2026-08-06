@@ -33,7 +33,7 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
     .map(row => splitColumns(row)
       .reduce<CsvRow>((obj, item, currentIndex) => ({
         ...obj,
-        [headers[currentIndex]]: item
+        [headers[currentIndex]]: item,
       }), {"deck name": "", "image url": "", "card name": ""}))
     .filter((row: CsvRow) => !!row["deck name"]);
 
@@ -42,12 +42,12 @@ export function parseCsv(csvContent: string): Array<{ name: string, template: Ar
       ...groups,
       [row["deck name"]]: (groups[row["deck name"]] || []).concat({
         value: row["card name"],
-        image: row["image url"]
-      })
+        image: row["image url"],
+      }),
     }), {} as {[deckName: string]: { value: string, image: string }[]});
 
   return Object.keys(groupedRows).map(key => ({
     name: key,
-    template: groupedRows[key]
+    template: groupedRows[key],
   }));
 }

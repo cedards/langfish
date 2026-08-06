@@ -1,7 +1,7 @@
 import js from "@eslint/js";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
-import stylistic from '@stylistic/eslint-plugin'
+import stylistic from "@stylistic/eslint-plugin";
 import pluginJest from "eslint-plugin-jest";
 
 export default defineConfig([
@@ -16,7 +16,8 @@ export default defineConfig([
     rules: {
       semi: ["error"],
       "@stylistic/indent": ["error", 2],
-      "@stylistic/indent-binary-ops": ["error", 2]
+      "@stylistic/indent-binary-ops": ["error", 2],
+      "comma-dangle": ["error", "always-multiline"],
     },
   },
   {

@@ -16,14 +16,14 @@ describe('parsing deck templates from a CSV string', function () {
         template: [
           {value: "SPOON", image: "spoon-url"},
           {value: "SEAGULL", image: "seagull-url"},
-        ]
+        ],
       }, {
         name: "Qawalangim Tunuu",
         template: [
           {value: "APPLE", image: "apple-url"},
           {value: "HARBOR SEAL", image: "harbor-seal-url"},
-        ]
-      }
+        ],
+      },
     ]);
   });
 });

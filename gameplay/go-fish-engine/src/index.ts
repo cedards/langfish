@@ -39,7 +39,7 @@ export interface GameRepository {
 export function GoFishGame(
   deck?: Array<Card>,
   players?: { [key: string]: PlayerState },
-  currentTurn?: string
+  currentTurn?: string,
 ): GoFishGame {
   let _nextPlayerId = 0;
   let _deck: Array<Card> = deck || [];
@@ -51,7 +51,7 @@ export function GoFishGame(
     return {
       deck: _deck,
       players: _players,
-      currentTurn: _currentTurn
+      currentTurn: _currentTurn,
     };
   }
 
@@ -102,7 +102,7 @@ export function GoFishGame(
 
     _players[playerName].sets.push(cards);
     _players[playerName].hand = _players[playerName].hand.filter(card =>
-      !cardIds.includes(card.id)
+      !cardIds.includes(card.id),
     );
   }
 
@@ -149,6 +149,6 @@ export function GoFishGame(
     score,
     showOrHideCard,
     endTurn,
-    removePlayer
+    removePlayer,
   };
 }

@@ -165,10 +165,10 @@ describe("A game of Go Fish", function () {
           {id: 1, value: "apple"},
           {id: 2, value: "apple"},
           {id: 3, value: "apple"},
-        ]
+        ],
       ]);
       expect(game.currentState().players[player1id].hand).toEqual([
-        {id: 4, value: "banana"}
+        {id: 4, value: "banana"},
       ]);
     });
 
@@ -179,7 +179,7 @@ describe("A game of Go Fish", function () {
         {id: 1, value: "apple"},
         {id: 2, value: "apple"},
         {id: 3, value: "apple"},
-        {id: 4, value: "banana"}
+        {id: 4, value: "banana"},
       ]);
     });
 
@@ -190,7 +190,7 @@ describe("A game of Go Fish", function () {
         {id: 1, value: "apple"},
         {id: 2, value: "apple"},
         {id: 3, value: "apple"},
-        {id: 4, value: "banana"}
+        {id: 4, value: "banana"},
       ]);
     });
 
@@ -201,7 +201,7 @@ describe("A game of Go Fish", function () {
         {id: 1, value: "apple"},
         {id: 2, value: "apple"},
         {id: 3, value: "apple"},
-        {id: 4, value: "banana"}
+        {id: 4, value: "banana"},
       ]);
     });
   });
@@ -223,9 +223,9 @@ describe("A game of Go Fish", function () {
               {id: 4, value: "apple"},
               {id: 5, value: "apple"},
               {id: 6, value: "apple"},
-            ]
-          ]
-        }
+            ],
+          ],
+        },
       };
 
       game = GoFishGame(deck, players, "TALAPAS");
@@ -233,7 +233,7 @@ describe("A game of Go Fish", function () {
       expect(game.currentState()).toEqual({
         deck,
         players,
-        currentTurn: "TALAPAS"
+        currentTurn: "TALAPAS",
       });
     });
   });
@@ -243,18 +243,18 @@ describe("A game of Go Fish", function () {
       "player1": {
         name: "Player 1",
         hand: [],
-        sets: []
+        sets: [],
       },
       "player0": {
         name: "Player 0",
         hand: [],
-        sets: []
+        sets: [],
       },
       "player2": {
         name: "Player 2",
         hand: [],
-        sets: []
-      }
+        sets: [],
+      },
     };
 
     game = GoFishGame([], players);
@@ -276,7 +276,7 @@ describe("A game of Go Fish", function () {
         "player-to-remove": {
           hand: [{id: 1, value: "A"}, {id: 2, value: "B", revealed: true}],
           sets: [
-            [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ]
+            [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ],
           ],
           name: "Player 1",
         },
@@ -284,7 +284,7 @@ describe("A game of Go Fish", function () {
           hand: [],
           sets: [],
           name: "Player 2",
-        }
+        },
       });
 
       removedPlayerId = "player-to-remove";
@@ -326,10 +326,10 @@ describe("A game of Go Fish", function () {
         "player1": {
           hand: [{id: 1, value: "A"}, {id: 2, value: "B"}],
           sets: [
-            [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ]
+            [{id: 3, value: "C"}, {id: 4, value: "C"}, {id: 5, value: "C"} ],
           ],
           name: "Player 1",
-        }
+        },
       });
     });
 

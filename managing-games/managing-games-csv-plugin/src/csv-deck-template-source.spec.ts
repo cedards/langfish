@@ -67,7 +67,7 @@ describe('CsvDeckTemplateSource', function () {
       return CsvDeckTemplateSource(`http://localhost:${port}/this-url-is-wrong`)
         .getTemplates()
         .catch(error => { expect(error.message).toEqual(
-          `Could not fetch deck templates from http://localhost:${port}/this-url-is-wrong, got response code 403`
+          `Could not fetch deck templates from http://localhost:${port}/this-url-is-wrong, got response code 403`,
         );});
     });
   });
@@ -89,7 +89,7 @@ describe('CsvDeckTemplateSource', function () {
       return CsvDeckTemplateSource(`http://localhost:${port}/missing-deck-name`)
         .getTemplates()
         .catch(error => { expect(error.message).toEqual(
-          `Could not parse the CSV file at http://localhost:${port}/missing-deck-name because the deck name column is missing`
+          `Could not parse the CSV file at http://localhost:${port}/missing-deck-name because the deck name column is missing`,
         );});
     });
   });
@@ -100,7 +100,7 @@ describe('CsvDeckTemplateSource', function () {
       return CsvDeckTemplateSource(`http://localhost:${port}/missing-card-name`)
         .getTemplates()
         .catch(error => { expect(error.message).toEqual(
-          `Could not parse the CSV file at http://localhost:${port}/missing-card-name because the card name column is missing`
+          `Could not parse the CSV file at http://localhost:${port}/missing-card-name because the card name column is missing`,
         );});
     });
   });
@@ -111,7 +111,7 @@ describe('CsvDeckTemplateSource', function () {
       return CsvDeckTemplateSource(`http://localhost:${port}/illegal-comma`)
         .getTemplates()
         .catch(error => { expect(error.message).toEqual(
-          `Could not parse the CSV file at http://localhost:${port}/illegal-comma because there are illegal commas in this row: Alutiiq (Kodiak Island, AK),SPOON,spoon-url`
+          `Could not parse the CSV file at http://localhost:${port}/illegal-comma because there are illegal commas in this row: Alutiiq (Kodiak Island, AK),SPOON,spoon-url`,
         );});
     });
   });
