@@ -11,16 +11,15 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "devDependencies": {
     "@hapi/hapi": "^21.4.9",
     "@langfish/managing-games-domain": "workspace:*",
     "@langfish/managing-games-server-plugin": "workspace:*",
     "@types/jest": "^26.0.20",
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
-    "@typescript-eslint/parser": "^8.65.0",
-    "eslint": "^7.19.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
