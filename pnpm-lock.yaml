@@ -520,15 +520,6 @@ importers:
       '@types/jest':
         specifier: ^26.0.20
         version: 26.0.24
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^8.65.0
-        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@10.8.0(jiti@1.21.7))(typescript@6.0.3))(eslint@10.8.0(jiti@1.21.7))(typescript@6.0.3)
-      '@typescript-eslint/parser':
-        specifier: ^8.65.0
-        version: 8.65.0(eslint@10.8.0(jiti@1.21.7))(typescript@6.0.3)
-      eslint:
-        specifier: ^10.8.0
-        version: 10.8.0(jiti@1.21.7)
       jest:
         specifier: ^30.4.2
         version: 30.4.2(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)
@@ -663,24 +654,6 @@ importers:
 
   managing-games/managing-games-domain:
     devDependencies:
-      '@types/jest':
-        specifier: ^26.0.20
-        version: 26.0.24
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^8.65.0
-        version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@7.32.0)(typescript@6.0.3))(eslint@7.32.0)(typescript@6.0.3)
-      '@typescript-eslint/parser':
-        specifier: ^8.65.0
-        version: 8.65.0(eslint@7.32.0)(typescript@6.0.3)
-      eslint:
-        specifier: ^7.19.0
-        version: 7.32.0
-      jest:
-        specifier: ^30.4.2
-        version: 30.4.2(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)
-      ts-jest:
-        specifier: ^29.4.11
-        version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(jest-util@30.4.1)(jest@30.4.2(@types/node@26.1.1)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2))(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

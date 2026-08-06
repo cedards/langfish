@@ -1,5 +1,3 @@
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-};
+export const preset = 'ts-jest';
+export const testEnvironment = 'node';
+export const testRegex = "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$";

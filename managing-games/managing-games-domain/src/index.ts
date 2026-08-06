@@ -15,7 +15,7 @@ export function Game(deck: Deck): Game {
   return {
     id: null,
     deck,
-  }
+  };
 }
 
 export interface GameRepository {
