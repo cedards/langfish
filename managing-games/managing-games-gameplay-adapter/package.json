@@ -6,16 +6,15 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "dependencies": {
     "@langfish/go-fish-engine": "workspace:*",
     "@langfish/managing-games-domain": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.65.0",
-    "@typescript-eslint/parser": "^8.65.0",
-    "eslint": "^7.19.0",
     "typescript": "^6.0.3"
   }
 }
