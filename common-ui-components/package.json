@@ -6,7 +6,9 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "dependencies": {
     "preact": "^10.29.7"
