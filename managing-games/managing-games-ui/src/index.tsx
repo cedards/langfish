@@ -6,19 +6,19 @@ import App from './App';
 import { Deck, DeckTemplateSource } from "@langfish/managing-games-domain";
 
 const apiEndpoint = (process.env.NODE_ENV === "development"
-    ? `http://localhost:5000`
-    : `${document.location.protocol}//${document.location.host}/`
+  ? `http://localhost:5000`
+  : `${document.location.protocol}//${document.location.host}/`
 ) as `http://${string}` | `https://${string}`;
 
-const client = GoFishManagingGamesClient(apiEndpoint)
+const client = GoFishManagingGamesClient(apiEndpoint);
 
 const templatesClient: DeckTemplateSource = {
-    async getTemplates(): Promise<Array<{ name: string, template: Deck }>> {
-        const response = await fetch("/api/templates")
-        if (!response.ok) throw new Error("Call to get templates was not successful")
-        return await response.json()
-    }
-}
+  async getTemplates(): Promise<Array<{ name: string, template: Deck }>> {
+    const response = await fetch("/api/templates");
+    if (!response.ok) throw new Error("Call to get templates was not successful");
+    return await response.json();
+  },
+};
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

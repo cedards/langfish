@@ -5,16 +5,16 @@ import {CreateGame} from "./creating-a-game/CreateGame";
 import './App.css';
 
 interface AppProps {
-    client: GoFishManagingGamesClientInterface,
-    templatesClient: TemplatesClientInterface
+  client: GoFishManagingGamesClientInterface,
+  templatesClient: TemplatesClientInterface
 }
 
 const App: React.FunctionComponent<AppProps> = ({ client, templatesClient }) => {
-    return (
-        <div className="App">
-            <CreateGame templatesClient={templatesClient} managingGamesClient={client}/>
-        </div>
-    );
+  return (
+    <div className="App">
+      <CreateGame templatesClient={templatesClient} managingGamesClient={client}/>
+    </div>
+  );
 };
 
 export default App;
