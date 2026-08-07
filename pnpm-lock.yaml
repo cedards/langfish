@@ -472,6 +472,9 @@ importers:
 
   go-fish-server:
     dependencies:
+      '@hapi/boom':
+        specifier: ^10.0.1
+        version: 10.0.1
       '@hapi/hapi':
         specifier: ^21.4.9
         version: 21.4.9

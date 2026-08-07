@@ -7,13 +7,16 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
     "@hapi/hapi": "^21.4.9",
     "@hapi/inert": "^7.1.2",
     "@hapi/nes": "^14.0.1",
